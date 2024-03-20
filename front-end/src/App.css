@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&display=swap');
+
+
+html{
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    /*width: 100% !important;*/
+    /*max-width: 100% !important;*/
+}
+
+
+    body {
+        min-height: 100vh;
+        /*width: 100% !important;*/
+        /*max-width: 100% !important;*/
+        background-color:  #F0F0F0;
+        margin: 0 !important;
+    }
+
+
+.scale-90 {
+    transform: scale(0.95);
+    transform-origin: 0 0;
+}
+
+
+.MuiTypography-root{
+    font-family: 'Plus Jakarta Sans', sans-serif  !important;
+    /*font-weight:700  !important;*/
+}
