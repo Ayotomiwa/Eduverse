@@ -1,9 +1,9 @@
 import {SearchBar} from "../../components/SearchBar.jsx";
 import {Card, CardMedia, Box} from "@mui/material";
+import logo from "../../assets/lsbu_logo.svg"
+
 
 const SearchCard = () => {
-
-
 
 
 
@@ -15,12 +15,11 @@ const SearchCard = () => {
             p:2,
             borderRadius: "12px"
         }}>
-            <Box sx={{mb: 2}}>
+            <Box sx={{mb: 2, borderRadius: "12px", backgroundColor:"#584595", p:2}}>
             <CardMedia
-                sx={{ borderRadius: "12px"}}
                 component="img"
-                height="100"
-                image = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
+                height="80"
+                image= {logo}
                 alt="University Logo"
             />
             </Box>

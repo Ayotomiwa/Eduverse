@@ -90,7 +90,7 @@ const Feed = () => {
             justifyContent: "center",
             position: "sticky",
             zIndex: 1000,
-            top: -90,
+            top: -170,
         }}>
             <CreatePost setNewPost={setNewPost} posts={posts}/>
         </Box>

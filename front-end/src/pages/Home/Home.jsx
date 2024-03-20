@@ -1,6 +1,6 @@
 import Feed from "../Posts/Feed.jsx";
 import {Box, lighten, useMediaQuery, useTheme} from "@mui/material";
-import HomeSearch from "./HomeSearch.jsx";
+import MainCard from "./MainCard.jsx";
 import ModuleCard from "./ModuleCard.jsx";
 import CommunityCard from "./CommunityCard.jsx";
 import SearchCard from "./SearchCard.jsx";
@@ -32,7 +32,7 @@ const Home = () => {
                     <Box sx={{display: "flex", flexDirection: "column",
                         position: "sticky", top:10, m:"20px", height:"100%",
                         width: "23%", gap:2}}>
-                            <HomeSearch/>
+                            <MainCard/>
                             <ModuleCard/>
                             <CommunityCard/>
                     </Box>

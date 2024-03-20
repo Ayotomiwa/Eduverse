@@ -59,7 +59,7 @@ const ModuleCard = () => {
                     </Box>
                     <ListItemText color="secondary" primary={
                         <Typography color="secondary">
-                            Modules
+                            Communities
                         </Typography>
                     }>
                     </ListItemText>
@@ -78,7 +78,7 @@ const ModuleCard = () => {
                         borderRadius: '25px',
                         outline: '1px solid slategrey'
                     },
-                    maxHeight: "25vh"}}>
+                    maxHeight: "20vh"}}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             {communities.map((community, index) => {
