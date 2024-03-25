@@ -4,7 +4,6 @@ import {useEffect, useRef, useState} from "react";
 
 const CommentInput = ({username,
                           handleComment,
-                         replyButton,
                          setReplyWhom,
                           replyWhom}) => {
 
@@ -14,6 +13,7 @@ const CommentInput = ({username,
 
 
     useEffect(() => {
+        if(replyWhom){
             if(inputValue.startsWith(`@`)){
                 setInputValue(inputValue.replace(inputValue , `@${replyWhom} `));
             }
@@ -21,20 +21,18 @@ const CommentInput = ({username,
                 setInputValue(`@${replyWhom} ${inputValue}`);
             }
             setInputPlaceholder(inputValue)
-
-    }, [replyButton]);
+        }
+    }, [replyWhom]);
 
 
 
 
     const handleInputChange = (event) => {
             let newValue = event.target.value;
-            if(replyWhom !== "" && !newValue.startsWith(`@${replyWhom}`)){
-                setReplyWhom("");
+            if(replyWhom && !newValue.startsWith(`@${replyWhom}`)){
+                setReplyWhom(null);
             }
-
-            setInputValue(newValue);
-            setInputPlaceholder(inputValue);
+            setInputPlaceholder(newValue);
 
         }
 
@@ -42,10 +40,9 @@ const CommentInput = ({username,
         if(inputPlaceholder === ""){
             return;
         }
-        // handleAddComment(inputPlaceholder);
-        handleComment(inputValue);
-        setInputValue("");
-        setReplyWhom("");
+        // console.log("input value", inputPlaceholder);
+        handleComment(inputPlaceholder);
+        setInputPlaceholder("");
     }
 
 
@@ -57,7 +54,7 @@ const CommentInput = ({username,
                 height: 35
             }}>{username?.charAt(0).toUpperCase()}</Avatar>
             <OutlinedInput sx={{width: "100%", borderRadius: "10px"}}
-                           value={inputValue}
+                           value={inputPlaceholder}
                            onChange={(e) => handleInputChange(e)}
                            placeholder="Add a comment"
                            size="small"

@@ -1,52 +1,50 @@
-import Feed from "../Posts/Feed.jsx";
-import {Box, lighten, useMediaQuery, useTheme} from "@mui/material";
-import MainCard from "./MainCard.jsx";
-import ModuleCard from "./ModuleCard.jsx";
-import CommunityCard from "./CommunityCard.jsx";
-import SearchCard from "./SearchCard.jsx";
+import Posts from "../Posts/Posts.jsx";
+import {Box, lighten, useMediaQuery, useTheme, ThemeProvider} from "@mui/material";
+import RightSideBar from "./RightHomeBar/RightSideBar.jsx";
+import LeftSideBar from "./LeftHomeBar/LeftSideBar.jsx";
+import { createTheme } from '@mui/material/styles';
 
 
-const Home = () => {
-    const theme = useTheme();
+
+const Home = (props) => {
+    const {children} = props;
+    const outerTheme = useTheme();
+    const theme = createTheme({
+        typography: {
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+        },
+        icon: {
+            color: outerTheme.palette.primary.light,
+        },
+    });
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
 
     return (
+        <ThemeProvider theme={theme}>
         <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
             overFlowX: "hidden",
             width: "100%",
             // backgroundColor:darken ("#e6e6fa", 0.02)
             backgroundColor: lighten("#c9d1d3", 0.5)
         }}>
             <Box sx={{
-                mt: 0, width: "100%", border: "2px black solid",
-                display: "flex", flexDirection: "row"
+               width: "100%",
+                display: "flex", flexDirection: "row", gap: 2, justifyContent: "center", alignItems: "flex-start",
             }}>
-                {/*<Nav />*/}
                 {!isSmallScreen && (
-                    <Box sx={{display: "flex", flexDirection: "column",
-                        position: "sticky", top:10, m:"20px", height:"100%",
-                        width: "23%", gap:2}}>
-                            <MainCard/>
-                            <ModuleCard/>
-                            <CommunityCard/>
-                    </Box>
+                   <LeftSideBar/>
                 )}
                 <Box sx={{display: "flex", flexDirection: "column", width: !isSmallScreen ? "50%" : "100%"}}>
-                    <Feed/>
+                    {children}
                 </Box>
                 {!isSmallScreen && (
-                    <Box sx={{m: "20px", width: "25%"}}>
-                        <SearchCard />
-                    </Box>
+                   <RightSideBar/>
                 )}
             </Box>
         </Box>
+        </ThemeProvider>
     );
 }
 

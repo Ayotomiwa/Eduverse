@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {
     Avatar,
     Box,
@@ -14,14 +14,13 @@ import {
 import CommentIcon from '@mui/icons-material/Comment';
 import {Favorite} from "@mui/icons-material";
 import {styled} from "@mui/material/styles";
-import CommentInput from "../../components/CommentInput.jsx";
 
 
-const Comments = ({comments, setReplyWhom, replyButton, setReplyButton, setCommentOwnerId}) => {
 
-    if(!comments){
-        return null;
-    }
+const Comments = ({comments, setReplyWhom, setCommentOwnerId}) => {
+
+    const [replyButton, setReplyButton] = useState(false);
+
 
 
     const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -43,7 +42,6 @@ const Comments = ({comments, setReplyWhom, replyButton, setReplyButton, setComme
     });
 
     const toggleReplies = (id, open = false) => {
-
         if(open){
             setCommentReplyConfig(prevConfig => ({
                 ...prevConfig,
@@ -57,14 +55,16 @@ const Comments = ({comments, setReplyWhom, replyButton, setReplyButton, setComme
         }));
     }
 
+    if(!comments){
+        return null;
+    }
+
 
     const handleReplies = (comment) => {
         toggleReplies(comment.id, true);
         setReplyButton(!replyButton);
         setCommentOwnerId(comment.id);
         setReplyWhom(comment.username);
-        // console.log("replying to ", replyWhom);
-
     }
 
 
@@ -127,7 +127,7 @@ const Comments = ({comments, setReplyWhom, replyButton, setReplyButton, setComme
                                         variant="body2"
                                         color="text.primary"
                                     >
-                                        {comment.desc}
+                                        {comment.comment}
                                         <a
                                             href="#"
                                             onClick={(e) => {
@@ -163,7 +163,7 @@ const Comments = ({comments, setReplyWhom, replyButton, setReplyButton, setComme
                                                 variant="caption"
                                                 color="text.primary"
                                             >
-                                                {reply.desc}
+                                                {reply.comment}
                                             </Typography>
                                         }
                                     />

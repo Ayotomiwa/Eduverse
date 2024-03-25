@@ -22,7 +22,7 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import {AccountPopOver} from "../../components/AccountPopOver.jsx";
 import {usePopover} from "../../hooks/UsePopover.jsx";
-import CreatePost from "../Posts/CreatePost.jsx";
+import Feed from "../Posts/Feed.jsx";
 
 
 

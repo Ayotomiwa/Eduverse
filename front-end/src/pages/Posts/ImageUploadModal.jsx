@@ -24,27 +24,39 @@ const CloseButton = styled(IconButton)({
     top: '10px',
 });
 
-const ImageUploadModal = ({ open, closeModal, selectedImage, setSelectedImage, setNewPost, posts }) => {
+const ImageUploadModal = ({ open,
+                              closeModal,
+                              selectedImage,
+                              setSelectedImage,
+                              setPostToUpload,
+                              pictureFileName,
+                              setPictureFileName,
+    caption, setCaption
+
+}) => {
     // const [selectedImage, setSelectedImage] = useState(null);
-    const [caption, setCaption] = useState('');
+
 
     const handleImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
+            setPictureFileName(event.target.files[0].name);
+            console.log(event.target.files[0].name);
             setSelectedImage(URL.createObjectURL(event.target.files[0]));
         }
     };
 
 
     const handlePost = () => {
-        setNewPost({
-            id: posts.length + 1,
+        setPostToUpload({
             username: "Jane Doe",
-            imageUrl: selectedImage,
+            universityId:1,
+            userId: 1,
+            imageUrl: pictureFileName,
             caption: caption,
+            access: "PUBLIC",
             like:0,
             comments: []
         });
-        setSelectedImage(null);
         setCaption('');
         closeModal();
         }

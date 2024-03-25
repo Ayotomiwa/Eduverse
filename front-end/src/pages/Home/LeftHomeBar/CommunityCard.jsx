@@ -48,17 +48,13 @@ const ModuleCard = () => {
             pt: 0,
             borderRadius: "12px"
         }}>
-            <List
-                sx={{width: '100%', bgcolor: 'background.paper'}}
-                component="nav"
-            >
                 <ListItemButton onClick={handleClick}>
-                    <Box sx={{mr: 1}}>
+                    <Avatar sx={{ mr: 1 }}>
                         <img width="30" height="30" src="https://img.icons8.com/stickers/100/groups.png"
                              alt="groups"/>
-                    </Box>
+                    </Avatar>
                     <ListItemText color="secondary" primary={
-                        <Typography color="secondary">
+                        <Typography color="secondary" sx={{ fontWeight: "bold"}}>
                             Communities
                         </Typography>
                     }>
@@ -95,7 +91,6 @@ const ModuleCard = () => {
                         </List>
                     </Collapse>
                 </Box>
-            </List>
         </Card>
     )
 

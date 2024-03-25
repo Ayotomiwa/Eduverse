@@ -9,13 +9,14 @@ import {
     Typography,
     ListItemIcon,
     ListItemText,
-    SvgIcon
+    SvgIcon, useTheme
 } from "@mui/material";
 import {InboxIcon} from "lucide-react";
 import {ExpandLess, ExpandMore, LibraryBooks, StarBorder} from "@mui/icons-material";
 import {useState} from "react";
 
 const ModuleCard = () => {
+    const theme = useTheme();
 
     const [open, setOpen] = useState(true);
 
@@ -61,16 +62,12 @@ const ModuleCard = () => {
             bgcolor: "white",
             borderRadius: "12px"
         }}>
-            <List
-                sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper'}}
-                component="nav"
-            >
                 <ListItemButton onClick={handleClick}>
-                    <Box sx={{mr:1}}>
+                    <Avatar sx={{mr: 1}}>
                         <img width="30" height="30" src="https://img.icons8.com/stickers/100/books.png" alt="books"/>
-                    </Box>
+                    </Avatar>
                     <ListItemText  primary={
-                        <Typography color="secondary">
+                        <Typography color="secondary" sx={{ fontWeight: "bold"}}>
                             Modules
                         </Typography>
                     }>
@@ -107,7 +104,6 @@ const ModuleCard = () => {
                     </List>
                 </Collapse>
                 </Box>
-            </List>
         </Card>
     )
 

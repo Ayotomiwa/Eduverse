@@ -58,7 +58,7 @@ export const TopNav = () => {
                                     <ArrowLeftIcon />
                                 </SvgIcon>}
 
-                            onClick={() => {}}
+                            onClick={() => {window.location.pathname = "/feed"}}
                         >
                             <Typography
                                 variant="subtitle1"

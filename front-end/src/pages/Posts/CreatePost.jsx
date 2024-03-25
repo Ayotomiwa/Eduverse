@@ -1,18 +1,29 @@
-import {useEffect, useState} from 'react';
-import {Box, Button, Divider, lighten, Paper, SvgIcon, Typography} from '@mui/material';
-
+import {Box, Button, lighten, SvgIcon, Typography} from "@mui/material";
+import {PlusIcon} from "lucide-react";
 import ImageUploadModal from "./ImageUploadModal.jsx";
 import PollCreationModal from "./PollCreationModal.jsx";
-import SimpleTab from "../../components/SimpleTab.jsx";
-import {PlusIcon} from "lucide-react";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
+const CreatePost = ({setNewPost}) => {
 
-const CreatePost = ({setNewPost, posts}) => {
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [caption, setCaption] = useState('');
     const [openImageModal, setOpenImageModal] = useState(false);
     const [openPollModal, setOpenPollModal] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const universityId = 1;
+    const [keyName, setKeyName] = useState(null);
+    const [pictureFileName, setPictureFileName] = useState(null);
+    const [pictureData, setPictureData] = useState(null);
+    const [uploadDone, setUploadDone] = useState(false);
+    const [postToUpload, setPostToUpload] = useState(false);
 
-    const tabs = ["Public", "Friends"];
+
+    useEffect(() => {
+        if(pictureFileName){
+            setKeyName(`${universityId}/${pictureFileName}`);
+        }
+    }, [pictureFileName]);
 
 
     useEffect(() => {
@@ -22,17 +33,101 @@ const CreatePost = ({setNewPost, posts}) => {
     }, [selectedImage]);
 
 
-    const handleTabChange = (event, newValue) => {
+    useEffect(() => {
+        if (uploadDone) {
+            console.log("upload done");
+            saveToDatabase();
+            setUploadDone(false);
+            setPostToUpload(null);
+            setPictureFileName(null);
+        }
+    }, [uploadDone]);
 
 
+
+    useEffect(() => {
+        if (postToUpload) {
+            console.log("post to upload");
+
+            if (pictureData && postToUpload.imageUrl) {
+                console.log("Uploading image to S3");
+                (async () => {
+                    try {
+                        const signedUrl = await getSignedUrl();
+                        if (signedUrl) {
+                            try {
+                                const response = await axios.put(signedUrl, pictureData, {
+                                    headers: {
+                                        'Content-Type': pictureData.type
+                                    },
+                                });
+                                if (response.status === 200) {
+                                    console.log('Image uploaded to S3', response);
+                                    setUploadDone(true);
+                                    setSelectedImage(null);
+                                }
+                            } catch (error) {
+                                console.error('Error uploading to S3:', error);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                })();
+            } else {
+                console.log("No image to upload");
+                setUploadDone(true);
+            }
+        }
+
+        // if(postToUpload){
+        //     setNewPost(postToUpload);
+        // }
+
+    }, [postToUpload]);
+
+
+    const getSignedUrl = () => {
+        console.log("In get signed" + pictureFileName);
+        return axios.get(`http://localhost:8080/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
+
+
+
+    const saveToDatabase = () => {
+        console.log("saving to database");
+        axios.post("http://localhost:8080/api/post-service/posts", postToUpload)
+            .then((response) => {
+                if (response.status === 200) {
+                    // console.log("Post saved to database");
+                    // console.log(response.data);
+                    setNewPost(response.data);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+
+
 
 
     const handleImageUpload = (event) => {
         if (event.target.files && event.target.files[0]) {
+            setPictureFileName(event.target.files[0].name);
+            setPictureData(event.target.files[0]);
+            console.log(event.target.files[0].name);
             setSelectedImage(URL.createObjectURL(event.target.files[0]));
         }
     }
+
 
     const handleOpenImageModal = () => {
         if (selectedImage) {
@@ -40,37 +135,19 @@ const CreatePost = ({setNewPost, posts}) => {
         }
         setOpenImageModal(true);
     }
-    const handleCloseImageModal = () => setOpenImageModal(false);
+    const handleCloseImageModal = () =>{
+        setSelectedImage(null);
+        setOpenImageModal(false);
+    }
 
     const handleOpenPollModal = () => setOpenPollModal(true);
     const handleClosePollModal = () => setOpenPollModal(false);
 
-    const profilePicture = "https://www.w3schools.com/howto/img_avatar.png";
 
     return (
-        <Paper sx={{
-            padding: 2, mt: -0.02, pt: 0, pb: 0, mb: 1, width: "100%",
-            borderTop: "0.3px grey solid", borderRadius: "0 0 12px 12px",
-            // bgcolor:"#F0F0F0",
-            bgcolor: "white"
-            // bgcolor: lighten ("#c9d1d3", 0.5)
-        }}>
-            <Box sx={{m: "25px"}}>
-                <Typography textAlign="center" variant="h4"
-                            sx={{color: "grey"}}>
-                    Content Feed
-                </Typography>
-            </Box>
-            <Box>
-                <SimpleTab
-                    tabs={tabs}
-                    handleTabChange={handleTabChange}
-                />
-            </Box>
-            <Divider/>
-
-            <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "center", p: 1, gap:2}}>
-                <Box sx={{display: "flex", flexDirection:"row", alignItems: "center", gap:1}}>
+        <>
+            <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "center", p: 1, gap: 2}}>
+                <Box sx={{display: "flex", flexDirection: "row", alignItems: "center", gap: 1}}>
                     <Button size="large" component="label" sx={{color: "grey"}} startIcon={
                         <img width="35" height="35" src="https://img.icons8.com/plasticine/100/camera--v1.png"
                              alt="camera--v1"/>
@@ -107,14 +184,14 @@ const CreatePost = ({setNewPost, posts}) => {
                         color: "grey", borderRadius: "25px",
                         bgcolor: lighten("#c9d1d3", 0.1),
                         border: "0.2px solid grey",
-                        width:"100%"
+                        width: "100%"
                     }}
                 >
                     <SvgIcon>
                         <PlusIcon/>
                     </SvgIcon>
                     <Typography variant="caption" sx={{color: "grey", letterSpacing: "0.1rem"}}>
-                       Share Something
+                        Share Something
                     </Typography>
                 </Button>
             </Box>
@@ -124,16 +201,17 @@ const CreatePost = ({setNewPost, posts}) => {
                     closeModal={handleCloseImageModal}
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
-                    setNewPost={setNewPost}
-                    posts={posts}
+                    setPostToUpload={setPostToUpload}
+                    setPictureFileName={setPictureFileName}
+                    setCaption={setCaption}
+                    caption={caption}
+                    pictureFileName={pictureFileName}
                 />
             </Box>
             <Box>
                 <PollCreationModal isOpen={openPollModal} onClose={handleClosePollModal}/>
             </Box>
-        </Paper>
-    );
-};
-
+        </>
+    )
+}
 export default CreatePost;
-

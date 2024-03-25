@@ -23,15 +23,17 @@ export default function SimpleTab({tabs, handleTabChange}) {
 
 
     return (
-        <Tabs value={tabValue}  onChange={handleTab}>
-            <TabsList>
-                {tabs.map((tab, index) => (
-                    <Tab key={index} value={index}>
-                        {tab}
-                    </Tab>
-                ))};
-            </TabsList>
-        </Tabs>
+        <Box>
+            <Tabs value={tabValue}  onChange={handleTab} sx={{flex:1}}>
+                <TabsList>
+                    {tabs.map((tab, index) => (
+                        <Tab key={index} value={index}>
+                            {tab}
+                        </Tab>
+                    ))};
+                </TabsList>
+            </Tabs>
+        </Box>
     );
 }
 
@@ -60,6 +62,14 @@ const grey = {
     800: '#303740',
     900: '#1C2025',
 };
+
+const Box = styled('div')(
+    () => `
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  `,
+);
 
 const Tab = styled(BaseTab)`
   font-family:  'Plus Jakarta Sans', sans-serif ;
@@ -97,7 +107,8 @@ const Tab = styled(BaseTab)`
 const TabsList = styled(BaseTabsList)(
     () => `
   min-width: 400px;
-  background-color: ${darken ("#c9d1d3", 0.3)};
+  width: 100%;
+  background-color: ${darken ("#c9d1d3", 0.5)};
   border-radius: 12px;
   margin-bottom: 16px;
   display: flex;

@@ -6,9 +6,8 @@ import { styled } from '@mui/system';
 import {Typography} from "@mui/material";
 
 export default function SimpleMenu({options, title, handleClick }) {
-    const handleMenuClick = (event) => {
-        const menuItem = event.target.textContent;
-        handleClick(menuItem);
+    const handleMenuClick = (label) => {
+        handleClick(label);
     };
 
 
@@ -22,7 +21,7 @@ export default function SimpleMenu({options, title, handleClick }) {
             </MenuButton>
             <Menu slots={{ listbox: Listbox }}>
                 {options.map((option, index) => (
-                    <MenuItem key={index} onClick={handleMenuClick}>
+                    <MenuItem key={index} onClick={() => handleMenuClick(option.label)}>
                             {option.icon}
                             {option.label}
                     </MenuItem>
