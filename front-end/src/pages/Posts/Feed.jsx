@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Box, Button, Divider, lighten, Paper, SvgIcon, Typography, useMediaQuery, useTheme} from '@mui/material';
 
 import ImageUploadModal from "./ImageUploadModal.jsx";
@@ -7,6 +7,7 @@ import SimpleTab from "../../components/SimpleTab.jsx";
 import {PlusIcon} from "lucide-react";
 import CreatePost from "./CreatePost.jsx";
 import Posts from "./Posts.jsx";
+import UserContext from "../../hooks/UserProvider.jsx";
 
 
 const Feed = () => {
@@ -15,6 +16,7 @@ const Feed = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [newPost, setNewPost] = useState(null);
     const [tabValue, setTabValue] = useState(0);
+    const {user, university} = useContext(UserContext)
 
 
 
@@ -42,13 +44,6 @@ const Feed = () => {
 
 
 
-
-
-
-
-
-
-
     return (
         <>
         <Box
@@ -59,7 +54,7 @@ const Feed = () => {
                 justifyContent: "center",
                 position: "sticky",
                 zIndex: 1000,
-                top: -170,
+                top: university.featureFlags.CONTENT_POSTING ? -170 : -80
             }}>
         <Paper sx={{
             padding: 2, pt: 0, pb: 0, mb: 1, width: "100%", borderRadius: "0 0 12px 12px",
@@ -80,10 +75,11 @@ const Feed = () => {
                 />
             </Box>
             <Divider/>
+            {university.featureFlags.CONTENT_POSTING && (
             <CreatePost
             setNewPost={setNewPost}
             newPost={newPost}
-            />
+            />)}
         </Paper>
         </Box>
         <Box sx={{display: "flex", flexDirection: "column", width: "100%"}}>

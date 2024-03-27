@@ -15,7 +15,7 @@ import {InboxIcon} from "lucide-react";
 import {ExpandLess, ExpandMore, LibraryBooks, StarBorder} from "@mui/icons-material";
 import {useState} from "react";
 
-const ModuleCard = () => {
+const ModuleCard = ({maxHeight}) => {
     const theme = useTheme();
 
     const [open, setOpen] = useState(true);
@@ -87,7 +87,7 @@ const ModuleCard = () => {
                         borderRadius: '25px',
                         outline: '1px solid slategrey'
                     },
-                    maxHeight: "20vh"}}>
+                    maxHeight: maxHeight }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         {modules.map((module, index) => {

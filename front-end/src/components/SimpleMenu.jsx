@@ -5,7 +5,9 @@ import { MenuItem as BaseMenuItem, menuItemClasses } from '@mui/base/MenuItem';
 import { styled } from '@mui/system';
 import {Typography} from "@mui/material";
 
-export default function SimpleMenu({options, title, handleClick }) {
+export default function SimpleMenu({options,
+                                       title,
+                                       handleClick }) {
     const handleMenuClick = (label) => {
         handleClick(label);
     };

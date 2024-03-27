@@ -54,7 +54,7 @@ return (
           </Button>
         </InputAdornment>
       )}
-      sx={{ maxWidth: "500px",backgroundColor:"rgb(59, 61, 145, 0.1)", borderRadius: "12px",
+      sx={{backgroundColor:"rgb(59, 61, 145, 0.1)", borderRadius: "12px",
           // "& .MuiOutlinedInput-notchedOutline": {
           //     borderColor: "transparent",
           // },

@@ -14,7 +14,7 @@ import {Announcement, Comment, ExpandLess, ExpandMore, Reply} from "@mui/icons-m
 import {useState} from "react";
 import {styled} from "@mui/material/styles";
 
-const NotificationCard = ({open, handleOpen}) => {
+const NotificationCard = ({open, handleOpen, maxHeight}) => {
 
     const handleClick = (event) => {
         handleOpen(event);
@@ -111,7 +111,7 @@ const NotificationCard = ({open, handleOpen}) => {
                     borderRadius: '25px',
                     outline: '1px solid slategrey'
                 },
-                maxHeight: "45vh"
+                maxHeight: {maxHeight},
             }}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List sx={{width: '100%'}}>

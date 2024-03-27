@@ -2,12 +2,14 @@ import {Box} from "@mui/material";
 import SearchCard from "./SearchCard.jsx";
 import NotificationCard from "./NotificationCard.jsx";
 import EventsCard from "./EventsCard.jsx";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
 const RightSideBar = () => {
 
     const [notificationOpen, setNotificationOpen] = useState(true);
     const [eventsOpen, setEventsOpen] = useState(false);
+    const {user, university} = useContext(UserContext)
 
 
 
@@ -33,18 +35,20 @@ const RightSideBar = () => {
 
     return (
         <Box sx={{
-            display: "flex", flexDirection: "column",
-            position: "sticky", top: 20, m: "20px", height: "100%", mt: 2, gap: 2, width: "26%", maxWidth: "26%"
+            display: "flex", flexDirection: "column", height: "100%", gap:2
         }}>
             <SearchCard/>
             <NotificationCard
+                maxHeight={university.featureFlags.EVENTS? "44vh" : "54vh"}
              open={notificationOpen}
              handleOpen={handleOpen}
             />
+            {university.featureFlags.EVENTS && (
             <EventsCard
                 open={eventsOpen}
                 handleOpen={handleOpen}
             />
+                )}
         </Box>
     )
 }

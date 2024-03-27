@@ -1,3 +1,5 @@
+import {useEffect, useState} from "react";
+import axios from "axios";
 import {
     Avatar,
     Box,
@@ -8,20 +10,19 @@ import {
     Collapse,
     Divider,
     IconButton,
-    Typography
-} from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment';
-import Comments from "./Comments.jsx";
-import {useContext, useEffect, useState} from "react";
+    Typography,
+    CardHeader,
+    CardActionArea
+} from "@mui/material";
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
-import CommentInput from "../../components/CommentInput.jsx";
-import axios from "axios";
-import UserContext from "../../hooks/UserProvider.jsx";
+import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
+import CommentIcon from "@mui/icons-material/Comment.js";
+import CommentInput from "../../../components/CommentInput.jsx";
+import Comments from "../../Posts/Comments.jsx";
+import {useNavigate} from "react-router-dom";
 
-
-const Post = ({post}) => {
-
-    const {user, university} = useContext(UserContext)
+const ThreadCard= ({post}) => {
+    const navigate = useNavigate();
 
     const [openComments, setOpenComments] = useState(false);
     const [newComment, setNewComment] = useState(null);
@@ -126,7 +127,7 @@ const Post = ({post}) => {
 
     const toggleComments = () => {
         console.log(post.commentIds);
-            setOpenComments(!openComments);
+        setOpenComments(!openComments);
     };
 
 
@@ -142,90 +143,50 @@ const Post = ({post}) => {
     }
 
 
-    // const addComment = (comment) =>{
-    //     setOpenComments(true);
-    //     if(replyWhom && commentId){
-    //         console.log("replyWhom", replyWhom);
-    //         setComments(prevComments => {
-    //             return prevComments.map(newComment => {
-    //                 if (newComment.id === commentId) {
-    //                     if (newComment.replies) {
-    //                         newComment.replies.push({
-    //                             username: "Mike Tyson",
-    //                             desc: comment,
-    //                         });
-    //                     } else {
-    //                         newComment.replies = [{
-    //                             username: "Mike Tyson",
-    //                             desc: comment,
-    //                         }];
-    //                     }
-    //
-    //                 }
-    //                 return newComment;
-    //             });
-    //         });
-    //         return;
-    //     }
-    //     const newComment = {
-    //         username: "Mike Tyson",
-    //         userid: 1,
-    //         comment: comment,
-    //         postId: post.id,
-    //         userProfilePicUrl: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    //     }
-    //     if(!comments){
-    //         console.log("no comments");
-    //         setComments([newComment]);
-    //         // toggleComments()
-    //         return;
-    //     }
-    //     console.log("comments", comments);
-    //     setComments([ newComment, ...comments]);
-    // }
-
-
     return (
 
         <Card sx={{width: "100%", border: "1 grey solid"}}>
-            <CardContent sx={{display: 'flex', flexDirection: "column", gap: 2}}>
-                <Box sx={{display: 'flex', alignItems: 'flex-start', gap: 1}}>
-                    <Avatar variant="square" sx={{
-                        bgcolor: 'secondary.main',
-                        width: 24,
-                        height: 24
-                    }}>{post.username?.charAt(0).toUpperCase()}</Avatar>
-                    <Typography variant="subtitle2" component="div">
-                        {post.username}
-                    </Typography>
-                </Box>
+            <CardActionArea
+                onClick={() => {
+                    navigate(`/community/thread`)
+                    // window.location.href = `/contract/edit?contractId=${contractId}&color=${encodeURIComponent(color)}&default=${true}`;
+                }}
+            >
+                <CardHeader
+                    avatar={
+                        <Avatar sx={{ bgcolor: 'secondary.main' }} aria-label="recipe">
+                            {post.username.charAt(0).toUpperCase()}
+                        </Avatar>
+                    }
+                    title={post.username}
+                    subheader={new Date(post.createdAt).toLocaleDateString()}
+                />
                 {post.imageUrl && (
                     <CardMedia
                         component="img"
-                        height="400"
+                        height="150"
                         image={post.imageUrl}
                         alt="User post"
                     />
                 )}
-            </CardContent>
-            {!post.imageUrl && (
-                <Divider/>
-            )}
             {post.caption && (
                 <CardContent sx={{
                     display: "flex", alignItems: "center", justifyContent: !post.imageUrl ? "center" : "unset",
-                    maxHeight: "50px",
+                    height: "100px",
                     mt: 0, mb: 0, pt: post.imageUrl ? 0 : 3
                 }}>
-                    <Typography variant={post.imageUrl ? "subtitle1" : "h6"} color="black"
+                    <Typography variant={"h6"} color="black"
                                 sx={{color: "black"}}
                     >
                         {post.caption}
                     </Typography>
                 </CardContent>
             )}
+            </CardActionArea>
+
             <CardActions disableSpacing sx={{
                 display: "flex",
+                justifyContent:"center",
                 flexDirection: "row", mt: 0, mb: 0, pt: 0, pb: 0
             }}>
                 <Box sx={{display: "flex", alignItems: "center"}}>
@@ -243,52 +204,19 @@ const Post = ({post}) => {
                         {post.likes}
                     </Typography>
                 </Box>
-                {university.featureFlags.POST_COMMENTING && (
-                <Box sx={{display: "flex", alignItems: "center"}}>
-                    <IconButton
-                        onClick={toggleComments}
-                        sx={{'& svg': {fontSize: 30}}}>
-                        <CommentIcon/>
-                    </IconButton>
+                <Box sx={{display: "flex", alignItems: "center", gap:0.5}}>
+                        <GroupsTwoToneIcon fontSize="large" sx={{color:"grey"}} />
                     <Typography variant="body2" component="div">
                         {post.commentIds?.length}
                     </Typography>
                 </Box>
-                )}
+
             </CardActions>
-            {university.featureFlags.POST_COMMENTING && ( <Divider/> )}
-            <Box sx={{m: "10px"}}>
-                {university.featureFlags.POST_COMMENTING && (
-                        <CommentInput
-                            setReplyWhom={setReplyWhom}
-                            username={post.username}
-                            handleComment={addComment}
-                            replyWhom={replyWhom}/>
 
-                )}
-
-                {/*<Avatar variant="cirle"  sx={{ bgcolor: 'secondary.main', width: 35, height: 35  }}>{post.username.charAt(0).toUpperCase()}</Avatar>*/}
-                {/*<OutlinedInput sx={{width: "100%", borderRadius:"10px"}} placeholder="Add a comment" size="small"*/}
-                {/*               endAdornment={*/}
-                {/*    <InputAdornment position="end">*/}
-                {/*        <IconButton edge="end" onClick={addComment} >*/}
-                {/*            <MapsUgc />*/}
-                {/*        </IconButton>*/}
-                {/*    </InputAdornment>*/}
-                {/*}*/}
-                {/*    />*/}
-            </Box>
-            {comments && (
-            <Collapse in={openComments} timeout="auto" unmountOnExit>
-                <Comments comments={comments}
-                          setReplyWhom={setReplyWhom}
-                          setCommentOwnerId={setCommentId}
-                />
-            </Collapse>
-                )}
+            <Divider/>
         </Card>
 
     );
 };
 
-export default Post;
+export default ThreadCard;

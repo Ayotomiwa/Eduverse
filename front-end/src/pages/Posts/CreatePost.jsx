@@ -2,10 +2,12 @@ import {Box, Button, lighten, SvgIcon, Typography} from "@mui/material";
 import {PlusIcon} from "lucide-react";
 import ImageUploadModal from "./ImageUploadModal.jsx";
 import PollCreationModal from "./PollCreationModal.jsx";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
+import UserContext from "../../hooks/UserProvider.jsx";
 
 const CreatePost = ({setNewPost}) => {
+
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [caption, setCaption] = useState('');
