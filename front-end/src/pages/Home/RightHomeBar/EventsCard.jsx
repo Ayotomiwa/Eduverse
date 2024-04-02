@@ -60,7 +60,9 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
     },
 }));
 
-const EventsCard = ({open, handleOpen, maxHeight="45vh"}) => {
+const EventsCard = ({open, handleOpen, maxHeight="45vh",
+                        borderRadius = "12px",
+                        showButton=true}) => {
 
 
     const handleClick = (event) => {
@@ -68,7 +70,7 @@ const EventsCard = ({open, handleOpen, maxHeight="45vh"}) => {
     };
 
     return (
-        <Card sx={{ bgcolor: "white", borderRadius: "12px", overflow: "hidden", width:"100%"}}>
+        <Card sx={{ bgcolor: "white", borderRadius:borderRadius, overflow: "hidden", width:"100%"}}>
             <CustomListItemButton id="Events" onClick={handleClick}>
                 <Avatar sx={{ mr: 1 }}>
                     <img width="30" height="30" src="https://img.icons8.com/stickers/100/planner.png" alt="planner"/>
@@ -121,9 +123,11 @@ const EventsCard = ({open, handleOpen, maxHeight="45vh"}) => {
                             />
                         </ListItem>
                     ))}
+                    {showButton && (
                     <ListItemButton size="small" sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                         <ListItemText primary="View all Events"/>
                     </ListItemButton>
+                        )}
                 </List>
             </Collapse>
             </Box>

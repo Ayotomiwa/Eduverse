@@ -14,7 +14,7 @@ export default function SimpleTab({tabs, handleTabChange}) {
 
 
     const handleTab = (event, newValue) => {
-        console.log(newValue);
+        // console.log(newValue);
         setTabValue(newValue);
         handleTabChange(newValue);
     }

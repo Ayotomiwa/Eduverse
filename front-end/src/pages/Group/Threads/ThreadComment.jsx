@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {
     Avatar,
@@ -17,16 +17,53 @@ import {
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 import {useNavigate} from "react-router-dom";
+import CommentInput from "../../../components/CommentInput.jsx";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
-const ThreadComment = ({threadComment}) => {
+const ThreadComment = ({threadComment, setCommentAdded}) => {
+    const{user} = useContext(UserContext);
     const navigate = useNavigate();
-    const [isLikedButton, setIsLikedButton] = useState(false)
+    const [openComments, setOpenComments] = useState(false);
+    const [isLikedButton, setIsLikedButton] = useState(false);
+    const [newReply, setNewReply] = useState(null);
     const [isLikedByUser, setIsLikeByUser] = useState(false);
-    const userId = 1;
 
-            const handleLike = () =>{
 
-            }
+
+    const handleLike = () =>{
+
+    }
+
+
+
+    useEffect(() => {
+        if(newReply){
+            // console.log("newReply", newReply);
+            handleReply();
+        }
+    },[newReply]);
+
+    const handleComment = (comment) => {
+        console.log("comment", comment);
+        setNewReply({
+            comment: comment,
+            username: user.username,
+            userId: user.id,
+        });
+    }
+
+
+    const handleReply = () => {
+        axios.post(`http://localhost:8222/api/group-service/discussions/comments/${threadComment.id}/reply`, newReply)
+            .then(response => {
+                if(response.status === 200){
+                    console.log("reply added", response.data);
+                    setCommentAdded(true);
+                }
+            }).catch(error => {
+            console.log(error);
+            });
+    }
 
     return (
 
@@ -45,17 +82,17 @@ const ThreadComment = ({threadComment}) => {
                 <Card sx={{ m: 2, p:1, mt:0,
                     backgroundColor: "primary.light"}}>
                     <CardContent sx={{display: "flex", flexDirection:"column"}}>
-                        <Box sx={{display:"flex", flexDirection:"row", gap:2}}>
+                        <Box sx={{display:"flex", flexDirection:"row", gap:1}}>
                             <Typography variant="caption" color="white">
-                                {threadComment.username} -
+                               Original post by {threadComment.parentComment.username} -
                             </Typography>
                             <Typography variant="caption" color="white">
-                                {new Date(threadComment.createdAt).toLocaleDateString()}
+                                {new Date(threadComment.parentComment.createdAt).toLocaleDateString()}
                             </Typography>
                         </Box>
                         <Typography variant="caption" color="white"
                         >
-                            {threadComment.message}
+                            {threadComment.parentComment.comment}
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing sx={{
@@ -71,13 +108,13 @@ const ThreadComment = ({threadComment}) => {
                                         <FavoriteBorderOutlined fontSize="small" sx={{color: "white"}}/>
                                     )}
                             <Typography variant="subtitle2" component="div">
-                                {threadComment.likes}
+                                {threadComment.parentComment.likesIds?.length}
                             </Typography>
                         </Box>
                         <Box sx={{display: "flex", alignItems: "center", gap: 0.5}}>
                             <GroupsTwoToneIcon fontSize="small" sx={{color: "white"}}/>
                             <Typography variant="caption" component="div">
-                                {threadComment.commentIds?.length}
+                                {threadComment.parentComment.count}
                             </Typography>
                         </Box>
                     </CardActions>
@@ -90,7 +127,7 @@ const ThreadComment = ({threadComment}) => {
                 <Typography variant="subtitle2" color="black"
                             sx={{color: "black"}}
                 >
-                    {threadComment.message}
+                    {threadComment.comment}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing sx={{
@@ -123,12 +160,20 @@ const ThreadComment = ({threadComment}) => {
 
                 </Box>
                 <Box>
-                    <Button variant="contained" color="secondary">
+                    <Button
+                        onClick={() => setOpenComments(!openComments)}
+                        variant="contained" color="secondary">
                         Reply
                     </Button>
                 </Box>
-
             </CardActions>
+            <Collapse in={openComments} timeout="auto" unmountOnExit>
+                <Box sx={{p: 2, alignSelf: "flex-end", width: "100%", boxSizing: 'border-box'}}>
+                    <CommentInput
+                    handleComment={handleComment}
+                    />
+                </Box>
+            </Collapse>
         </Card>
     );
 };

@@ -1,30 +1,101 @@
 import {
     AppBar,
-    Box, lighten,
+    Box, CircularProgress, lighten,
     Typography
 } from "@mui/material";
 import GroupCard from "./GroupCard.jsx";
 import GroupPageTopBar from "./GroupPageTopBar.jsx";
+import {useContext, useEffect, useState} from "react";
+import UserContext from "../../hooks/UserProvider.jsx";
+import axios from "axios";
 
 
 const Groups = () => {
+    const [groups, setGroups] = useState([]);
+    const [tabValue, setTabValue] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const {user, university} = useContext(UserContext);
 
 
-    const contracts  = [
-        { title: 'Asset Purchase Agreement', description: 'Outlines the terms of the sale and purchase of a company\'s assets.' },
-        { title: 'Brand Licensing Agreement Template', description: 'Allows one party to use another\'s brand, logo, or name for a specified purpose.' },
-        { title: 'Collaboration Agreement Template', description: 'A contract between parties to work together on a project or venture.' },
-        { title: 'Data Use Agreement Template', description: 'Governs how data, particularly sensitive or proprietary, can be used and shared.' },
-        { title: 'Lease', description: 'A contract conveying land, property, or services to another for a specified time against periodic payment.' },
-        { title: 'Tenancy Agreement Template', description: 'A contract between a landlord and tenant outlining rental property terms and conditions.' },
-        { title: 'Data Use Agreement Template', description: 'Governs how data, particularly sensitive or proprietary, can be used and shared.' },
-        { title: 'Lease', description: 'A contract conveying land, property, or services to another for a specified time against periodic payment.' },
-        { title: 'Tenancy Agreement Template', description: 'A contract between a landlord and tenant outlining rental property terms and conditions.' },
-        { title: 'Data Use Agreement Template', description: 'Governs how data, particularly sensitive or proprietary, can be used and shared.' },
-        { title: 'Lease', description: 'A contract conveying land, property, or services to another for a specified time against periodic payment.' },
-        { title: 'Tenancy Agreement Template', description: 'A contract between a landlord and tenant outlining rental property terms and conditions.' },
-    ];
+    useEffect(() => {
+        setGroups([]);
+        setLoading(true);
+        setSearchTerm('');
+        if(tabValue === 0){
+            fetchMyGroups();
+        }
+        else{
+            fetchAllGroups();
+        }
 
+    },[tabValue]);
+
+
+
+    useEffect(() => {
+        if(searchTerm !== ''){
+            if(tabValue === 0){
+                searchMyGroups();
+            }
+            else{
+                searchAllGroups();
+            }
+        }
+    }, [searchTerm]);
+
+    const fetchAllGroups = ()=> {
+        axios.get(`http://localhost:8222/api/group-service/university/${university.university.id}/groups`)
+            .then(response => {
+                setGroups(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Failed to fetch groups", error);
+                setLoading(false);
+            });
+    }
+
+
+    const fetchMyGroups = () =>{
+        axios.get(`http://localhost:8222/api/group-service/user/${user.id}/groups`)
+            .then(res => {
+                setGroups(res.data)
+                setLoading(false);
+            }).catch(error => {
+                setLoading(false);
+            console.log(error);
+        });
+    }
+
+
+    const searchAllGroups = () => {
+        axios.get(`http://localhost:8222/api/group-service/university/${university.university.id}/groups/search?name=${searchTerm}`)
+            .then(response => {
+                setGroups(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Failed to search groups", error);
+                setLoading(false);
+            });
+    }
+
+    const searchMyGroups = () => {
+        axios.get(`http://localhost:8222/api/group-service/user/${user.id}/groups/search?name=${searchTerm}`)
+            .then(response => {
+                setGroups(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Failed to search groups", error);
+                setLoading(false);
+            });
+    }
+
+    const resetList = () => {
+        setGroups([]);
+    }
 
     const softColors = [
         '#f8c6d1',
@@ -44,7 +115,7 @@ const Groups = () => {
 
 
     return (
-        <Box sx={{minHeight:"100vh", p:0, border:"1px red solid"}}>
+        <Box sx={{minHeight:"100vh", p:0}}>
             <Box
                 sx={{
                    p: 2,
@@ -54,8 +125,24 @@ const Groups = () => {
                     zIndex: 2000
                 }}
             >
-                <GroupPageTopBar />
+                <GroupPageTopBar
+                 setTabValue={setTabValue}
+                 setSearchTerm={setSearchTerm}
+                 resetList={resetList}
+                />
             </Box>
+            {loading? (
+            <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"100vh"}}>
+                <CircularProgress />
+            </Box>
+                ) : (
+                groups.length === 0 ? (
+                <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh"}}>
+                    <Typography variant="h5" color="secondary">
+                        No groups found
+                    </Typography>
+                </Box>
+                ) : (
             <Box sx={{
                 mt: 2,
                 display: 'flex',
@@ -63,15 +150,15 @@ const Groups = () => {
                 justifyContent: 'center',
                 gap: 4,
             }}>
-                {contracts.map((contract, index) => (
+                {groups.map((group) => (
                     <GroupCard
-                        key={index}
-                        title={contract.title}
-                        description={contract.description}
-                        color={softColors[index % softColors.length]}
+                        key={group.id}
+                        group={group}
                     />
                 ))}
             </Box>
+            )
+            )}
         </Box>
     );
 };

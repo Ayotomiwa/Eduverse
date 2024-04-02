@@ -3,14 +3,14 @@ import {useNavigate} from "react-router-dom";
 import profileImage from "../../assets/14358.jpg"
 
 
-export default function GroupCard({title, description, image, color}) {
+export default function GroupCard({group}) {
     const navigate = useNavigate();
 
 
 
     return (
         <Card elevation={8} sx={{
-            maxWidth: 270, mb: 4,
+            width: 270, mb: 4,
             backgroundColor: "white",
             elevation: 6,
             border: "0.1px solid grey",
@@ -18,22 +18,22 @@ export default function GroupCard({title, description, image, color}) {
         }}>
             <CardActionArea
                 onClick={() => {
-                    navigate(`/community/`)
-                    // window.location.href = `/contract/edit?contractId=${contractId}&color=${encodeURIComponent(color)}&default=${true}`;
+                    navigate(`/communities/${group.id}`)
+                    // window.location.pathname = `/communities/${group.id}`;
                 }}
             >
                 <CardMedia
                     component="img"
                     height="250"
-                    image={profileImage}
+                    image={group.profileUrl}
                 />
                 <CardContent>
                     <Typography variant="h6"
                     >
-                        {title}
+                        {group.name}
                     </Typography>
                     <Typography variant="subtitle2" color="grey">
-                        {description || "Default description if not provided"}
+                        {group.description || "Default description if not provided"}
                     </Typography>
                 </CardContent>
             </CardActionArea>

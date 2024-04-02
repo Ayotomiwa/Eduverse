@@ -3,15 +3,11 @@ import SimpleTab from "../../components/SimpleTab.jsx";
 import {useState} from "react";
 import {SearchBar} from "../../components/SearchBar.jsx";
 
-const GroupPageTopBar = () => {
+const GroupPageTopBar = ({setTabValue, setSearchTerm, resetList}) => {
 
-    const [tabValue, setTabValue] = useState(0);
+
     const tabs = ["My Groups", "All Groups"];
 
-    const tabConfig ={
-        0: "Mine",
-        1: "All",
-    }
 
     const handleTabChange = (newValue) => {
         setTabValue(newValue);
@@ -28,7 +24,11 @@ const GroupPageTopBar = () => {
                     </Typography>
                 </Box>
                 <Box sx={{width:"350px"}}>
-                    <SearchBar />
+                    <SearchBar
+                        placeHolder="Search for Groups"
+                        setSearchTerm={setSearchTerm}
+                        resetList={resetList}
+                    />
                 </Box>
                 <Box>
                     <SimpleTab

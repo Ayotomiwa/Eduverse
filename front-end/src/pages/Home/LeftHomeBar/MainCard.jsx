@@ -50,7 +50,7 @@ const MainCard = () => {
             window.location.pathname = "/admin";
             return;
         }
-        navigate(features[label]);
+        window.location.pathname= features[label];
     }
 
 

@@ -1,81 +1,121 @@
-import {Box, Button} from "@mui/material";
-import {useEffect, useState} from "react";
+import {Box, Button, CircularProgress, Typography} from "@mui/material";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
-import ThreadCard from "./ThreadCard.jsx";
+import Thread from "./Thread.jsx";
+import UserContext from "../../../hooks/UserProvider.jsx";
+import CreateThreadModal from "./CreateThreadModal.jsx";
 
-const Threads = ({newPost, selectedTab}) => {
-
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false);
+const Threads = ({community}) => {
     const [page, setPage] = useState(0);
+    const {user} = useContext(UserContext);
+    const [discussions, setDiscussions] = useState([]);
+    const [threadModalOpen, setThreadModalOpen] = useState(false);
+    const [discussion, setDiscussion] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [loadMore, setLoadMore] = useState(false);
-    const universityId = 1;
-    const userId = 1;
-    const publicUrl = `http://localhost:8080/api/post-service/posts/${universityId}/public?page=${page}&size=20&sortBy=createdAt`;
-    const friendsUrl = `http://localhost:8080/api/post-service/posts/${userId}/friends?page=${page}&size=20&sortBy=createdAt`;
-
-    const fetchUrl = selectedTab !== 0 ? publicUrl : friendsUrl;
-
-    console.log("fetchUrl", fetchUrl);
 
     useEffect(() => {
-        fetchPosts();
-    }, [selectedTab, page]);
-
+        fetchDiscussions();
+    }, [page, community]);
 
 
     useEffect(() => {
-        if (newPost) {
-            setPosts(prevPosts => [newPost, ...prevPosts])
+        if (discussion) {
+            postDiscussion();
         }
-    }, [newPost]);
+    }, [discussion]);
 
 
-
-    const fetchPosts = () => {
-        axios.get(fetchUrl)
-            .then((response) => {
-                if(loadMore){
-                    setPosts([posts, ...response.data.content])
-                }
-                else{
-                    // console.log("response", response.data.content);
-                    setPosts(response.data.content);
-                }
+    const fetchDiscussions = () => {
+        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/discussions?page=${page}`)
+            .then(response => {
+                // console.log(response.data.content);
+                setDiscussions(response.data.content);
                 setLoading(false);
-            }).catch((error) => {
-            console.error("Error fetching posts:", error);
-            setLoading(false);
-        });
+            })
+            .catch(error => {
+                console.error("Failed to fetch discussions", error);
+                setLoading(false);
+            });
     }
 
 
-    const handleLoadMore = () => {
-        if(posts.length == 0){
-            return
-        }
-        setLoadMore(true)
-        setPage((prev) => prev + 1)
+    const postDiscussion = () => {
+        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/discussions`, discussion)
+            .then(response => {
+                console.log("response", response.data);
+                setDiscussions( [response.data, ...discussions]);
+            })
+            .catch(error => {
+                console.error("Failed to post discussion", error);
+            });
+    }
 
+    const closeModal = () => {
+        setThreadModalOpen(false);
+    }
+
+    const handleSubmission = (topic) => {
+        setDiscussion({
+            topic: topic,
+            groupId: community.id,
+            userId: user.id,
+            username: user.username
+        });
     }
 
 
     return (
         <>
-            <Box sx={{
-                display: "flex", flexDirection: "column", JustifyContent: "center",
-                alignItems: "center", gap: 4, mb: "150px", minHeight: "100vh"
-            }}>
-                {posts.map((post, index) => (
-                    <ThreadCard key={posts.length - index} post={post} posts={posts}/>
+            {!community?.moderatorsIds?.includes(user.id) && (
+                <>
+                    <Button
+                        onClick={() => setThreadModalOpen(true)}
+                        sx={{mb: 2}}
+                        fullWidth
+                        color="secondary"
+                        startIcon={<img width="30" height="30"
+                                        src="https://img.icons8.com/stickers/100/communication.png"
+                                        alt="communication"/>}
+                    >
+                        Create A Discussion
+                    </Button>
+                    <CreateThreadModal
+                        open={threadModalOpen}
+                        closeModal={closeModal}
+                        setDiscussion={setDiscussion}
+                        handleSubmission={handleSubmission}
+                    />
+                </>
+            )}
+            {loading ? (
+                <Box>
+                    <CircularProgress color="secondary"/>
+                </Box>
+            ) : (
+                discussions.length === 0 ? (
+                    <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh"}}>
+                        <Typography variant="h6">
+                            No discussions found
+                        </Typography>
+                    </Box>
+                ) : (
+                    <Box>
+                        <Box sx={{
+                            display: "flex", flexDirection: "column", justifyContent: "center",
+                            alignItems: "center", gap: 4, mb: "150px", minHeight: "20vh"
+                        }}>
+                            {discussions.map((disc) => (
+                                <Thread key={disc.id} discussion={disc}/>
+                            ))}
+                        </Box>
+                        <Box>
+                            <Button>
+                                Load more
+                            </Button>
+                        </Box>
+                    </Box>
                 ))}
-            </Box>
-            <Box>
-                <Button onClick={handleLoadMore}>
-                    Load more
-                </Button>
-            </Box>
-
         </>
     );
 }

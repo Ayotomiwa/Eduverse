@@ -30,7 +30,7 @@ const Home = (props) => {
 
 
     const isNonSidebarRoute = useCallback(() => {
-        return noneRightSideBarRoutes.includes(currentPath) || currentPath.startsWith("/community")
+        return noneRightSideBarRoutes.includes(currentPath) || currentPath.startsWith("/community") || currentPath.startsWith("/communities");
     }, [currentPath]);
 
 
@@ -52,6 +52,9 @@ const Home = (props) => {
         <ThemeProvider theme={theme}>
         <Box sx={{
             overFlowX: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
             // backgroundColor:darken ("#e6e6fa", 0.02),
             minHeight: "100vh",
             width:"100%",

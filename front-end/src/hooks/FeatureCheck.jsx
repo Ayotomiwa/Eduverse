@@ -3,14 +3,10 @@ import UserContext from "./UserProvider";
 import { Navigate } from "react-router-dom";
 
 const BusinessContent = ({ children }) => {
-    const { user, isLoading} = useContext(UserContext);
+    const {university} = useContext(UserContext);
 
 
-        if (isLoading) {
-            return null;
-        }
-
-            if(user && user.businessId){
+            if(university && university.featureFlags.BUSINESS){
                 return children;
             }
             else{

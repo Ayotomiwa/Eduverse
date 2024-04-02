@@ -91,7 +91,7 @@ const CreatePost = ({setNewPost}) => {
 
     const getSignedUrl = () => {
         console.log("In get signed" + pictureFileName);
-        return axios.get(`http://localhost:8080/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`)
+        return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`)
             .then((response) => {
                 return response.data;
             })
@@ -104,7 +104,7 @@ const CreatePost = ({setNewPost}) => {
 
     const saveToDatabase = () => {
         console.log("saving to database");
-        axios.post("http://localhost:8080/api/post-service/posts", postToUpload)
+        axios.post("http://localhost:8222/api/post-service/posts", postToUpload)
             .then((response) => {
                 if (response.status === 200) {
                     // console.log("Post saved to database");

@@ -30,10 +30,10 @@ const Post = ({post}) => {
     const [replyWhom, setReplyWhom] = useState(null);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [isLikedByUser, setIsLikeByUser] = useState(false);
-    const commentsUrl = `http://localhost:8080/api/post-service/${post.id}/comments`;
-    const fetchCommentsUrl = `http://localhost:8080/api/post-service/${post.id}/comments`;
-    const replyUrl = `http://localhost:8080/api/post-service/comments/${commentId}/reply`;
-    const likeUrl = `http://localhost:8080/api/post-service/posts/${post.id}/likes/${isLikedButton}?userId=1`;
+    const commentsUrl = `http://localhost:8222/api/post-service/${post.id}/comments`;
+    const fetchCommentsUrl = `http://localhost:8222/api/post-service/${post.id}/comments`;
+    const replyUrl = `http://localhost:8222/api/post-service/comments/${commentId}/reply`;
+    const likeUrl = `http://localhost:8222/api/post-service/posts/${post.id}/likes/${isLikedButton}?userId=1`;
     const [comments, setComments] = useState(null);
 
     const userId = 1;

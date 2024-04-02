@@ -107,10 +107,9 @@ export const UserProvider = ({ children }) => {
                        GROUP: true,
                        CONTENT_POSTING: true,
                        CONTENT_FEED: true,
-                       EVENTS: false,
+                       EVENTS: true,
                        MODULE: true,
                        POST_COMMENTING: true,
-
                    },
                    authorizedUsers: {
                        GROUP: "ADMIN",

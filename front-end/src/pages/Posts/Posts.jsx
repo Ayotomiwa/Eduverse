@@ -11,8 +11,8 @@ const Posts = ({newPost, selectedTab}) => {
     const [loadMore, setLoadMore] = useState(false);
     const universityId = 1;
     const userId = 1;
-    const publicUrl = `http://localhost:8080/api/post-service/posts/${universityId}/public?page=${page}&size=20&sortBy=createdAt`;
-    const friendsUrl = `http://localhost:8080/api/post-service/posts/${userId}/friends?page=${page}&size=20&sortBy=createdAt`;
+    const publicUrl = `http://localhost:8222/api/post-service/posts/${universityId}/public?page=${page}&size=20&sortBy=createdAt`;
+    const friendsUrl = `http://localhost:8222/api/post-service/posts/${userId}/friends?page=${page}&size=20&sortBy=createdAt`;
 
     const fetchUrl = selectedTab !== 0 ? publicUrl : friendsUrl;
 

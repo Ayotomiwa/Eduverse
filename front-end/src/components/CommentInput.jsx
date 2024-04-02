@@ -8,19 +8,19 @@ const CommentInput = ({username,
                           replyWhom}) => {
 
     const [inputPlaceholder, setInputPlaceholder] = useState("");
-    const [inputValue, setInputValue] = useState("");
+    // const [inputVlue, setInputValue] = useState("");
 
 
 
     useEffect(() => {
         if(replyWhom){
-            if(inputValue.startsWith(`@`)){
-                setInputValue(inputValue.replace(inputValue , `@${replyWhom} `));
+            if(inputPlaceholder.startsWith(`@`)){
+                setInputPlaceholder(inputPlaceholder.replace(inputPlaceholder , `@${replyWhom} `));
+                return
             }
-            else if(replyWhom !== ""){
-                setInputValue(`@${replyWhom} ${inputValue}`);
+            if(replyWhom !== ""){
+                setInputPlaceholder(`@${replyWhom} ${inputPlaceholder}`);
             }
-            setInputPlaceholder(inputValue)
         }
     }, [replyWhom]);
 
@@ -58,6 +58,11 @@ const CommentInput = ({username,
                            onChange={(e) => handleInputChange(e)}
                            placeholder="Add a comment"
                            size="small"
+                           onKeyPress={(e) => {
+                               if (e.key === 'Enter') {
+                                   addComment();
+                               }
+                           }}
                            endAdornment={
                                <InputAdornment position="end">
                                    <IconButton edge="end" onClick={addComment}>
