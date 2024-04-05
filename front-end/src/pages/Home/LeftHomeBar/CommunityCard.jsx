@@ -2,7 +2,7 @@ import {
     Avatar,
     Box,
     Card,
-    Collapse,
+    Collapse, Divider,
     List,
     ListItemAvatar,
     ListItemButton,
@@ -14,12 +14,14 @@ import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import UserContext from "../../../hooks/UserProvider.jsx";
+import {useNavigate} from "react-router-dom";
 
 const ModuleCard = ({maxHeight}) => {
 
     const [open, setOpen] = useState(true);
-    const {user} = useContext(UserContext);
+    const {user, jwtToken} = useContext(UserContext);
     const [groups, setGroups] = useState([])
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setOpen(!open);
@@ -32,7 +34,11 @@ const ModuleCard = ({maxHeight}) => {
     },[]);
 
     const fetchMyGroups = () =>{
-        axios.get(`http://localhost:8222/api/group-service/user/${user.id}/groups`)
+        axios.get(`http://localhost:8222/api/group-service/users/${user.id}/groups`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(res => {
                 setGroups(res.data)
             }).catch(error => {
@@ -41,6 +47,8 @@ const ModuleCard = ({maxHeight}) => {
     }
 
     const handleMenuClick = (id) => {
+        console.log("Clicked on: ", id);
+        // navigate(`/communities/${id}`, {replace: false});
         window.location.pathname = `/communities/${id}`;
     }
 
@@ -79,16 +87,17 @@ const ModuleCard = ({maxHeight}) => {
                     },
                     maxHeight: maxHeight }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Divider />
                         <List component="div" disablePadding>
                             {groups.map((community, index) => {
                                 return(
                                     <ListItemButton sx={{pl: 4}}
                                                     onClick={() => handleMenuClick(community.id)}
                                                     key={index}>
-                                        <ListItemAvatar>
-                                            <Avatar variant="square"  sx={{ bgcolor: 'green', width: 24, height: 24  }}>
-                                                {community.profilePic}</Avatar>
-                                        </ListItemAvatar>
+                                        {/*<ListItemAvatar>*/}
+                                        {/*    <Avatar variant="square"  sx={{ bgcolor: 'green', width: 24, height: 24  }}>*/}
+                                        {/*        {community.profilePicUrl}</Avatar>*/}
+                                        {/*</ListItemAvatar>*/}
                                         <ListItemText primary={community.name}/>
                                     </ListItemButton>
                                 )

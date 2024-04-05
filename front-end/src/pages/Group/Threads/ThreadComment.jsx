@@ -21,7 +21,7 @@ import CommentInput from "../../../components/CommentInput.jsx";
 import UserContext from "../../../hooks/UserProvider.jsx";
 
 const ThreadComment = ({threadComment, setCommentAdded}) => {
-    const{user} = useContext(UserContext);
+    const{user, jwtToken} = useContext(UserContext);
     const navigate = useNavigate();
     const [openComments, setOpenComments] = useState(false);
     const [isLikedButton, setIsLikedButton] = useState(false);
@@ -54,7 +54,11 @@ const ThreadComment = ({threadComment, setCommentAdded}) => {
 
 
     const handleReply = () => {
-        axios.post(`http://localhost:8222/api/group-service/discussions/comments/${threadComment.id}/reply`, newReply)
+        axios.post(`http://localhost:8222/api/group-service/discussions/comments/${threadComment.id}/reply`, newReply,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 if(response.status === 200){
                     console.log("reply added", response.data);

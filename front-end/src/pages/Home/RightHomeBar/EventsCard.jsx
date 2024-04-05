@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {
     Avatar,
     Box,
@@ -11,47 +11,11 @@ import {
     ListItemText,
     Typography
 } from "@mui/material";
-import { Event as EventIcon, ExpandLess, ExpandMore, LocationOn, AccessTime } from "@mui/icons-material";
+import { ExpandLess, ExpandMore, LocationOn, AccessTime, CalendarMonth } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
+import UserContext from "../../../hooks/UserProvider.jsx";
+import axios from "axios";
 
-const eventsData = [
-    {
-        id: 1,
-        title: "Engineering Meetup",
-        dateTime: "2023-10-05 18:00",
-        location: "BR307",
-        group: "Engineering Club"
-    },
-    {
-        id: 2,
-        title: "Mathematics Workshop",
-        dateTime: "2023-10-10 15:00",
-        location: "FW115",
-        group: "Math Society"
-    },
-    {
-        id: 3,
-        title: "University Open Day",
-        dateTime: "2023-11-01 09:00",
-        location: "Library",
-        group: "University"
-    },
-    {
-        id: 4,
-        title: "Physics Seminar",
-        dateTime: "2023-11-15 14:00",
-        location: "BR307",
-        group: "Physics Department"
-    },
-    {
-        id: 5,
-        title: "Chemistry Lecture",
-        dateTime: "2023-11-20 12:00",
-        location: "FW115",
-        group: "Chemistry Department"
-    }
-
-];
 
 const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
     padding: theme.spacing(1),
@@ -63,6 +27,29 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
 const EventsCard = ({open, handleOpen, maxHeight="45vh",
                         borderRadius = "12px",
                         showButton=true}) => {
+
+
+    const{user, jwtToken} = useContext(UserContext);
+    const [eventsData, setEventsData] = useState([]);
+
+    useEffect(() => {
+        fetchEvents();
+    },[]);
+
+
+    const fetchEvents = () => {
+        axios.get(`http://localhost:8222/api/event-service/users/${user.id}/events`,
+            {headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }})
+            .then(response => {
+                setEventsData(response.data);
+                console.log("events", response.data);
+            })
+            .catch(error => {
+                console.error("Failed to fetch events", error);
+            });
+    };
 
 
     const handleClick = (event) => {
@@ -96,27 +83,40 @@ const EventsCard = ({open, handleOpen, maxHeight="45vh",
                 maxHeight: {maxHeight}
             }}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-                <List sx={{ width: '100%' }}>
+                <List sx={{ width: '100%', boxSizing:"border-box" }}>
                     {eventsData.map((event) => (
                         <ListItem key={event.id} divider sx={{ display: "flex", alignItems: "center" }}>
                             <ListItemText
                                 primary={
-                                    <Typography variant="body1" color="text.primary">
-                                        {event.title}
+                                <>
+                                    <Typography variant="body1" color="text.primary"  textAlign="center"  sx={{mb:1}}   >
+                                        {event.name}
                                     </Typography>
+                                    <Typography variant="subtitle2" color="text.primary" textAlign="center"
+                                    sx={{m:0.5}}
+                                    >
+                                {event.description}
+                             </Typography>
+                                    </>
                                 }
                                 secondary={
                                     <>
-                                        <Typography variant="caption" sx={{ display: 'inline-flex', alignItems: 'center', color: "text.secondary" }}>
-                                            <AccessTime sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                                            {new Date(event.dateTime).toLocaleString()}
-                                        </Typography>
-                                        <Typography variant="caption" sx={{ display: 'inline-flex', alignItems: 'center', color: "text.secondary" }}>
-                                            <LocationOn sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                                            {event.location}
-                                        </Typography>
-                                        <Typography variant="caption" display="block" color="text.secondary">
-                                            Hosted by: {event.group}
+                                        <Box sx={{display:"flex", alignItems:"center", gap:1, justifyContent:"space-around"}}>
+                                            <Typography variant="caption" sx={{ display: 'inline-flex', alignItems: 'center', color: "text.secondary" }}>
+                                                <AccessTime sx={{ verticalAlign: 'middle' }} />
+                                                {event.date};
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ display: 'inline-flex', alignItems: 'center', color: "text.secondary" }}>
+                                                <CalendarMonth sx={{ verticalAlign: 'middle' }} />
+                                                {event.time}
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ display: 'inline-flex', alignItems: 'center', color: "text.secondary" }}>
+                                                <LocationOn sx={{ verticalAlign: 'middle', mr: 0.2 }} />
+                                                {event.location}
+                                            </Typography>
+                                        </Box>
+                                        <Typography variant="caption" display="block"  textAlign="center"   color="text.secondary">
+                                            Hosted by: {event.organizer}
                                         </Typography>
                                     </>
                                 }

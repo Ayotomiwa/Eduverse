@@ -42,7 +42,11 @@ const GroupEvents = ({community}) => {
     };
 
     const postEvent = () => {
-        axios.post(`http://localhost:8222/api/event-service/events`, eventData)
+        axios.post(`http://localhost:8222/api/event-service/events`, eventData,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 console.log("response", response.data);
             })
@@ -65,7 +69,7 @@ const GroupEvents = ({community}) => {
 
     return(
         <Box sx={{display: 'flex', flexDirection: "column", alignItems: "left", width:"100%", boxSizing:"border-box"}}>
-            {!community.moderatorsIds?.includes(user.id) && (
+            {community.moderatorsIds?.includes(user.id) && (
                 <Button
                     onClick={handleModalOpen}
                 fullWidth

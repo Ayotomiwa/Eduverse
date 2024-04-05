@@ -12,41 +12,67 @@ import UserContext from "../../hooks/UserProvider.jsx";
 import EventCalendar from "../../components/EventCalendar.jsx";
 import GroupEvents from "./Events/GroupEvents.jsx";
 import EditGroupProfileModal from "./EditGroupProfileModal.jsx";
+import useImageUpload from "../../hooks/useImageUpload.jsx";
 
-const GroupPage = ({setOpenEditModal}) => {
+const GroupPage = ({}) => {
     const {id} = useParams();
-    const {user} = useContext(UserContext);
+    const {user, jwtToken, university} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [community, setCommunity] = useState(null);
     const[editModalOpen, setEditModalOpen] = useState(false)
     const [tabValue, setTabValue] = useState(0);
+
+    const postUrl = `http://localhost:8222/api/group-service/university/${university.id}/groups`;
     const tabs = ["Threads", "About", "Events"];
+
+
+    const {setPicFileName, setPicData, setNewData, newDataSaved, newData,
+        setNewDataSaved
+    } =
+        useImageUpload(jwtToken, university, postUrl);
 
 
     const handleTabChange = (newValue) => {
         setTabValue(newValue);
     }
 
+
     useEffect(() => {
-        fetchCommunity()
-    }, [id]);
+        if(community && !newDataSaved){
+            return
+        }
+        fetchCommunity();
+    }, [id, newDataSaved]);
 
 
     const fetchCommunity = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${id}`)
+        axios.get(`http://localhost:8222/api/group-service/groups/${id}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 setCommunity(response.data);
-                // console.log("response", response.data);
+                console.log("Community: ", response.data);
                 setIsLoading(false);
+                setNewDataSaved(false);
             })
             .catch(error => {
                 console.error("Failed to fetch community", error);
             });
     }
 
+    const saveChanges= (community, data, fileName) => {
+        if(data && fileName){
+            setPicData(data);
+                setPicFileName(fileName);
+        }
+        setNewData(community);
+        console.log("saving changes", newData);
+    }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", mx: 5 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", mx: 4 }}>
             <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", gap: 2 }}>
                 <Box sx={{ width: "100%" }}>
                     <Card sx={{
@@ -54,7 +80,7 @@ const GroupPage = ({setOpenEditModal}) => {
                         alignItems: 'center',
                         mb: 2,
                         pb: 1,
-                        borderRadius: "12px",
+                        borderRadius: "0 0 12px 12px",
                         flexDirection: 'column',
                         position: "sticky",
                         zIndex: 1000,
@@ -65,8 +91,8 @@ const GroupPage = ({setOpenEditModal}) => {
                             flexDirection: "column",
                             width: "100%",
                         }}>
-                            <Box sx={{ position: 'relative', height: "40vh", overflow: "hidden" }}>
-                                <img src={"https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"} alt={community?.name} style={{ width: "100%", position: "absolute", top: 0, left: 0, objectFit: "cover" }} />
+                            <Box sx={{ position: 'relative', height: "40vh", overflow: "hidden"}}>
+                                <img src={community?.profilePicUrl} alt={community?.name} style={{ width: "100%", position: "absolute", top: 0, left: 0, objectFit: "cover" }} />
                                 <Box sx={{ position: 'absolute', top: 0, right: 10, p: 2 }}>
                                     <Button variant="contained" color="secondary" size="large">
                                         {community?.membersIds?.includes(user.id) ? "Leave" : "Join"}
@@ -100,7 +126,8 @@ const GroupPage = ({setOpenEditModal}) => {
                                         </Button>
                                         <EditGroupProfileModal open={editModalOpen} closeModal={() => setEditModalOpen(false)}
                                                                community={community}
-                                                               setCommunity={setCommunity}
+                                                              saveChanges={saveChanges}
+
                                             />
                                     </Box>
                                     <Box sx={{ alignSelf: "flex-end", mt: 1, px: 1, width:"50%" }}>

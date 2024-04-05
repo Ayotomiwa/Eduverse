@@ -16,7 +16,7 @@ const Feed = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [newPost, setNewPost] = useState(null);
     const [tabValue, setTabValue] = useState(0);
-    const {user, university} = useContext(UserContext)
+    const {university} = useContext(UserContext)
 
 
 
@@ -54,7 +54,7 @@ const Feed = () => {
                 justifyContent: "center",
                 position: "sticky",
                 zIndex: 1000,
-                top: university.featureFlags.CONTENT_POSTING ? -170 : -80
+                top: university?.featureFlags?.CONTENT_POSTING ? -170 : -80
             }}>
         <Paper sx={{
             padding: 2, pt: 0, pb: 0, mb: 1, width: "100%", borderRadius: "0 0 12px 12px",
@@ -75,7 +75,7 @@ const Feed = () => {
                 />
             </Box>
             <Divider/>
-            {university.featureFlags.CONTENT_POSTING && (
+            {university?.featureFlags?.CONTENT_POSTING && (
             <CreatePost
             setNewPost={setNewPost}
             newPost={newPost}

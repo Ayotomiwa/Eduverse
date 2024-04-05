@@ -1,10 +1,12 @@
 import Post from "./Post.jsx";
 import {Box, Button} from "@mui/material";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
+import UserContext from "../../hooks/UserProvider.jsx";
 
 const Posts = ({newPost, selectedTab}) => {
 
+    const {jwtToken} = useContext(UserContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
@@ -35,7 +37,10 @@ const Posts = ({newPost, selectedTab}) => {
 
 
     const fetchPosts = () => {
-        axios.get(fetchUrl)
+        axios.get(fetchUrl, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }})
             .then((response) => {
                 if(loadMore){
                     setPosts([posts, ...response.data.content])
@@ -60,73 +65,6 @@ const Posts = ({newPost, selectedTab}) => {
         setPage((prev) => prev + 1)
 
     }
-
-    // const [posts, setPosts] = useState([
-    //     {
-    //         username: "Jane Doe",
-    //         imageUrl: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    //         caption: "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
-    //         likes: 25,
-    //         comments: [
-    //             {
-    //                 username: "Dave Tyson",
-    //                 id: 1,
-    //                 desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-    //                 name: "John Doe",
-    //                 userId: 1,
-    //                 profilePicture: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    //                 replies: [
-    //                     {
-    //                         username: "Mike Tyson",
-    //                         id: 1,
-    //                         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-    //                         name: "John Doe",
-    //                         userId: 2,
-    //                         profilePicture:
-    //                             "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    //                     },
-    //                     {
-    //                         username: "Dave Castle",
-    //                         id: 2,
-    //                         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-    //                         name: "Jane Doe",
-    //                         userId: 3,
-    //                         profilePicture:
-    //                             "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    //                     }]
-    //             }]
-    //     }, {
-    //         username: "David Sloane",
-    //         id: 2,
-    //         desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-    //         name: "John Doe",
-    //         userId: 1,
-    //         profilePicture: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    //     },
-    //     {
-    //         id: 3,
-    //         username: "Ruth Doe",
-    //         caption: "Money is good",
-    //         imageUrl: null,
-    //         likes: 25,
-    //     },
-    //     {
-    //         id: 4,
-    //         username: "Ayotunde Doe",
-    //         imageUrl: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    //         caption: "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
-    //         likes: 25,
-    //
-    //     },
-    //     {
-    //         id: 5,
-    //         username: "James Madison",
-    //         imageUrl: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    //         caption: "Family",
-    //         likes: 25,
-    //     }
-    // ]);
-    //
 
 
     return (

@@ -25,7 +25,7 @@ import UserContext from "../../../hooks/UserProvider.jsx";
 const ThreadCardPage = () => {
 
     const {id} = useParams();
-    const {user} = useContext(UserContext);
+    const {user, jwtToken} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [newComment, setNewComment] = useState(null);
@@ -58,7 +58,11 @@ const ThreadCardPage = () => {
 
 
     const fetchThread = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/discussions/${id}`)
+        axios.get(`http://localhost:8222/api/group-service/groups/discussions/${id}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 // console.log("response", response.data);
                 setDiscussion(response.data);
@@ -72,7 +76,11 @@ const ThreadCardPage = () => {
     }
 
     const fetchComments = () => {
-        axios.get(`http://localhost:8222/api/group-service/discussions/${discussion.id}/comments?page=${page}&size=${SIZE}`)
+        axios.get(`http://localhost:8222/api/group-service/discussions/${discussion.id}/comments?page=${page}&size=${SIZE}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 // console.log("comments", response.data);
                 if (!comments || commentAdded) {
@@ -93,7 +101,11 @@ const ThreadCardPage = () => {
 
 
     const postComment = () => {
-        axios.post(`http://localhost:8222/api/group-service/discussions/${id}/comments`, newComment)
+        axios.post(`http://localhost:8222/api/group-service/discussions/${id}/comments`, newComment,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 if (response.status === 200) {
                     console.log("comment added", response.data);

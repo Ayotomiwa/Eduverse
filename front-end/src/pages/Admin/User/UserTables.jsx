@@ -1,10 +1,12 @@
 import PagesTable from "../../../components/PagesTable.jsx";
 import {Box, LinearProgress} from "@mui/material";
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import axios from "axios";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
 const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection}) => {
     const [loading, setLoading] = useState(false);
+    const{jwtToken, user, university} = useContext(UserContext);
 
 
     useEffect(() => {
@@ -29,7 +31,11 @@ const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection
 
 
     const fetchStudentUsers = () => {
-        axios.get("http://localhost:8080/api/user-service/university/1/admin/50/users?user-type=STUDENT&companyID=3420062")
+        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STUDENT`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 processUserData(response.data.content);
                 // console.log(response.data.content);
@@ -41,7 +47,11 @@ const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection
     }
 
     const fetchStaffUsers = () => {
-        axios.get(`http://localhost:8080/api/user-service/university/1/admin/50/users?user-type=STAFF&companyID=3420062`)
+        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STAFF`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 processUserData(response.data.content);
                 // console.log(response.data.content);

@@ -3,7 +3,7 @@ import SimpleTab from "../../components/SimpleTab.jsx";
 import {useState} from "react";
 import {SearchBar} from "../../components/SearchBar.jsx";
 
-const GroupPageTopBar = ({setTabValue, setSearchTerm, resetList}) => {
+const GroupsTopBar = ({setTabValue, setSearchTerm, resetList}) => {
 
 
     const tabs = ["My Groups", "All Groups"];
@@ -39,4 +39,4 @@ const GroupPageTopBar = ({setTabValue, setSearchTerm, resetList}) => {
             </Box>
     )
 }
-export default GroupPageTopBar;
+export default GroupsTopBar;

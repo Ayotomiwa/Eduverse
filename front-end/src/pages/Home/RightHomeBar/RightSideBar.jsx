@@ -9,6 +9,7 @@ const RightSideBar = () => {
 
     const [notificationOpen, setNotificationOpen] = useState(true);
     const [eventsOpen, setEventsOpen] = useState(false);
+    const[search, setSearch] = useState(false);
     const {user, university} = useContext(UserContext)
 
 
@@ -37,15 +38,18 @@ const RightSideBar = () => {
         <Box sx={{
             display: "flex", flexDirection: "column", height: "100%", gap:2
         }}>
-            <SearchCard/>
+            <SearchCard
+            setSearch={setSearch}
+            search={search}
+            />
             <NotificationCard
                 maxHeight={university.featureFlags.EVENTS? "44vh" : "54vh"}
-             open={notificationOpen}
+             open={notificationOpen && !search}
              handleOpen={handleOpen}
             />
             {university.featureFlags.EVENTS && (
             <EventsCard
-                open={eventsOpen}
+                open={eventsOpen && !search}
                 handleOpen={handleOpen}
             />
                 )}

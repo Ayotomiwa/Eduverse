@@ -9,18 +9,19 @@ import {useCallback, useEffect, useState} from "react";
 
 
 const Home = (props) => {
+
     const {children} = props;
-    const outerTheme = useTheme();
+    const theme = useTheme();
     const location = useLocation();
 
-    const theme = createTheme({
-        typography: {
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-        },
-        icon: {
-            color: outerTheme.palette.primary.light,
-        },
-    });
+    // const theme = createTheme({
+    //     typography: {
+    //         fontFamily: "'Plus Jakarta Sans', sans-serif",
+    //     },
+    //     icon: {
+    //         color: outerTheme.palette.primary.light,
+    //     },
+    // });
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const currentPath = location.pathname;
@@ -37,8 +38,8 @@ const Home = (props) => {
 
     useEffect(() => {
         if(!isNonSidebarRoute()) {
-            console.log("currentPath", currentPath)
-            console.log("noneRightSideBarRoutes", showRightSideBar)
+            // console.log("currentPath", currentPath)
+            // console.log("noneRightSideBarRoutes", showRightSideBar)
           setShowRightSideBar(true);
         }
         else{
@@ -49,7 +50,7 @@ const Home = (props) => {
 
 
     return (
-        <ThemeProvider theme={theme}>
+
         <Box sx={{
             overFlowX: "hidden",
             display: "flex",
@@ -62,10 +63,10 @@ const Home = (props) => {
             backgroundColor: lighten("#c9d1d3", 0.2)
         }}>
             <Box sx={{
-                display: "flex", flexDirection: "row", gap:2, justifyContent: "space-evenly", alignItems: "flex-start",
+                display: "flex", flexDirection: "row", justifyContent:"space-between", alignItems: "flex-start",
             }}>
                 {!isSmallScreen && (
-                    <Box sx={{width:showRightSideBar? "23%" : "30%", p:1, position: "sticky", top:20, }}>
+                    <Box sx={{width:showRightSideBar? "22%" : "22%", p:2, pt:0 , position: "sticky", top:0, }}>
                    <LeftSideBar/>
                     </Box>
                 )}
@@ -74,13 +75,12 @@ const Home = (props) => {
                     {children}
                 </Box>
                 {!isSmallScreen && showRightSideBar && (
-                    <Box sx={{width:"23%", p:1, position: "sticky", top:20 }}>
+                    <Box sx={{width:"22%", p:2, pt:0, position: "sticky", top:0 }}>
                    <RightSideBar/>
                         </Box>
                 )}
             </Box>
         </Box>
-        </ThemeProvider>
     );
 }
 

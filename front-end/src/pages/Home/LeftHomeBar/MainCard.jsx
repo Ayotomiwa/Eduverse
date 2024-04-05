@@ -50,7 +50,8 @@ const MainCard = () => {
             window.location.pathname = "/admin";
             return;
         }
-        window.location.pathname= features[label];
+        // window.location.pathname= features[label];
+        navigate(features[label]);
     }
 
 
@@ -68,11 +69,11 @@ const MainCard = () => {
     return (
         <Card sx={{
             bgcolor: "white",
-            maxHeight: "700px",
+            maxHeight: "36vh",
             p: 2,
-            pt: 0,
-            pb: 0,
-            borderRadius: "12px"
+            pt: 3,
+            pb: 1,
+            borderRadius: "0 0 12px 12px",
         }}>
             <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", m: "20px", mb: 1}}>
                 <SimpleMenu

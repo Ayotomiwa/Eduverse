@@ -20,7 +20,7 @@ import AddMembersModal from "./AddMembersModal.jsx";
 
 const Members = ({community}) => {
 
-    const {user} = useContext(UserContext);
+    const {user, jwtToken} = useContext(UserContext);
     const [members, setMembers] = useState([])
     const [moderators, setModerators] = useState([])
     const [isModerator, setIsModerator] = useState(false)
@@ -37,7 +37,11 @@ const Members = ({community}) => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/members?isAccepted=true`)
+        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/members?isAccepted=true`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 // console.log("members", response.data);
                 setModerators(response.data.filter(member => member.role === "MODERATOR"));
@@ -68,7 +72,11 @@ const Members = ({community}) => {
 
     const addMembers = () => {
         console.log("newMembers", newMembers);
-        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/members/multiple`, newMembers)
+        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/members/multiple`, newMembers,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 console.log("response", response.data);
             })

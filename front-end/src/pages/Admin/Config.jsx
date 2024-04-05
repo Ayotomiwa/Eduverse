@@ -47,17 +47,7 @@ const Config = [
                     <CogIcon/>
                 </SvgIcon>
             )
-        },
-    {
-        title: 'App Styling',
-        path: '/admin?page=app-styling',
-        public: true,
-        icon: (
-            <SvgIcon fontSize="large">
-                <PaintBrushIcon/>
-            </SvgIcon>
-        )
-    },
+        }
     ];
 
 export default Config;

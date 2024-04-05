@@ -10,6 +10,7 @@ const LeftSideBar = () => {
     const {user, university} = useContext(UserContext)
 
 
+    // console.log("UNIVERSITY", university);
 
     return(
         <Box sx={{display: "flex", flexDirection: "column", height:"100%", gap:2}}>

@@ -7,7 +7,7 @@ import CreateThreadModal from "./CreateThreadModal.jsx";
 
 const Threads = ({community}) => {
     const [page, setPage] = useState(0);
-    const {user} = useContext(UserContext);
+    const {user, jwtToken} = useContext(UserContext);
     const [discussions, setDiscussions] = useState([]);
     const [threadModalOpen, setThreadModalOpen] = useState(false);
     const [discussion, setDiscussion] = useState(null);
@@ -27,7 +27,11 @@ const Threads = ({community}) => {
 
 
     const fetchDiscussions = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/discussions?page=${page}`)
+        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/discussions?page=${page}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 // console.log(response.data.content);
                 setDiscussions(response.data.content);
@@ -41,7 +45,11 @@ const Threads = ({community}) => {
 
 
     const postDiscussion = () => {
-        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/discussions`, discussion)
+        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/discussions`, discussion,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 console.log("response", response.data);
                 setDiscussions( [response.data, ...discussions]);

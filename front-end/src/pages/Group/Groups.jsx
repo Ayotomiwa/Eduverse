@@ -4,23 +4,22 @@ import {
     Typography
 } from "@mui/material";
 import GroupCard from "./GroupCard.jsx";
-import GroupPageTopBar from "./GroupPageTopBar.jsx";
+import GroupsTopBar from "./GroupsTopBar.jsx";
 import {useContext, useEffect, useState} from "react";
 import UserContext from "../../hooks/UserProvider.jsx";
 import axios from "axios";
 
 
 const Groups = () => {
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState(null);
     const [tabValue, setTabValue] = useState(0);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const {user, university} = useContext(UserContext);
+    const {user, university, jwtToken} = useContext(UserContext);
 
 
     useEffect(() => {
-        setGroups([]);
-        setLoading(true);
+        setGroups(null);
         setSearchTerm('');
         if(tabValue === 0){
             fetchMyGroups();
@@ -32,23 +31,36 @@ const Groups = () => {
     },[tabValue]);
 
 
+    useEffect(() => {
+        if(groups){
+           setLoading(false);
+           return;
+        }
+        setLoading(true);
+    }, [groups]);
+
+
 
     useEffect(() => {
-        if(searchTerm !== ''){
-            if(tabValue === 0){
-                searchMyGroups();
-            }
-            else{
-                searchAllGroups();
-            }
+        if(searchTerm === '') {
+         return
         }
+        if(tabValue === 0){
+            searchMyGroups();
+            return;
+            }
+        searchAllGroups();
+
     }, [searchTerm]);
 
     const fetchAllGroups = ()=> {
-        axios.get(`http://localhost:8222/api/group-service/university/${university.university.id}/groups`)
+        axios.get(`http://localhost:8222/api/group-service/university/${university.id}/groups`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 setGroups(response.data);
-                setLoading(false);
             })
             .catch(error => {
                 console.error("Failed to fetch groups", error);
@@ -58,10 +70,13 @@ const Groups = () => {
 
 
     const fetchMyGroups = () =>{
-        axios.get(`http://localhost:8222/api/group-service/user/${user.id}/groups`)
+        axios.get(`http://localhost:8222/api/group-service/users/${user.id}/groups`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(res => {
                 setGroups(res.data)
-                setLoading(false);
             }).catch(error => {
                 setLoading(false);
             console.log(error);
@@ -70,7 +85,11 @@ const Groups = () => {
 
 
     const searchAllGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/university/${university.university.id}/groups/search?name=${searchTerm}`)
+        axios.get(`http://localhost:8222/api/group-service/groups/search?query=${searchTerm}&universityId=${university.id}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 setGroups(response.data);
                 setLoading(false);
@@ -82,7 +101,11 @@ const Groups = () => {
     }
 
     const searchMyGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/user/${user.id}/groups/search?name=${searchTerm}`)
+        axios.get(`http://localhost:8222/api/group-service/groups/search?query=${searchTerm}&userId=${user.id}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 setGroups(response.data);
                 setLoading(false);
@@ -93,8 +116,15 @@ const Groups = () => {
             });
     }
 
-    const resetList = () => {
-        setGroups([]);
+    const resetList = (value) => {
+        if(searchTerm === '' || !value ){
+            setGroups(null);
+            if(tabValue === 0){
+                fetchMyGroups();
+                return
+            }
+            fetchAllGroups();
+        }
     }
 
     const softColors = [
@@ -125,18 +155,18 @@ const Groups = () => {
                     zIndex: 2000
                 }}
             >
-                <GroupPageTopBar
+                <GroupsTopBar
                  setTabValue={setTabValue}
                  setSearchTerm={setSearchTerm}
                  resetList={resetList}
                 />
             </Box>
-            {loading? (
+            {loading || !groups? (
             <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"100vh"}}>
                 <CircularProgress />
             </Box>
                 ) : (
-                groups.length === 0 ? (
+                groups?.length === 0 ? (
                 <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh"}}>
                     <Typography variant="h5" color="secondary">
                         No groups found

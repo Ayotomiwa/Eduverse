@@ -55,13 +55,13 @@ const ImportUsers = (
         : ["staffId", "name", "email", "role", "accessLevel"];
 
 
-    useEffect(() => {
-            if(localStorage.getItem("file") && localStorage.getItem("file") !== "null"){
-                console.log("file", JSON.parse(localStorage.getItem("file")));
-                setFile(JSON.parse(localStorage.getItem("file")));
-                validateAndProcessRows(JSON.parse(localStorage.getItem("file")));
-            }
-    }, []);
+    // useEffect(() => {
+    //         if(localStorage.getItem("file") && localStorage.getItem("file") !== "null"){
+    //             console.log("file", JSON.parse(localStorage.getItem("file")));
+    //             setFile(JSON.parse(localStorage.getItem("file")));
+    //             validateAndProcessRows(JSON.parse(localStorage.getItem("file")));
+    //         }
+    // }, []);
 
 
     useEffect(()=> {
@@ -199,7 +199,11 @@ const ImportUsers = (
       // console.log("Users", users)
         const data = usersData();
         // console.log("data", data);
-        axios.post("http://localhost:8080/api/user-service/university/1/admin/1/users", data)
+        axios.post("http://localhost:8080/api/user-service/university/1/admin/1/users", data,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 if(response.status === 200){
                     if(response.data){
@@ -264,7 +268,6 @@ const ImportUsers = (
 
 
     const studentFields = {
-        "s/n": "index",
         "studentNo.": "studentId",
         "name": "name",
         "email": "email",
@@ -275,7 +278,7 @@ const ImportUsers = (
     }
 
     const staffFields = {
-        "s/n": "staffId",
+        "staffNo": "staffId",
         "name": "name",
         "email": "email",
         "authority": "authority",

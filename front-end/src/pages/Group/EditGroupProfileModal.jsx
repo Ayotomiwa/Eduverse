@@ -1,5 +1,3 @@
-
-
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import {
     Button,
@@ -8,16 +6,61 @@ import {
     Divider,
     Typography,
     Box,
+    Select,
     TextField,
     styled,
     Modal,
     IconButton,
-    Paper
+    Paper, MenuItem
 } from "@mui/material";
-import {CardOverflow, Select, Textarea} from "@mui/joy";
 import {Close as CloseIcon} from "@mui/icons-material";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
+import UserContext from "../../hooks/UserProvider.jsx";
 
-const EditGroupProfileModal = ({open, closeModal, community}) =>  {
+
+const EditGroupProfileModal = ({open, closeModal,
+                                   community = {},
+                                   saveChanges
+
+}) =>  {
+
+    const communityPlaceHolder=  useRef(null);
+    const{user} = useContext(UserContext);
+    const [picFileName, setPicFileName] = useState(null);
+    const [picData, setPicData] = useState(null)
+
+
+    useEffect(() => {
+        communityPlaceHolder.current = {
+            ...community,
+            name: community?.name || '',
+            description: community?.description || '',
+            bio: community?.bio || '',
+            category: community?.category || '',
+            about: community?.about || '',
+            profilePicUrl: community?.profilePicUrl || 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600',
+        }
+        if(!community){
+            communityPlaceHolder.current = {
+                creatorId: user.id
+            }
+        }
+    },[community])
+
+
+    const handleImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setPicFileName(event.target.files[0].name);
+            setPicData(event.target.files[0]);
+            console.log(event.target.files[0].name);
+            communityPlaceHolder.current.profilePicUrl = URL.createObjectURL(event.target.files[0]);
+            }
+        }
+
+        const handleChange = (e) => {
+            communityPlaceHolder.current[e.target.name] = e.target.value;
+        }
+
 
 
     const StyledModal = styled(Modal)({
@@ -30,10 +73,13 @@ const EditGroupProfileModal = ({open, closeModal, community}) =>  {
         position: 'relative',
         width: '90%',
         maxWidth: '600px',
+        maxHeight:"80vh",
+        overflowY:"auto",
         outline: 'none',
         boxShadow: '24px',
         padding: '20px',
         borderRadius: '10px',
+        boxSizing:"border-box"
     });
 
     const CloseButton = styled(IconButton)({
@@ -43,67 +89,107 @@ const EditGroupProfileModal = ({open, closeModal, community}) =>  {
     });
 
 
+ const handleSave = () => {
+     communityPlaceHolder.current.profilePicUrl = picFileName
+     console.log("CommunityPlaceholder", communityPlaceHolder.current)
+        saveChanges(communityPlaceHolder.current, picData, picFileName)
+        closeModal()
+      }
 
 
     return (
         <StyledModal open={open} onClose={closeModal}>
             <ModalContent>
                 <CloseButton onClick={closeModal}>
-                    <CloseIcon />
+                    <CloseIcon/>
                 </CloseButton>
-                <Box sx={{display:"flex", alignItems:"stretch", m:2, py:2 }}>
-                            <img
-                                src={community?.profilePicUrl ? community.profilePicUrl :  "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"}
-                                style={{width:"100%", height:230, border:"1px red solid", objectFit: "cover"}}
-                            />
+                <Box sx={{display: "flex", alignItems: "stretch", m: 2, py: 2}}>
+                    <img
+                        // src={community?.profilePicUrl ? community.profilePicUrl :  "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"}
+                        // src={"https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"}
+                        src={communityPlaceHolder.current?.profilePicUrl || ""}
+
+                        style={{width: "100%", height: 230, objectFit: "cover"}}
+                    />
                 </Box>
                 <Button
-                    startDecorator={<PhotoCamera/>}
+                    component="label"
+                    startIcon={<PhotoCamera/>}
                     variant="contained"
                     color="secondary"
-                    sx={{  position: "absolute", top: 200, right: 50 }}
+                    sx={{position: "absolute", top: 200, right: 50}}
                 >
                     Change Profile Pic
+                    <input type="file" hidden onChange={handleImageChange}/>
                 </Button>
 
-                <Box sx={{ flex: 1}}>
+                <Box style={{display: "flex", flexDirection: "column", }}>
                     <Typography variant="subtitle" sx={{ textAlign: 'left' }}>
                         Group Name
                     </Typography>
                     <TextField
-                        defaultValue={community?.name}
+                        name="name"
+                        placeholder="Name of your group"
+                        defaultValue={community?.name || ""}
+                        onChange={handleChange}
                         variant="outlined"
                         fullWidth
                         sx={{ my: 2 }}
                     />
-                    <Select
-                            defaultValue={community?.category}
-                            options={[
-                                { label: 'Technology', value: 'technology' },
-                                { label: 'Science', value: 'science' },
-                                { label: 'Health', value: 'health' },
-                                { label: 'Sports', value: 'sports' },
-                                { label: 'Entertainment', value: 'entertainment' },
-                                { label: 'Education', value: 'education' },
-                                { label: 'Business', value: 'business' },
-                                { label: 'Other', value: 'other' },
-                            ]}
-                        />
                     <Typography variant="subtitle" sx={{ textAlign: 'left' }}>
                         Description
                     </Typography>
                     <TextField
-                        defaultValue={community?.bio}
+                        name="description"
+                        placeholder="One liner about your group"
+                        defaultValue={community?.description || ""}
+                        onChange={handleChange}
+                        variant="outlined"
+                        fullWidth
+                        sx={{ my: 2 }}
+                    />
+                    <Typography variant="subtitle" sx={{ textAlign: 'left' }}>
+                        About
+                    </Typography>
+                    <TextField
+                        name="about"
+                        placeholder="Tell us about your group"
+                        defaultValue={community?.bio || ""}
+                        onChange={handleChange}
                         multiline
                         rows={4}
                         variant="outlined"
                         fullWidth
                         sx={{ my: 2 }}
                     />
-                        <Box sx={{ justifyContent: 'flex-end', p: 2 , mb:2 }}>
-                            <Button variant="outlined" size="sm">Cancel</Button>
-                            <Button variant="solid" size="sm">Save Changes</Button>
+                    <Typography variant="subtitle" sx={{ textAlign: 'left' }}>
+                        Category
+                    </Typography>
+                    <Select
+                        name="category"
+                        sx={{mb:5, mt:2}}
+                        defaultValue={community?.category || null}
+                        onChange={handleChange}
+                        >
+                            <MenuItem value='ACADEMIC'>Technology</MenuItem>
+                            <MenuItem value='CAREER'>Career</MenuItem>
+                            <MenuItem value='SPORTS'>Sports</MenuItem>
+                            <MenuItem value='SOCIAL'>Social</MenuItem>
+                            <MenuItem value='CULTURE'>Culture</MenuItem>
+                            <MenuItem value='NETWORKING'>Networking</MenuItem>
+                            <MenuItem value='ALUMINI'>Alumni</MenuItem>
+                            <MenuItem value='OTHER'>Other</MenuItem>
+                        </Select>
+                    <Box sx={{display:"flex", alignItems:"center", justifyContent:"flex-end"}}>
+                        <Box sx={{ display:"flex", boxSizing:"border-box", gap:3}}>
+                            <Button
+                                onClick={closeModal}
+                                variant="outlined" size="sm">Cancel</Button>
+                            <Button
+                                onClick={handleSave}
+                                variant="solid" size="sm">Save Changes</Button>
                         </Box>
+                    </Box>
                 </Box>
             </ModalContent>
         </StyledModal>

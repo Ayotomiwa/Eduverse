@@ -51,7 +51,11 @@ const AddMembersModal = ({
     }
 
     const fetchUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}`)
+        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then(response => {
                 setUsers(response.data);
                 setSearchTerm('');

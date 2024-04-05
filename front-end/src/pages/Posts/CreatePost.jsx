@@ -9,6 +9,7 @@ import UserContext from "../../hooks/UserProvider.jsx";
 const CreatePost = ({setNewPost}) => {
 
 
+    const {jwtToken} = useContext(UserContext);
     const [selectedImage, setSelectedImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [openImageModal, setOpenImageModal] = useState(false);
@@ -22,7 +23,7 @@ const CreatePost = ({setNewPost}) => {
 
 
     useEffect(() => {
-        if(pictureFileName){
+        if (pictureFileName) {
             setKeyName(`${universityId}/${pictureFileName}`);
         }
     }, [pictureFileName]);
@@ -44,7 +45,6 @@ const CreatePost = ({setNewPost}) => {
             setPictureFileName(null);
         }
     }, [uploadDone]);
-
 
 
     useEffect(() => {
@@ -91,7 +91,12 @@ const CreatePost = ({setNewPost}) => {
 
     const getSignedUrl = () => {
         console.log("In get signed" + pictureFileName);
-        return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`)
+        return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
             .then((response) => {
                 return response.data;
             })
@@ -101,10 +106,14 @@ const CreatePost = ({setNewPost}) => {
     };
 
 
-
     const saveToDatabase = () => {
         console.log("saving to database");
-        axios.post("http://localhost:8222/api/post-service/posts", postToUpload)
+        axios.post("http://localhost:8222/api/post-service/posts", postToUpload,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
             .then((response) => {
                 if (response.status === 200) {
                     // console.log("Post saved to database");
@@ -118,10 +127,7 @@ const CreatePost = ({setNewPost}) => {
     }
 
 
-
-
-
-    const handleImageUpload = (event) => {
+    const handleImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
             setPictureFileName(event.target.files[0].name);
             setPictureData(event.target.files[0]);
@@ -137,7 +143,7 @@ const CreatePost = ({setNewPost}) => {
         }
         setOpenImageModal(true);
     }
-    const handleCloseImageModal = () =>{
+    const handleCloseImageModal = () => {
         setSelectedImage(null);
         setOpenImageModal(false);
     }
@@ -157,7 +163,7 @@ const CreatePost = ({setNewPost}) => {
                         <Typography>
                             Gallery
                         </Typography>
-                        <input type="file" hidden onChange={handleImageUpload}/>
+                        <input type="file" hidden onChange={handleImageChange}/>
 
                     </Button>
                     <Button size="medium" sx={{color: "grey"}} startIcon={
@@ -202,12 +208,11 @@ const CreatePost = ({setNewPost}) => {
                     open={openImageModal}
                     closeModal={handleCloseImageModal}
                     selectedImage={selectedImage}
-                    setSelectedImage={setSelectedImage}
                     setPostToUpload={setPostToUpload}
-                    setPictureFileName={setPictureFileName}
                     setCaption={setCaption}
                     caption={caption}
                     pictureFileName={pictureFileName}
+                    handleImageChange={handleImageChange}
                 />
             </Box>
             <Box>

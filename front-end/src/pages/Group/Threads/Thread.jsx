@@ -19,7 +19,7 @@ import UserContext from "../../../hooks/UserProvider.jsx";
 
 const Thread= ({discussion}) => {
     const navigate = useNavigate();
-    const{user} = useContext(UserContext);
+    const{user, jwtToken} = useContext(UserContext);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [isLikedByUser, setIsLikeByUser] = useState(false);
     const likeUrl = `http://localhost:8222/api/group-service/group/discussions/${discussion.id}?isLiked=${isLikedButton}&userId=${user.id}`;
@@ -42,7 +42,10 @@ const Thread= ({discussion}) => {
 
 
     const postLikes = () => {
-        axios.post(likeUrl)
+        axios.post(likeUrl, null, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }})
             .then((response) => {
                 console.log("response", response.data);
             }).catch((error) => {

@@ -8,6 +8,10 @@ import {Close as CloseIcon} from "@mui/icons-material";
 export default function EditProfileModal({open, closeModal}) {
 
 
+
+
+
+
     const userProfile = {
         name: "Jane Doe",
         bio: "Hello! I'm a 4th-year Engineering Student passionate about technology and design. Excited to connect with like-minded peers.",

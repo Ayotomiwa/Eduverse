@@ -21,7 +21,9 @@ import UserContext from "../../hooks/UserProvider.jsx";
 
 const Post = ({post}) => {
 
-    const {user, university} = useContext(UserContext)
+    const {university} = useContext(UserContext)
+    const {user} = useContext(UserContext)
+    const{jwtToken} = useContext(UserContext)
 
     const [openComments, setOpenComments] = useState(false);
     const [newComment, setNewComment] = useState(null);
@@ -78,7 +80,10 @@ const Post = ({post}) => {
 
 
     const fetchComments = () => {
-        axios.get(fetchCommentsUrl, post.commentIds)
+        axios.get(fetchCommentsUrl,{
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }})
             .then((response) => {
                 if (response.data) {
                     console.log("comments", response.data);
@@ -89,7 +94,10 @@ const Post = ({post}) => {
         });
     }
     const postComment = () => {
-        axios.post(commentsUrl, newComment)
+        axios.post(commentsUrl, newComment, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }})
             .then((response) => {
                 console.log("response", response.data);
                 fetchComments();
@@ -100,7 +108,11 @@ const Post = ({post}) => {
     };
 
     const postReply = () => {
-        axios.post(replyUrl, newComment)
+        axios.post(replyUrl, newComment,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 console.log("response", response.data);
                 fetchComments();
@@ -112,7 +124,10 @@ const Post = ({post}) => {
 
 
     const postLikes = () => {
-        axios.post(likeUrl)
+        axios.post(likeUrl, null,{
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }})
             .then((response) => {
                 console.log("response", response.data);
             }).catch((error) => {
@@ -133,11 +148,11 @@ const Post = ({post}) => {
     const addComment = (comment) => {
         setOpenComments(true);
         setNewComment({
-            username: "Mike Tyson",
-            userId: 1,
+            username: user.username,
+            userId: user.id,
             comment: comment,
             postId: post.id,
-            userProfilePicUrl: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+            userPicUrl: user.profileInfo?.profilePicUrl,
         });
     }
 
@@ -243,7 +258,7 @@ const Post = ({post}) => {
                         {post.likes}
                     </Typography>
                 </Box>
-                {university.featureFlags.POST_COMMENTING && (
+                {university?.featureFlags?.POST_COMMENTING && (
                 <Box sx={{display: "flex", alignItems: "center"}}>
                     <IconButton
                         onClick={toggleComments}
@@ -256,9 +271,9 @@ const Post = ({post}) => {
                 </Box>
                 )}
             </CardActions>
-            {university.featureFlags.POST_COMMENTING && ( <Divider/> )}
+            {university?.featureFlags?.POST_COMMENTING && ( <Divider/> )}
             <Box sx={{m: "10px"}}>
-                {university.featureFlags.POST_COMMENTING && (
+                {university?.featureFlags?.POST_COMMENTING && (
                         <CommentInput
                             setReplyWhom={setReplyWhom}
                             username={post.username}

@@ -9,7 +9,7 @@ import {
     Typography,
     ListItemIcon,
     ListItemText,
-    SvgIcon, useTheme
+    SvgIcon, useTheme, Divider
 } from "@mui/material";
 import {InboxIcon} from "lucide-react";
 import {ExpandLess, ExpandMore, LibraryBooks, StarBorder} from "@mui/icons-material";
@@ -89,14 +89,15 @@ const ModuleCard = ({maxHeight}) => {
                     },
                     maxHeight: maxHeight }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
+                        <Divider />
                     <List component="div" disablePadding>
                         {modules.map((module, index) => {
                             return(
                                 <ListItemButton sx={{pl: 4}} key={index}>
-                                    <ListItemAvatar>
-                                        <Avatar variant="square"  sx={{ bgcolor: 'green', width: 24, height: 24  }}>
-                                            {module.name?.charAt(0).toUpperCase()}</Avatar>
-                                    </ListItemAvatar>
+                                    {/*<ListItemAvatar>*/}
+                                    {/*    <Avatar variant="square"  sx={{ bgcolor: 'green', width: 24, height: 24  }}>*/}
+                                    {/*        {module.name?.charAt(0).toUpperCase()}</Avatar>*/}
+                                    {/*</ListItemAvatar>*/}
                                     <ListItemText primary={module.name}/>
                                 </ListItemButton>
                             )

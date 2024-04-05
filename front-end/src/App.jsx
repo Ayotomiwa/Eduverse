@@ -14,8 +14,13 @@ import FeatureCheckFeed from "./hooks/FeatureCheckFeed.jsx";
 import FeatureCheckGroup from "./hooks/FeatureCheckGroup.jsx";
 import FeatureCheckModule from "./hooks/FeatureCheckModule.jsx";
 import GroupPage from "./pages/Group/GroupPage.jsx";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, useTheme} from "@mui/material";
 import {Box} from "@mui/material";
+import AuthLogin from "./pages/Login/AuthLogin.jsx";
+import AuthRegister from "./pages/Login/AuthRegister.jsx";
+import {createTheme} from "@mui/material/styles";
+import {ThemeProvider} from "@mui/material";
+import {purple} from "@mui/material/colors";
 
 
 
@@ -24,6 +29,21 @@ import {Box} from "@mui/material";
 
 function App() {
 
+    const outerTheme = useTheme();
+    const theme = createTheme({
+        palette: {
+            primary:purple,
+        },
+        typography: {
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+        },
+        button: {
+            dark:"rgb(59, 61, 145)"
+        },
+        icon: {
+            color: outerTheme.palette.primary.light,
+        },
+    });
     const { user, isAuthenticating} = useContext(UserContext);
 
     if(isAuthenticating){
@@ -32,12 +52,15 @@ function App() {
 
 
   return (
+      <ThemeProvider theme={theme}>
       <Routes>
         {/*/!*<Route path="/" element={<Admin />}/>*!/*/}
         {/*  <Route path="/" element={<Feed/>}/>*/}
           <Route path="/feed" element={<Home><FeatureCheckFeed><Feed/></FeatureCheckFeed></Home>}/>
           <Route path="/profile" element={<Home><Profile/></Home>}/>
           <Route path="/admin" element={<Admin />}/>
+          <Route path="/login" element={<AuthLogin/>}/>
+          <Route path="/register" element={<AuthRegister/>}/>
           <Route path="/communities" element={<Home><FeatureCheckGroup><Groups/></FeatureCheckGroup></Home>}/>
           <Route path="/communities/:id" element={<Home><FeatureCheckGroup><GroupPage/></FeatureCheckGroup></Home>}/>
           {/*<Route path="/community/*" element={<Home><ThreadComment/></Home>}/>*/}
@@ -46,6 +69,7 @@ function App() {
 
           <Route path="*" element={<Home><Feed/></Home>}/>
       </Routes>
+        </ThemeProvider>
   )
 }
 

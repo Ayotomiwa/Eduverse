@@ -55,10 +55,10 @@ const UserManagement = () => {
             title: 'studentusers',
             path: '/admin?page=user-management&tab=studentusers',
         },
-        {
-            title: 'adduser',
-            path: '/admin?page=user-management&tab=adduser',
-        },
+        // {
+        //     title: 'adduser',
+        //     path: '/admin?page=user-management&tab=adduser',
+        // },
         {
             title: 'importusers',
             path: '/admin?page=user-management&tab=importusers',
@@ -84,11 +84,6 @@ const UserManagement = () => {
     };
 
 
-
-
-
-
-// ...
 
 
     const handleTabChange = (event, newValue) => {
