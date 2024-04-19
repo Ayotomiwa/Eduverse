@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
-import CommentInput from "../../../components/CommentInput.jsx";
+import CommentInput from "../../../components/Input/CommentInput.jsx";
 import ThreadComment from "./ThreadComment.jsx";
 import {Pagination} from "@mui/material";
 import {useParams} from "react-router-dom";
@@ -142,6 +142,7 @@ const ThreadCardPage = () => {
             minHeight: "95vh",
             mt: 2,
             boxSizing: 'border-box',
+            boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
             m: 2
         }}>
             <Box>

@@ -17,7 +17,7 @@ import {
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 import {useNavigate} from "react-router-dom";
-import CommentInput from "../../../components/CommentInput.jsx";
+import CommentInput from "../../../components/Input/CommentInput.jsx";
 import UserContext from "../../../hooks/UserProvider.jsx";
 
 const ThreadComment = ({threadComment, setCommentAdded}) => {

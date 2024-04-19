@@ -49,7 +49,7 @@ const CreateThreadModal = ({ open,
                     <CloseIcon />
                 </CloseButton>
                 <Typography variant="h6" textAlign="center" marginBottom="20px">
-                    Create a Post
+                    Create a Channel
                 </Typography>
 
                 <Box textAlign="center" marginBottom="20px">
@@ -64,8 +64,8 @@ const CreateThreadModal = ({ open,
                         onChange={(e) => setTopic(e.target.value)}
                     />
                 </Box>
-                <Box sx={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-                    <Button variant="contained"  onClick={handleCreate}>
+                <Box sx={{display:"flex", alignItems:"flex-end"}}>
+                    <Button variant="contained" fullWidth  onClick={handleCreate}>
                         Create
                     </Button>
                 </Box>

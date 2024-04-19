@@ -1,6 +1,6 @@
 import {Box, Card, Collapse, ListItemButton, ListItemIcon, ListItemText, List} from "@mui/material";
-import SimpleMenu from "../../components/SimpleMenu.jsx";
-import {SearchBar} from "../../components/SearchBar.jsx";
+import SimpleMenu from "../../components/Input/SimpleMenu.jsx";
+import {SearchBar} from "../../components/Input/SearchBar.jsx";
 import {InboxIcon} from "lucide-react";
 import {ExpandLess, ExpandMore, StarBorder} from "@mui/icons-material";
 import {useState} from "react";

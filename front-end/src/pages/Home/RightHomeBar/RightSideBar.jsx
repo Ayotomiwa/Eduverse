@@ -4,18 +4,39 @@ import NotificationCard from "./NotificationCard.jsx";
 import EventsCard from "./EventsCard.jsx";
 import {useContext, useEffect, useState} from "react";
 import UserContext from "../../../hooks/UserProvider.jsx";
+import {UseCheckFeature} from "../../../hooks/UseCheckFeature.jsx";
+import axios from "axios";
 
 const RightSideBar = () => {
 
     const [notificationOpen, setNotificationOpen] = useState(true);
     const [eventsOpen, setEventsOpen] = useState(false);
     const[search, setSearch] = useState(false);
-    const {user, university} = useContext(UserContext)
+    const {user, jwtToken} = useContext(UserContext)
+    const featureCheck = UseCheckFeature();
+    const eventsFeatureAllowed = featureCheck.checkUserAccess("EVENTS");
+    const [eventsData, setEventsData] = useState([]);
+
+    useEffect(() => {
+        if(eventsFeatureAllowed){
+        fetchEvents();
+    }
+    },[]);
 
 
-
-
-
+    const fetchEvents = () => {
+        axios.get(`http://localhost:8222/api/event-service/users/${user.id}/events`,
+            {headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }})
+            .then(response => {
+                setEventsData(response.data);
+                console.log("events", response.data);
+            })
+            .catch(error => {
+                console.error("Failed to fetch events", error);
+            });
+    };
 
 
     const handleOpen = (event) => {
@@ -43,12 +64,13 @@ const RightSideBar = () => {
             search={search}
             />
             <NotificationCard
-                maxHeight={university.featureFlags.EVENTS? "44vh" : "54vh"}
+                maxHeight={eventsFeatureAllowed? "43vh" : "52vh"}
              open={notificationOpen && !search}
              handleOpen={handleOpen}
             />
-            {university.featureFlags.EVENTS && (
+            {eventsFeatureAllowed  && (
             <EventsCard
+                eventsData={eventsData}
                 open={eventsOpen && !search}
                 handleOpen={handleOpen}
             />

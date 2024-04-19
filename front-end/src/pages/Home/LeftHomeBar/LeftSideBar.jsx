@@ -4,10 +4,12 @@ import CommunityCard from "./CommunityCard.jsx";
 import {Box} from "@mui/material";
 import {useContext} from "react";
 import UserContext from "../../../hooks/UserProvider.jsx";
+import {UseCheckFeature} from "../../../hooks/UseCheckFeature.jsx";
 
 const LeftSideBar = () => {
 
     const {user, university} = useContext(UserContext)
+    const featureCheck = UseCheckFeature();
 
 
     // console.log("UNIVERSITY", university);
@@ -15,11 +17,11 @@ const LeftSideBar = () => {
     return(
         <Box sx={{display: "flex", flexDirection: "column", height:"100%", gap:2}}>
             <MainCard/>
-            {university.featureFlags.MODULE && (
-                    <ModuleCard  maxHeight={university.featureFlags.GROUP? "19vh" : "60vh"} />
+            {featureCheck.checkUserAccess("MODULE") && (
+                    <ModuleCard  maxHeight={featureCheck.checkUserAccess("GROUP")? "19vh" : "60vh"} />
             )}
-            {university.featureFlags.GROUP && (
-                    <CommunityCard maxHeight={university.featureFlags.MODULE? "19vh" : "60vh"} />
+            {featureCheck.checkUserAccess("GROUP")  && (
+                    <CommunityCard maxHeight={featureCheck.checkUserAccess("MODULE")? "19vh" : "60vh"} />
             )}
         </Box>
     )

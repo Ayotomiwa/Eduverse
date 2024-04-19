@@ -1,10 +1,11 @@
 import {Box, Divider, FormControlLabel, MenuItem, Select, Switch, Typography} from "@mui/material";
+import featureSettings from "./FeatureSettings.jsx";
 
 
 
 
 
-const FeatureSetting = ({featureSetting, setFeatureSettings, featureSettings})=> {
+const FeatureSetting = ({featureSetting, fullFeatureSettings, setFullFeatureSettings})=> {
 
     const roleOptions = [
         {label: 'Admin', value: 'ADMIN'},
@@ -19,30 +20,28 @@ const FeatureSetting = ({featureSetting, setFeatureSettings, featureSettings})=>
         {label: "All", value: "ALL"},
     ];
     const handleFeatureSwitchChange = (event, featureSettingToUpdate) => {
-        setFeatureSettings(featureSettings.map(featureSetting => {
-            if (featureSetting === featureSettingToUpdate) {
+        console.log("Feature setting to update", featureSettingToUpdate);
+        setFullFeatureSettings(fullFeatureSettings.map(featureSetting => {
+            if (featureSetting.id === featureSettingToUpdate.id) {
                 return { ...featureSetting, enabled: event.target.checked };
             } else {
                 return featureSetting;
             }
         }));
-        console.log(featureSettings);
-        console.log("featureSetting", featureSetting);
     };
 
 
 
-    const handleSelectChange = (event) => {
+    const handleSelectChange = (event, featureSettingToUpdate) => {
         const {name, value} = event.target;
-        setFeatureSettings(featureSettings.map(featureSetting => {
-            if (featureSetting === featureSetting) {
+        setFullFeatureSettings(fullFeatureSettings.map(featureSetting => {
+            if (featureSetting.id === featureSettingToUpdate.id) {
                 return { ...featureSetting, [name]: value };
             } else {
                 return featureSetting;
             }
         }));
     }
-
 
 
     return (
@@ -60,6 +59,7 @@ const FeatureSetting = ({featureSetting, setFeatureSettings, featureSettings})=>
                 <FormControlLabel
                     control={
                         <Switch
+                            color="secondary"
                             checked={featureSetting.enabled}
                             onChange={(event) => handleFeatureSwitchChange(event, featureSetting)}
                         />
@@ -88,7 +88,7 @@ const FeatureSetting = ({featureSetting, setFeatureSettings, featureSettings})=>
                 <Select
                     fullWidth
                     value={featureSetting?.authorizedUsers || ""}
-                    onChange={handleSelectChange}
+                    onChange={(event) => handleSelectChange(event, featureSetting)}
                     name="authorizedUsers"
                     disabled={!featureSetting.enabled}
                 >
@@ -102,7 +102,7 @@ const FeatureSetting = ({featureSetting, setFeatureSettings, featureSettings})=>
                 <Select
                     fullWidth
                     value={featureSetting?.authorizedMembers || ""}
-                    onChange={handleSelectChange}
+                    onChange={(event) => handleSelectChange(event, featureSetting)}
                     name="authorizedMembers"
                     disabled={!featureSetting?.enabled}
                 >

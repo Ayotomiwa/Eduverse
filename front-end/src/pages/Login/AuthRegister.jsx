@@ -6,14 +6,8 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import {
     Box,
     Button,
-    Card,
-    Checkbox, Divider,
-    FormControl,
-    FormControlLabel,
     FormHelperText,
     Grid,
-    IconButton,
-    InputAdornment,
     InputLabel, Link,
     OutlinedInput,
     Stack, TextField,
@@ -21,7 +15,6 @@ import {
 } from '@mui/material';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-// import {EyeInvisibleOutlined, EyeOutlined} from '@ant-design/icons';
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider";
 import {useNavigate} from "react-router-dom";
@@ -103,8 +96,7 @@ const AuthRegister = () => {
                         email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                         password: Yup.string().max(255).required('Password is required'),
                       phoneNumber: Yup.string().max(255).required('Phone Number is required'),
-                        // universityName:  Yup.string().max(255).required('University Name is required'),
-                        address: Yup.string().required('Address is required'),
+                        universityName:  Yup.string().max(255).required('University Name is required'),
                         domain: Yup.string().required('Domain is required')
                     })}
                     onSubmit={async (values, {setErrors, setStatus, setSubmitting}) => {
@@ -112,13 +104,13 @@ const AuthRegister = () => {
                             console.log("Signing UP")
                             await axios({
                                 "method": 'POST',
-                                "url": 'https://contract-system-5c4e51349d5b.herokuapp.com/api/users/sign-up',
+                                "url": 'http://localhost:8222/api/user-service/university/register',
                                 "data": values
                             });
 
                             const logInResponse = await axios({
                                 "method": 'POST',
-                                "url": 'https://contract-system-5c4e51349d5b.herokuapp.com/api/authenticate',
+                                "url": 'http://localhost:8222/api/user-service/authenticate',
                                 "data": {
                                     username: values.email,
                                     password: values.password
@@ -359,7 +351,6 @@ const AuthRegister = () => {
                                         size="large"
                                         variant= {next? "outlined" : "contained"}
                                         color={!next ? "success" : "secondary"}
-                                        // sx={{bgcolor:theme.button.dark, color:"white"}}
                                     >
                                         {next ? "Previous" : "Next"}
                                     </Button>

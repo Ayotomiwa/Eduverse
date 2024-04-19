@@ -88,13 +88,16 @@ const NotificationCard = ({open, handleOpen, maxHeight}) => {
     }));
 
     return (
-        <Card sx={{bgcolor: "white", borderRadius: "12px", overflow: "hidden"}}>
+        <Card sx={{bgcolor: "white",
+            boxShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+            borderRadius: "12px",
+            overflow: "hidden"}}>
             <CustomListItemButton id="Notifications"  onClick={handleClick}>
                 <Avatar sx={{mr: 1}}>
                     <img width="30" height="30" src="https://img.icons8.com/stickers/100/alarm.png" alt="alarm"/>
                 </Avatar>
                 <ListItemText primary="Notifications"
-                              primaryTypographyProps={{color: "secondary", fontWeight: "bold"}}/>
+                              primaryTypographyProps={{color: "secondary.dark", fontWeight: "bold"}}/>
                 {open ? <ExpandLess/> : <ExpandMore/>}
             </CustomListItemButton>
             <Box sx={{

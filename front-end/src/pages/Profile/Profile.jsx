@@ -8,10 +8,11 @@ import UserContext from "../../hooks/UserProvider.jsx";
 import axios from "axios";
 
 const Profile = () => {
-    // const {id} = useParams();
+    const {id} = useParams();
     const {user, jwtToken} = useContext(UserContext);
     const theme = useTheme();
     const [tabValue, setTabValue] = useState(0);
+    const [postNo, setPostNo] = useState(0);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openEditModal, setOpenEditModal] = useState(false);
 
@@ -34,30 +35,25 @@ const Profile = () => {
     }
 
     useEffect(() => {
-        // fetchProfile();
+        fetchProfile();
     },[]);
 
 
-
     const fetchProfile = () => {
-        // axios.get(`http://localhost:8222/api/user-service/users/${id}/profile`,
-        //     {
-        //         headers: {
-        //             'Authorization': `Bearer ${jwtToken}`
-        //         }
-        //     })
-        //     .then(response => {
-        //         setProfile(response.data);
-        //     }).catch(error => {
-        //         console.error("Failed to fetch profile", error);
-        //     }
-        // );
+        axios.get(`http://localhost:8222/api/user-service/users/${id}/profile`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => {
+                console.log("PROFILE ", response.data);
+                setProfile(response.data);
+            }).catch(error => {
+                console.error("Failed to fetch profile", error);
+            }
+        );
     }
-
-
-
-
-
 
     return (
         <>
@@ -77,17 +73,23 @@ const Profile = () => {
                 setProfile={setProfile}
                 setTabValue={setTabValue}
                 setOpenEditModal={setOpenEditModal}
+                postNo={postNo}
             />
         </Box>
                 <Box>
                     <EditProfileModal
                     open={openEditModal}
                     closeModal={() => setOpenEditModal(false)}
+                    userProfile={profile}
                     />
                 </Box>
             {tabConfig[tabValue] !== "Community" && (
                 <Box sx={{display: "flex", flexDirection: "column", width: "100%"}}>
-                 <Posts newPost={newPost}/>
+                 <Posts
+                     newPost={newPost}
+                     profilePostsUrl={`http://localhost:8222/api/post-service/users/${id}/posts`}
+                     setPostNo={setPostNo}
+                 />
                 </Box>
             )}
 

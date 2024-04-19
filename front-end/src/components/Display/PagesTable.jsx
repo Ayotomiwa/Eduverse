@@ -27,12 +27,13 @@ const PagesTable = ({
                         columnHeaders,
                         pagination,
                         checkable,
+                        handleRowClick,
 
                     }) => {
 
 
     const selectedSome = (selected?.length > 0) && (selected?.length < items.length);
-    const selectedAll = (items.length > 0) && (selected?.length === items.length);
+    const selectedAll = (items?.length > 0) && (selected?.length === items.length);
     const MotionTableRow = motion(TableRow);
     const columnLength = Object.keys(columnHeaders).length;
     const isLoading = false;
@@ -50,7 +51,7 @@ const PagesTable = ({
 
     return (
         // <Card elevation={6} sx={{overflowX: "auto", border: "0.5px solid black", boxShadow: 3}}>
-            <Card sx={{overflowX: "auto"}}>
+            <Box sx={{overflowX: "auto"}}>
             <Box sx={{minWidth: "100%", maxHeight: "700px", overflowY:"auto", minHeight:"400px"}}>
                 <Table stickyHeader size="small">
                     {/*<TableHead sx={{backgroundColor:"rgb(59, 61, 145, 0.3)"}}>*/}
@@ -97,7 +98,7 @@ const PagesTable = ({
                                     </TableRow>
                                 ))
                             ) :
-                            items.length > 0 ? (
+                            items?.length > 0 ? (
                             <AnimatePresence>
                                 {items.map((item, index) => {
 
@@ -112,7 +113,7 @@ const PagesTable = ({
                                             layout
                                             selected={isSelected}
                                             onClick={() => {
-
+                                              handleRowClick(item.id)
                                             }}
                                             sx={{
                                                 cursor: 'pointer',
@@ -162,20 +163,12 @@ const PagesTable = ({
                                                             </Typography>
                                                         // </Stack>
                                                     ) : (
-                                                        header === "Created Date" || header === "Last Updated" || header === "Sent" || header === "Received" ? (
+                                                        header.includes("date") ? (
                                                             <ListItem>
                                                                 <ListItemText
-                                                                    sx={{display: "grid", placeItems: "center",
-                                                                        // border:"1px red solid"
-                                                                }}
                                                                     primary={
-                                                                        <Typography variant="subtitle2">
+                                                                        <Typography  textAlign="center" variant="subtitle2">
                                                                             {new Date(getNestedValue(item, path)).toLocaleDateString()}
-                                                                        </Typography>
-                                                                    }
-                                                                    secondary={
-                                                                        <Typography variant="subtitle2">
-                                                                            {new Date(getNestedValue(item, path)).toLocaleTimeString()}
                                                                         </Typography>
                                                                     }>
                                                                 </ListItemText>
@@ -221,7 +214,7 @@ const PagesTable = ({
                 rowsPerPageOptions={[5, 10, 25]}
             />
                 }
-        </Card>
+        </Box>
     );
 };
 

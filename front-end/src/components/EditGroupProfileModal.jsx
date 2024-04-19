@@ -11,15 +11,15 @@ import {
     styled,
     Modal,
     IconButton,
-    Paper, MenuItem
+    Paper, MenuItem, CardMedia
 } from "@mui/material";
 import {Close as CloseIcon} from "@mui/icons-material";
 import {useCallback, useContext, useEffect, useRef, useState} from "react";
-import UserContext from "../../hooks/UserProvider.jsx";
+import UserContext from "../hooks/UserProvider.jsx";
 
 
 const EditGroupProfileModal = ({open, closeModal,
-                                   community = {},
+                                   community ,
                                    saveChanges
 
 }) =>  {
@@ -35,14 +35,15 @@ const EditGroupProfileModal = ({open, closeModal,
             ...community,
             name: community?.name || '',
             description: community?.description || '',
-            bio: community?.bio || '',
             category: community?.category || '',
             about: community?.about || '',
-            profilePicUrl: community?.profilePicUrl || 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600',
+            profilePicUrl: community?.profilePicUrl || "",
         }
         if(!community){
             communityPlaceHolder.current = {
-                creatorId: user.id
+                ...communityPlaceHolder.current,
+                creatorId: user.id,
+                creatorUsername: user.username
             }
         }
     },[community])
@@ -103,15 +104,15 @@ const EditGroupProfileModal = ({open, closeModal,
                 <CloseButton onClick={closeModal}>
                     <CloseIcon/>
                 </CloseButton>
-                <Box sx={{display: "flex", alignItems: "stretch", m: 2, py: 2}}>
+                <Card sx={{display: "flex", alignItems: "stretch", m: 3}}>
                     <img
                         // src={community?.profilePicUrl ? community.profilePicUrl :  "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"}
                         // src={"https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"}
-                        src={communityPlaceHolder.current?.profilePicUrl || ""}
+                        src={communityPlaceHolder.current?.profilePicUrl}
 
                         style={{width: "100%", height: 230, objectFit: "cover"}}
                     />
-                </Box>
+                </Card>
                 <Button
                     component="label"
                     startIcon={<PhotoCamera/>}
@@ -130,7 +131,7 @@ const EditGroupProfileModal = ({open, closeModal,
                     <TextField
                         name="name"
                         placeholder="Name of your group"
-                        defaultValue={community?.name || ""}
+                        defaultValue={communityPlaceHolder.current?.name}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -142,7 +143,7 @@ const EditGroupProfileModal = ({open, closeModal,
                     <TextField
                         name="description"
                         placeholder="One liner about your group"
-                        defaultValue={community?.description || ""}
+                        defaultValue={communityPlaceHolder.current?.description}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -154,7 +155,7 @@ const EditGroupProfileModal = ({open, closeModal,
                     <TextField
                         name="about"
                         placeholder="Tell us about your group"
-                        defaultValue={community?.bio || ""}
+                        defaultValue={communityPlaceHolder.current?.about}
                         onChange={handleChange}
                         multiline
                         rows={4}
@@ -168,16 +169,16 @@ const EditGroupProfileModal = ({open, closeModal,
                     <Select
                         name="category"
                         sx={{mb:5, mt:2}}
-                        defaultValue={community?.category || null}
+                        defaultValue={communityPlaceHolder.current?.category}
                         onChange={handleChange}
                         >
-                            <MenuItem value='ACADEMIC'>Technology</MenuItem>
+                            <MenuItem value='TECHNOLOGY'>Technology</MenuItem>
                             <MenuItem value='CAREER'>Career</MenuItem>
                             <MenuItem value='SPORTS'>Sports</MenuItem>
                             <MenuItem value='SOCIAL'>Social</MenuItem>
                             <MenuItem value='CULTURE'>Culture</MenuItem>
                             <MenuItem value='NETWORKING'>Networking</MenuItem>
-                            <MenuItem value='ALUMINI'>Alumni</MenuItem>
+                            <MenuItem value='ALUMNI'>Alumni</MenuItem>
                             <MenuItem value='OTHER'>Other</MenuItem>
                         </Select>
                     <Box sx={{display:"flex", alignItems:"center", justifyContent:"flex-end"}}>

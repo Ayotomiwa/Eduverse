@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useEffect, useMemo, useState} from "react";
-import PagesTable from "../../../components/PagesTable.jsx";
+import PagesTable from "../../../components/Display/PagesTable.jsx";
 import {useDropzone} from 'react-dropzone';
 import * as XLSX from 'xlsx';
 import * as Papa from 'papaparse';

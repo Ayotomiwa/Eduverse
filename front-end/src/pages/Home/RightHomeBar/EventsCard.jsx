@@ -1,4 +1,3 @@
-import {useContext, useEffect, useState} from 'react';
 import {
     Avatar,
     Box,
@@ -24,32 +23,12 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
     },
 }));
 
-const EventsCard = ({open, handleOpen, maxHeight="45vh",
+const EventsCard = ({open,
+                        eventsData,
+                        handleOpen,
+                        maxHeight="45vh",
                         borderRadius = "12px",
                         showButton=true}) => {
-
-
-    const{user, jwtToken} = useContext(UserContext);
-    const [eventsData, setEventsData] = useState([]);
-
-    useEffect(() => {
-        fetchEvents();
-    },[]);
-
-
-    const fetchEvents = () => {
-        axios.get(`http://localhost:8222/api/event-service/users/${user.id}/events`,
-            {headers: {
-                    Authorization: `Bearer ${jwtToken}`
-                }})
-            .then(response => {
-                setEventsData(response.data);
-                console.log("events", response.data);
-            })
-            .catch(error => {
-                console.error("Failed to fetch events", error);
-            });
-    };
 
 
     const handleClick = (event) => {
@@ -57,13 +36,16 @@ const EventsCard = ({open, handleOpen, maxHeight="45vh",
     };
 
     return (
-        <Card sx={{ bgcolor: "white", borderRadius:borderRadius, overflow: "hidden", width:"100%"}}>
+        <Card sx={{ bgcolor: "white",
+            boxShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+            borderRadius:borderRadius,
+            overflow: "hidden", width:"100%"}}>
             <CustomListItemButton id="Events" onClick={handleClick}>
                 <Avatar sx={{ mr: 1 }}>
                     <img width="30" height="30" src="https://img.icons8.com/stickers/100/planner.png" alt="planner"/>
                 </Avatar>
                 <ListItemText primary="Upcoming Events"
-                              primaryTypographyProps={{ color: "secondary", fontWeight: "bold" }}/>
+                              primaryTypographyProps={{ color: "secondary.dark", fontWeight: "bold" }}/>
                 {open ? <ExpandLess /> : <ExpandMore />}
             </CustomListItemButton>
             <Box sx={{

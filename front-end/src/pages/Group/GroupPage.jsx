@@ -1,6 +1,6 @@
-import {Avatar, Box, Button, Card, CircularProgress, Divider, Paper, Typography} from '@mui/material';
+import {Avatar, Box, Button, Card, CircularProgress, Divider, Paper, Typography, useTheme} from '@mui/material';
 import {Edit as EditIcon} from '@mui/icons-material';
-import SimpleTab from "../../components/SimpleTab.jsx";
+import SimpleTab from "../../components/Input/SimpleTab.jsx";
 import EventsCard from "../Home/RightHomeBar/EventsCard.jsx";
 import Posts from "../Posts/Posts.jsx";
 import Threads from "./Threads/Threads.jsx";
@@ -9,12 +9,13 @@ import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import About from "./About/About.jsx";
 import UserContext from "../../hooks/UserProvider.jsx";
-import EventCalendar from "../../components/EventCalendar.jsx";
+import EventCalendar from "../../components/Event/EventCalendar.jsx";
 import GroupEvents from "./Events/GroupEvents.jsx";
-import EditGroupProfileModal from "./EditGroupProfileModal.jsx";
+import EditGroupProfileModal from "../../components/EditGroupProfileModal.jsx";
 import useImageUpload from "../../hooks/useImageUpload.jsx";
 
-const GroupPage = ({}) => {
+const GroupPage = () => {
+    const theme = useTheme();
     const {id} = useParams();
     const {user, jwtToken, university} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
@@ -26,15 +27,21 @@ const GroupPage = ({}) => {
     const tabs = ["Threads", "About", "Events"];
 
 
-    const {setPicFileName, setPicData, setNewData, newDataSaved, newData,
-        setNewDataSaved
-    } =
-        useImageUpload(jwtToken, university, postUrl);
+    const {
+        saveToDatabase, initUpload, newDataSaved, initUploadDone,setNewDataSaved
+    } = useImageUpload(jwtToken, university, postUrl);
 
 
     const handleTabChange = (newValue) => {
         setTabValue(newValue);
     }
+
+
+    useEffect(() => {
+        if(initUploadDone){
+            saveToDatabase();
+        }
+    }, [initUploadDone]);
 
 
     useEffect(() => {
@@ -62,13 +69,9 @@ const GroupPage = ({}) => {
             });
     }
 
-    const saveChanges= (community, data, fileName) => {
-        if(data && fileName){
-            setPicData(data);
-                setPicFileName(fileName);
-        }
-        setNewData(community);
-        console.log("saving changes", newData);
+    const saveChanges= (community, picData, fileName) => {
+        const keyName =   `${university.id}/${fileName}`
+        initUpload(community, picData, keyName);
     }
 
     return (
@@ -81,6 +84,8 @@ const GroupPage = ({}) => {
                         mb: 2,
                         pb: 1,
                         borderRadius: "0 0 12px 12px",
+                        border:`0.5px ${theme.palette.secondary.main} solid`,
+                        boxShadow: "1px 1px 2px rgba(0,0,0,0.5)",
                         flexDirection: 'column',
                         position: "sticky",
                         zIndex: 1000,

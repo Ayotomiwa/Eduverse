@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import {Box, ButtonBase, darken, Typography} from '@mui/material';
+import {Box, ButtonBase, darken, lighten, Typography, useTheme} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const SideNavItem = (props) => {
+    const theme = useTheme();
     const { active = false, disabled, path, icon, title } = props;
 
     const linkProps = path
@@ -26,13 +27,14 @@ export const SideNavItem = (props) => {
                     // backgroundColor: 'rgba(25, 118, 210, 0.1)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
                     '&:hover': {
-                        backgroundColor: 'rgba(25, 118, 210, 0.8)',
-                        color: '#fff',
+                        // backgroundColor: 'rgba(25, 118, 210, 0.8)',
+                        backgroundColor: lighten(`${theme.palette.secondary.light}`, 0.5),
+                        color: "secondary.contrastText",
                         '.icon': {
-                            color: '#fff',
+                            color: "secondary.contrastText",
                         },
                         'title':{
-                            color: '#fff'
+                            color: "secondary.contrastText",
                         }
                     },
                     ...(active && {

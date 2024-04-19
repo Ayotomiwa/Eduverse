@@ -1,4 +1,4 @@
-import {Avatar, IconButton, InputAdornment, OutlinedInput, Box} from "@mui/material";
+import {Avatar, IconButton, InputAdornment, OutlinedInput, Box, useTheme} from "@mui/material";
 import {MapsUgc} from "@mui/icons-material";
 import {useEffect, useRef, useState} from "react";
 
@@ -6,7 +6,7 @@ const CommentInput = ({username,
                           handleComment,
                          setReplyWhom,
                           replyWhom}) => {
-
+    const theme = useTheme();
     const [inputPlaceholder, setInputPlaceholder] = useState("");
     // const [inputVlue, setInputValue] = useState("");
 
@@ -49,7 +49,8 @@ const CommentInput = ({username,
     return (
         <Box sx={{display:"flex", flexDirection:"row", gap:1, width:"100%"}}>
             <Avatar variant="cirle" sx={{
-                bgcolor: 'secondary.main',
+                bgcolor: "secondary.main",
+                color:"secondary.contrastText",
                 width: 35,
                 height: 35
             }}>{username?.charAt(0).toUpperCase()}</Avatar>

@@ -33,7 +33,7 @@ const BigColorButton = ({ buttonName, handleClick, colorSchemes, selectedColor }
     </Box>
 );
 
-const ColorSchemeSelector = ({}) => {
+const ThemeSettings = ({universityPlaceHolder}) => {
     const theme = useTheme();
     const {changeTheme, jwtToken, university} = useContext(UserContext);
     const [primaryColour, setPrimaryColour] = useState(theme.palette.primary.main);
@@ -193,4 +193,4 @@ const ColorSchemeSelector = ({}) => {
     );
 };
 
-export default ColorSchemeSelector;
+export default ThemeSettings;

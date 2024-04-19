@@ -6,18 +6,13 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
 
-    const[data, setData] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [changesMade, setChangesMade] = useState(false);
     const [university, setUniversity] = useState(null);
     const [jwtToken, setJwtToken] = useState(null);
-
-
-    const [lastUser, setLastUser] = useState(null);
     const [isAuthenticating, setIsAuthenticating] = useState(true);
-    const [timedOut, setTimedOut] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     let storedPath;
 
 
@@ -25,54 +20,52 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         setIsAuthenticating(true);
-        const storedUserData = localStorage.getItem('userData');
-        const lastUser = localStorage.getItem('lastUser');
-        if (lastUser) {
-            setLastUser(JSON.parse(lastUser));
+        setChangesMade(false);
+        const publicPaths = ['/login', '/register'];
+        if(publicPaths.includes(location.pathname)){
+            setIsAuthenticating(false);
+            return;
         }
+        const storedUserData = localStorage.getItem('userData');
         if (storedUserData) {
             const decodedToken = jwtDecode(JSON.parse(storedUserData).token);
-            const tokenLifespan = decodedToken.exp - decodedToken.iat;
-            const halfExpiryTime = decodedToken.iat + (tokenLifespan / 2);
-            if (halfExpiryTime * 1000 < Date.now()) {
+            const currentTime = Date.now() / 1000;
+            if (decodedToken.exp < currentTime) {
+                console.log("Token expired");
                 localStorage.removeItem('user');
                 localStorage.removeItem('userData');
                 localStorage.removeItem('jwtToken');
                 localStorage.removeItem('university');
-                setTimedOut(true);
+                setUser(null);
             } else {
                 setUser(JSON.parse(storedUserData).user);
-                // console.log("UNIVERSITY ELSE", JSON.parse(storedUserData).user.university)
                 setUniversity(JSON.parse(storedUserData).user.university);
                 setJwtToken(JSON.parse(storedUserData).token);
             }
         }
         else {
-            setTimedOut(true);
+            setUser(null);
+            console.log("No user data found");
+            window.location.pathname = '/login';
         }
         setIsAuthenticating(false);
-        setIsLoading(false);
     }, []);
 
 
 
     useEffect(() => {
-        const publicPaths = ['/login', '/register'];
-
-        if (!isAuthenticating && !user && !publicPaths.includes(location.pathname)) {
-            if(location.pathname.includes('/contract/edit')){
-                localStorage.setItem('pathBeforeLogin', window.location.href);
-            }
-            else {
-                localStorage.setItem('pathBeforeLogin', location.pathname);
-            }
-            window.location.pathname = '/login';
+        if(user && !isAuthenticating && changesMade){
+            console.log("CHANGES MADE", changesMade);
+            const storedUserData = localStorage.getItem('userData');
+            setUser(JSON.parse(storedUserData).user);
+            setUniversity(JSON.parse(storedUserData).user.university);
+            setJwtToken(JSON.parse(storedUserData).token);
+            setChangesMade(false);
         }
-    }, [user, navigate, isAuthenticating, timedOut]);
+    }, [changesMade]);
 
 
     const login = (data, path) => {
-        setData(data);
         setUser(data.user);
         setJwtToken(data.token);
         setUniversity(data.user.university);
@@ -94,20 +87,66 @@ export const UserProvider = ({ children }) => {
                 window.location.pathname = '/home';
             }
         }
-        setLastUser(user);
         setIsAuthenticating(false);
     };
 
     const logout = () => {
-        localStorage.removeItem('lastUser');
-        localStorage.removeItem('user');
-        localStorage.removeItem('pathBeforeLogin');
-            return new Promise((resolve) => {
-                setTimedOut(false);
-                setUser(null);
-                resolve();
-            });
+           localStorage.clear()
+           setUser(null);
+           setUniversity(null);
+           setJwtToken(null);
+           window.location.pathname = '/login';
     };
+
+
+    const changeTheme = (primary, secondary) => {
+        setUniversity({
+           ...university,
+              primaryTheme: primary,
+              secondaryTheme: secondary
+        });
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        userData.user.university = {
+            ...university,
+            primaryTheme: primary,
+            secondaryTheme: secondary
+        }
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setChangesMade(true);
+        // localStorage.setItem('university', JSON.stringify(newUniversity));
+    }
+
+    const changeFeatureSettings = (newFeatureSettings) => {
+        setUniversity({
+            ...university,
+            universityFeatures: newFeatureSettings
+        });
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        userData.user.university = {
+            ...university,
+            universityFeatures: newFeatureSettings
+        }
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setChangesMade(true);
+    }
+
+    const updateUniversityDetails = (contact, logoUrl) => {
+        setUniversity({
+            ...university,
+            contactNo: contact,
+            logoUrl: logoUrl
+        });
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        userData.user.university = {
+            ...university,
+            contactNo: contact,
+            logoUrl: logoUrl
+        }
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setChangesMade(true);
+    }
+
+
 
     return (
         <UserContext.Provider value={{ user,
@@ -116,7 +155,10 @@ export const UserProvider = ({ children }) => {
             login,
             isAuthenticating,
             logout,
-            timedOut}}>
+            changeTheme,
+            changeFeatureSettings,
+            updateUniversityDetails,
+        }}>
             {children}
         </UserContext.Provider>
     );

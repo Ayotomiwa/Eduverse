@@ -135,7 +135,7 @@ const Comments = ({comments, setReplyWhom, setCommentOwnerId}) => {
                                                 e.preventDefault();
                                                 handleReplies(comment);
                                             }}
-                                            style={{color: "red", fontSize:"12px", fontStyle:"italic", ml:8}}
+                                            style={{color: "red", fontSize:"12px", fontStyle:"italic", marginLeft:"10px"}}
                                         >
                                             reply
                                         </a>

@@ -3,17 +3,6 @@ import Members from "./Members.jsx";
 
 const About = ({community}) => {
 
-
-
-
-
-
-
-
-
-
-
-
     return (
         <Box>
         <Box sx={{display: 'flex', flexDirection: "column", alignItems: "left", width:"100%"}}>

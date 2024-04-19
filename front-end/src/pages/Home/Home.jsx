@@ -27,11 +27,11 @@ const Home = (props) => {
     const currentPath = location.pathname;
     const [showRightSideBar, setShowRightSideBar] = useState(false);
 
-    const noneRightSideBarRoutes = ["/communities", "/community"];
+    const noneRightSideBarRoutes = ["/communities", "/community", "/my-events"];
 
 
     const isNonSidebarRoute = useCallback(() => {
-        return noneRightSideBarRoutes.includes(currentPath) || currentPath.startsWith("/community") || currentPath.startsWith("/communities");
+        return noneRightSideBarRoutes.includes(currentPath) || currentPath.startsWith("/community") || currentPath.startsWith("/communities") || currentPath.startsWith("/modules");
     }, [currentPath]);
 
 
@@ -60,7 +60,8 @@ const Home = (props) => {
             minHeight: "100vh",
             width:"100%",
             boxSizing: 'border-box',
-            backgroundColor: lighten("#c9d1d3", 0.2)
+            // backgroundColor: lighten("#c9d1d3", 0.2)
+            backgroundColor: lighten(theme.palette.primary.main, 0.7)
         }}>
             <Box sx={{
                 display: "flex", flexDirection: "row", justifyContent:"space-between", alignItems: "flex-start",

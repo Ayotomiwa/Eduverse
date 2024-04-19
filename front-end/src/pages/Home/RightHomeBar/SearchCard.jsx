@@ -1,8 +1,8 @@
-import {SearchBar} from "../../../components/SearchBar.jsx";
+import {SearchBar} from "../../../components/Input/SearchBar.jsx";
 import {
     Card, CardMedia, Box, Typography, Collapse, ListItemText, Chip,
     Divider,
-    ListItem, List, ListItemButton, ListItemAvatar, Avatar
+    ListItem, List, ListItemButton, ListItemAvatar, Avatar, useTheme
 } from "@mui/material";
 import logo from "../../../assets/lsbu_logo.svg"
 import {useContext, useEffect, useState} from "react";
@@ -12,6 +12,7 @@ import {useNavigate} from "react-router-dom";
 
 
 const SearchCard = ({search, setSearch}) => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const{university, jwtToken} = useContext(UserContext);
   const[searchTerm, setSearchTerm] = useState("");
@@ -39,6 +40,10 @@ const SearchCard = ({search, setSearch}) => {
         navigate(`/profile/${id}`);
     }
 
+
+    const handleModuleClick = (id) => {
+        navigate(`/modules/${id}`);
+    }
 
     const searchPlatform = () => {
         console.log("searching platform");
@@ -82,14 +87,16 @@ const SearchCard = ({search, setSearch}) => {
             pt: 4,
             pb: 1,
             borderRadius: "0 0 12px 12px",
+            border:`0.5px ${theme.palette.secondary.main} solid`,
+            boxShadow: "1px 1px 2px rgba(0,0,0,0.5)",
 
         }}>
-            <Box sx={{m: 2, borderRadius: "12px", backgroundColor:"#584595", p:2, height:"15vh"}}>
+            <Box sx={{m: 2, borderRadius: "12px", backgroundColor:"primary.main", p:2, height:"15vh"}}>
                 <CardMedia
                     component="img"
                     width="100%"
                     height="100%"
-                    image={logo}
+                    image={university.logoUrl}
                     alt="University Logo"
                 />
             </Box>
@@ -123,6 +130,7 @@ const SearchCard = ({search, setSearch}) => {
                     {users.map((user) => (
                         <>
                         <ListItemButton key={user.id}>
+                            onClick={() => handleUserClick(user.id)}
                             <ListItemAvatar>
                                 <Avatar
                                     alt={user.username}
@@ -163,6 +171,7 @@ const SearchCard = ({search, setSearch}) => {
                     {modules.map((module) => (
                         <>
                         <ListItemButton key={module.id}>
+                            onClick={() => handleModuleClick(module.id)}
                             <ListItemText primary={module.name} secondary={module.description}/>
                         </ListItemButton>
                         <Divider />

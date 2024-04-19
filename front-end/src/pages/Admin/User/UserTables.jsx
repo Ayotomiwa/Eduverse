@@ -1,83 +1,18 @@
-import PagesTable from "../../../components/PagesTable.jsx";
-import {Box, LinearProgress} from "@mui/material";
-import {useContext, useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import UserContext from "../../../hooks/UserProvider.jsx";
+import PagesTable from "../../../components/Display/PagesTable.jsx";
+import {Box, LinearProgress, Card} from "@mui/material";
+import { useState} from "react";
 
-const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection}) => {
+
+const UserTables = ({value, users, userSelection}) => {
     const [loading, setLoading] = useState(false);
-    const{jwtToken, user, university} = useContext(UserContext);
-
-
-    useEffect(() => {
-        if(users.length > 0){
-            setUserIds(users.map(user => user.id));
-        }
-    }, [users]);
-
-
-    useEffect(() => {
-            setUsers([]);
-            if(value === "studentusers"){
-                fetchStudentUsers();
-            }
-            if(value === "staffusers"){
-                fetchStaffUsers()
-            }
-
-    }, [value]);
-
-
-
-
-    const fetchStudentUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STUDENT`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`
-                }})
-            .then((response) => {
-                processUserData(response.data.content);
-                // console.log(response.data.content);
-                setLoading(false);
-            }).catch((error) => {
-            console.error("Error fetching users:", error);
-            setLoading(false);
-        });
-    }
-
-    const fetchStaffUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STAFF`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`
-                }})
-            .then((response) => {
-                processUserData(response.data.content);
-                // console.log(response.data.content);
-                setLoading(false);
-            }).catch((error) => {
-            console.error("Error fetching users:", error);
-            setLoading(false);
-        });
-    }
-
-
-    const processUserData = (data) => {
-        const users = data.map((user) => ({
-            ...user,
-            name: user.firstName + " " + user.lastName
-        }));
-        setUsers(users);
-    }
 
 
     const staffColumnHeaders = {
         "staffNo.": "staff.staffNumber",
         "name": "name",
         "email": "email",
-        "school": "school",
-        "User Type": "userType",
+        "Department": "staff.department",
+        "Staff Type": "staff.staffType",
     }
 
     const studentColumnHeaders = {
@@ -90,9 +25,28 @@ const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection
         "course":"student.course"
     }
 
+    const facultyColumnHeaders = {
+        "name": "faculty.name",
+        "email": "email",
+        "department": "faculty.department",
+        "User Type": "userType",
+    }
+
+    const columnHeaders =  {
+            staff: staffColumnHeaders,
+            student: studentColumnHeaders,
+            faculty: facultyColumnHeaders
+    }
+
+
+    const handleRowClick = (id) => {
+        window.location.href = `/profile/${id}` ;
+    }
+
+
 
     return(
-        <Box sx={{width: "100%"}}>
+        <Card sx={{width: "100%", minHeight:"70vh"}}>
             {loading ?
                 (
                     <Box sx={{m:"auto"}}>
@@ -106,11 +60,12 @@ const UserTables = ({value, setValue, users, setUserIds, setUsers, userSelection
                 onSelectAll={userSelection.handleSelectAll}
                 onSelectOne={userSelection.handleSelectOne}
                 selected={userSelection.selected}
-                columnHeaders={value === "staffusers" ? staffColumnHeaders : studentColumnHeaders}
+                columnHeaders={columnHeaders[value]}
+                handleRowClick={handleRowClick}
                 checkable={true}
             />
                 )}
-        </Box>
+        </Card>
     )
 };
 export default UserTables;

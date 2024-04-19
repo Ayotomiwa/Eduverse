@@ -1,10 +1,11 @@
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
-import {Button,InputAdornment, OutlinedInput, SvgIcon} from "@mui/material";
+import {Button, InputAdornment, lighten, OutlinedInput, SvgIcon, useTheme} from "@mui/material";
 import {useState} from "react";
 
 
 export const SearchBar = ({setSearchTerm, resetList, placeHolder}) => {
     const [searchTermHolder, setSearchTermHolder] = useState("")
+    const theme = useTheme();
 
 const handleSearch = (event) => {
     event.preventDefault();
@@ -47,14 +48,14 @@ return (
           >
               <SvgIcon
                   fontSize="medium"
-                  sx={{color:"Gray"}}
+                  sx={{color:"text.contrast"}}
               >
                   <MagnifyingGlassIcon />
               </SvgIcon>
           </Button>
         </InputAdornment>
       )}
-      sx={{backgroundColor:"rgb(59, 61, 145, 0.1)", borderRadius: "12px",
+      sx={{backgroundColor:`${lighten(theme.palette.secondary.main,0.9)}`, borderRadius: "12px",
           // "& .MuiOutlinedInput-notchedOutline": {
           //     borderColor: "transparent",
           // },

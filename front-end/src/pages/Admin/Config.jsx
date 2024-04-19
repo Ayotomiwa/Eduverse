@@ -7,7 +7,7 @@ const Config = [
 
         {
             title: 'User Management',
-            path: '/admin?page=user-management',
+            path: '/admin?page=user-management&tab=staff',
             public: true,
             icon: (
                 <SvgIcon fontSize="large">

@@ -8,19 +8,20 @@ import {
     Collapse,
     Divider,
     IconButton,
-    Typography
+    Typography, useTheme
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 import Comments from "./Comments.jsx";
 import {useContext, useEffect, useState} from "react";
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
-import CommentInput from "../../components/CommentInput.jsx";
+import CommentInput from "../../components/Input/CommentInput.jsx";
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider.jsx";
+import {UseCheckFeature} from "../../hooks/UseCheckFeature.jsx";
 
 
-const Post = ({post}) => {
-
+const Post = ({post, setPosts}) => {
+    const theme = useTheme();
     const {university} = useContext(UserContext)
     const {user} = useContext(UserContext)
     const{jwtToken} = useContext(UserContext)
@@ -39,6 +40,9 @@ const Post = ({post}) => {
     const [comments, setComments] = useState(null);
 
     const userId = 1;
+
+    const featureCheck = UseCheckFeature("POST_COMMENTING");
+    const postCommentAllowed = featureCheck.checkUserAccess("POST_COMMENTING");
 
 
 
@@ -101,6 +105,12 @@ const Post = ({post}) => {
             .then((response) => {
                 console.log("response", response.data);
                 fetchComments();
+                setPosts(posts => posts.map((p) => {
+                    if(p.id === post.id) {
+                        p.commentIds?.push(response.data.id);
+                    }
+                    return p;
+                }));
             }).catch((error) => {
             console.error("Error adding comment:", error);
         });
@@ -129,6 +139,17 @@ const Post = ({post}) => {
                     'Authorization': `Bearer ${jwtToken}`
                 }})
             .then((response) => {
+                setPosts(posts => posts.map((p) => {
+                    if(p.id === post.id){
+                        if(isLikedButton){
+                            p.likesIds?.push(userId);
+                        }
+                        else{
+                            p.likesIds = p.likesIds?.filter(id => id !== userId);
+                        }
+                    }
+                    return p;
+                }));
                 console.log("response", response.data);
             }).catch((error) => {
             console.error("Error adding like:", error);
@@ -157,61 +178,26 @@ const Post = ({post}) => {
     }
 
 
-    // const addComment = (comment) =>{
-    //     setOpenComments(true);
-    //     if(replyWhom && commentId){
-    //         console.log("replyWhom", replyWhom);
-    //         setComments(prevComments => {
-    //             return prevComments.map(newComment => {
-    //                 if (newComment.id === commentId) {
-    //                     if (newComment.replies) {
-    //                         newComment.replies.push({
-    //                             username: "Mike Tyson",
-    //                             desc: comment,
-    //                         });
-    //                     } else {
-    //                         newComment.replies = [{
-    //                             username: "Mike Tyson",
-    //                             desc: comment,
-    //                         }];
-    //                     }
-    //
-    //                 }
-    //                 return newComment;
-    //             });
-    //         });
-    //         return;
-    //     }
-    //     const newComment = {
-    //         username: "Mike Tyson",
-    //         userid: 1,
-    //         comment: comment,
-    //         postId: post.id,
-    //         userProfilePicUrl: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    //     }
-    //     if(!comments){
-    //         console.log("no comments");
-    //         setComments([newComment]);
-    //         // toggleComments()
-    //         return;
-    //     }
-    //     console.log("comments", comments);
-    //     setComments([ newComment, ...comments]);
-    // }
 
 
     return (
 
-        <Card sx={{width: "100%", border: "1 grey solid"}}>
+        <Card sx={{width: "100%",
+            boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
+        }}>
             <CardContent sx={{display: 'flex', flexDirection: "column", gap: 2}}>
-                <Box sx={{display: 'flex', alignItems: 'flex-start', gap: 1}}>
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                     <Avatar variant="square" sx={{
                         bgcolor: 'secondary.main',
-                        width: 24,
-                        height: 24
-                    }}>{post.username?.charAt(0).toUpperCase()}</Avatar>
+                        color:"secondary.contrastText",
+                        border: `0.5px solid ${theme.palette.primary.dark}`,
+                        width: 30,
+                        height: 30
+                    }}>
+                        { post.userProfileUrl ? post.userProfileUrl : post.facultyId? post.facultyName?.charAt(0).toUpperCase() : post.username?.charAt(0).toUpperCase() }
+                    </Avatar>
                     <Typography variant="subtitle2" component="div">
-                        {post.username}
+                        {post.facultyId ? <><b>{post.facultyName?.toUpperCase()}</b> - posted by</> : ""} {post.username}
                     </Typography>
                 </Box>
                 {post.imageUrl && (
@@ -255,10 +241,10 @@ const Post = ({post}) => {
                             )}
                     </IconButton>
                     <Typography variant="body2" component="div">
-                        {post.likes}
+                        {post.likesIds?.length}
                     </Typography>
                 </Box>
-                {university?.featureFlags?.POST_COMMENTING && (
+                { postCommentAllowed && (
                 <Box sx={{display: "flex", alignItems: "center"}}>
                     <IconButton
                         onClick={toggleComments}
@@ -271,9 +257,9 @@ const Post = ({post}) => {
                 </Box>
                 )}
             </CardActions>
-            {university?.featureFlags?.POST_COMMENTING && ( <Divider/> )}
+            {postCommentAllowed  && ( <Divider/> )}
             <Box sx={{m: "10px"}}>
-                {university?.featureFlags?.POST_COMMENTING && (
+                {postCommentAllowed && (
                         <CommentInput
                             setReplyWhom={setReplyWhom}
                             username={post.username}
@@ -282,16 +268,6 @@ const Post = ({post}) => {
 
                 )}
 
-                {/*<Avatar variant="cirle"  sx={{ bgcolor: 'secondary.main', width: 35, height: 35  }}>{post.username.charAt(0).toUpperCase()}</Avatar>*/}
-                {/*<OutlinedInput sx={{width: "100%", borderRadius:"10px"}} placeholder="Add a comment" size="small"*/}
-                {/*               endAdornment={*/}
-                {/*    <InputAdornment position="end">*/}
-                {/*        <IconButton edge="end" onClick={addComment} >*/}
-                {/*            <MapsUgc />*/}
-                {/*        </IconButton>*/}
-                {/*    </InputAdornment>*/}
-                {/*}*/}
-                {/*    />*/}
             </Box>
             {comments && (
             <Collapse in={openComments} timeout="auto" unmountOnExit>

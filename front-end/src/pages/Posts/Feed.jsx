@@ -1,13 +1,14 @@
 import {useContext, useEffect, useState} from 'react';
 import {Box, Button, Divider, lighten, Paper, SvgIcon, Typography, useMediaQuery, useTheme} from '@mui/material';
 
-import ImageUploadModal from "./ImageUploadModal.jsx";
+import PostUploadModal from "./PostUploadModal.jsx";
 import PollCreationModal from "./PollCreationModal.jsx";
-import SimpleTab from "../../components/SimpleTab.jsx";
+import SimpleTab from "../../components/Input/SimpleTab.jsx";
 import {PlusIcon} from "lucide-react";
 import CreatePost from "./CreatePost.jsx";
 import Posts from "./Posts.jsx";
 import UserContext from "../../hooks/UserProvider.jsx";
+import {UseCheckFeature} from "../../hooks/UseCheckFeature.jsx";
 
 
 const Feed = () => {
@@ -17,6 +18,7 @@ const Feed = () => {
     const [newPost, setNewPost] = useState(null);
     const [tabValue, setTabValue] = useState(0);
     const {university} = useContext(UserContext)
+    const featureCheck = UseCheckFeature();
 
 
 
@@ -58,9 +60,9 @@ const Feed = () => {
             }}>
         <Paper sx={{
             padding: 2, pt: 0, pb: 0, mb: 1, width: "100%", borderRadius: "0 0 12px 12px",
-            // bgcolor:"#F0F0F0",
-            bgcolor: "white"
-            // bgcolor: lighten ("#c9d1d3", 0.5)
+            bgcolor: "white",
+            border:`0.5px ${theme.palette.secondary.main} solid`,
+            boxShadow: "1px 1px 2px rgba(0,0,0,0.5)",
         }}>
             <Box sx={{m: "25px"}}>
                 <Typography textAlign="center" variant="h4"
@@ -75,7 +77,7 @@ const Feed = () => {
                 />
             </Box>
             <Divider/>
-            {university?.featureFlags?.CONTENT_POSTING && (
+            {featureCheck.checkUserAccess("CONTENT_POSTING") && (
             <CreatePost
             setNewPost={setNewPost}
             newPost={newPost}

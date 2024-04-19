@@ -60,7 +60,7 @@ const Thread= ({discussion}) => {
 
     return (
 
-        <Card sx={{width: "100%", border: "1 grey solid"}}>
+        <Card sx={{width: "100%", border: "1 grey solid", boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",}}>
             <CardActionArea
                 onClick={() => {
                     navigate(`/communities/thread/${discussion.id}`)

@@ -1,24 +1,73 @@
 
 
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import {Button, Card, CardActions, Divider, Typography, Box, TextField, styled, Modal, IconButton} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardActions,
+    Divider,
+    Typography,
+    Box,
+    TextField,
+    styled,
+    Modal,
+    IconButton,
+    useTheme
+} from "@mui/material";
 import {CardOverflow, Textarea} from "@mui/joy";
 import {Close as CloseIcon} from "@mui/icons-material";
+import {useContext, useEffect, useRef, useState} from "react";
+import UserContext from "../../hooks/UserProvider.jsx";
 
-export default function EditProfileModal({open, closeModal}) {
+export default function EditProfileModal({open, closeModal, userProfile }) {
+     const theme = useTheme();
+
+
+    const userProfileHolder=  useRef(null);
+    const{user, university} = useContext(UserContext);
+    const [picFileName, setPicFileName] = useState(null);
+    const [coverPicFileName, setCoverPicFileName] = useState(null);
+    const [picData, setPicData] = useState(null)
+    const [coverPicData, setCoverPicData] = useState(null)
+
+
+    function capitalizeFirstLetter(string) {
+        return string?.charAt(0).toUpperCase() + string?.slice(1);
+    }
 
 
 
+    useEffect(() => {
+        userProfileHolder.current = {
+            ...userProfile,
+            name: userProfile?.name || '',
+            bio: userProfile?.bio || '',
+            profilePicUrl: userProfile?.profilePicUrl || "",
+            coverPicUrl: userProfile?.coverPicUrl || "",
+        }
+    },[userProfile])
 
 
+    const handleImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+             setCoverPicFileName(event.target.files[0].name);
+             setCoverPicData(event.target.files[0]);
+            console.log(event.target.files[0].name);
+            userProfileHolder.current.coverPicUrl = URL.createObjectURL(event.target.files[0]);
 
-    const userProfile = {
-        name: "Jane Doe",
-        bio: "Hello! I'm a 4th-year Engineering Student passionate about technology and design. Excited to connect with like-minded peers.",
-        avatar: "https://via.placeholder.com/150",
-        email: "janedoe@example.com",
-        timezone: "GMT+5"
-    };
+        }
+    }
+
+    const handleProfileImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setPicFileName(event.target.files[0].name);
+            setPicData(event.target.files[0]);
+            console.log(event.target.files[0].name);
+            userProfileHolder.current.profilePicUrl = URL.createObjectURL(event.target.files[0]);
+        }
+    }
+
+
 
     const StyledModal = styled(Modal)({
         display: 'flex',
@@ -51,23 +100,55 @@ export default function EditProfileModal({open, closeModal}) {
                 <CloseButton onClick={closeModal}>
                     <CloseIcon />
                 </CloseButton>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, borderRight: 1, borderColor: 'divider' }}>
-                    <img
-                        src={userProfile.avatar}
-                        alt="profile"
-                        style={{ width: 150, height: 150, borderRadius: '50%' }}
-                    />
-                    <Button
-                        startDecorator={<PhotoCamera />}
-                        variant="outlined"
-                        sx={{ mt: 2 }}
-                    >
-                        Change Profile Pic
-                    </Button>
+                <Box sx={{display:"flex", FlexDirection:"row", alignItems:"center", border:"1px red solid", justifyContent:"space-between"}}>
+                    <Box sx={{display: 'flex',
+                        flexDirection: 'column',
+                        width:"100%",
+                        height: "15vh",
+                        position: "relative", m:2}}>
+                        <img
+                            src={userProfileHolder.current?.profilePicUrl}
+                            style={{width: "100%", height: "100%", objectFit: "cover", borderRadius: "25px"}}
+                        />
+                        <Button
+                            component="label"
+                            size="small"
+                            variant="contained"
+                            color="secondary"
+                            sx={{position: "absolute", top: "50%", left: "50%"}}
+                        >
+                            Change
+                            <input type="file" hidden onChange={handleProfileImageChange}/>
+                        </Button>
+                    </Box>
+                    <Divider orientation="vertical" flexItem sx={{mx: 2}} />
+                    <Box sx={{
+                        m:2,
+                        position: "relative",
+                        borderRadius: "12px",
+                        height: "15vh",
+                        width:"100%"
+                    }}>
+                        <img
+                            src={userProfileHolder.current?.coverPicUrl}
+                            style={{width: "100%", height: "100%", objectFit: "cover"}}
+                        />
+                        <Button
+                            component="label"
+                            size="small"
+                            variant="contained"
+                            color="secondary"
+                            sx={{position: "absolute", top: "50%", left: "50%"}}
+                        >
+                            Change
+                            <input type="file" hidden onChange={handleImageChange}/>
+                        </Button>
+                    </Box>
                 </Box>
+
                 <Box sx={{ flex: 1, p: 2 }}>
                     <Typography level="h5" sx={{ mt: 2, mb: 2 }}>
-                        {userProfile.name}
+                        {capitalizeFirstLetter(userProfile.firstName)} {capitalizeFirstLetter(userProfile.lastName)}
                     </Typography>
                     <Divider />
                     <TextField

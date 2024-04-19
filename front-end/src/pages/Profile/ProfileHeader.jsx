@@ -2,14 +2,15 @@ import {useState} from 'react';
 import {Box, Avatar, Typography, Button, Stack, Paper, Divider, Card} from '@mui/material';
 import { Edit as EditIcon, AddCircleOutline as AddCircleOutlineIcon } from '@mui/icons-material';
 import CreatePost from "../Posts/CreatePost.jsx";
-import SimpleTab from "../../components/SimpleTab.jsx";
-import EditGroupProfileModal from "../Group/EditGroupProfileModal.jsx";
+import SimpleTab from "../../components/Input/SimpleTab.jsx";
+import EditGroupProfileModal from "../../components/EditGroupProfileModal.jsx";
 
 const ProfileHeader = ({
                            setTabValue,
     setOpenEditModal,
     setProfile,
-    profile
+    profile,
+    postNo
 
 }) => {
 
@@ -20,6 +21,11 @@ const ProfileHeader = ({
 
     const handleTabChange = (newValue) => {
       setTabValue(newValue);
+    }
+
+
+    function capitalizeFirstLetter(string) {
+        return string?.charAt(0).toUpperCase() + string?.slice(1);
     }
 
 
@@ -50,35 +56,39 @@ const ProfileHeader = ({
                     </Box>
                     <Box sx={{position: 'absolute', top: "40%", right: "0%", p: 2}}>
                         <Typography variant="h5" color="white">
-                            <b></b> 200 Discussions
+                            <b></b> {postNo} Posts
                         </Typography>
                         <Typography variant="h5" color="white">
                             <b></b>00 Members
                         </Typography>
                     </Box>
                 </Box>
-                <Avatar src={profile.avatar}
-
+                <Avatar
+                    src={profile.profilePicUrl}
                         sx={{
-                    width: "28%",
-                    height: "60%",
+                    width: "20%",
+                    height: "44%",
                     position: 'absolute',
-                    top: "12%",
-                    left: "35%",
+                    top: "22%",
+                    left: "38%",
                     border: '5px solid white',
                 }}/>
                 <Box sx={{ px: 2, pb: 0 }}>
                     <Box sx={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
-                        <Box sx={{flex:1, p:1}}>
-                            <Typography variant="h5" sx={{ textAlign: 'left' }}>
-                                {profile.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {profile.bio}
-                            </Typography>
+                        <Box sx={{display:"flex", flexDirection:"row", p:1, border:"1px red solid"}}>
+                            <Box sx={{width:"40%", wordWrap: "break-word",  boxSizing:"border-box"}}>
+                                <Typography variant="h5" sx={{ textAlign: 'left' }}>
+                                    {capitalizeFirstLetter(profile.firstName)} {capitalizeFirstLetter(profile.lastName)}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {profile.bio}
+                                </Typography>
+                            </Box>
                             <Button
+
                                 onClick={() => setOpenEditModal(true)}
                                 startIcon={<EditIcon />} variant="text" sx={{
+                                ml: 'auto',
                                 textTransform: 'none',
                                 p: 0,
                                 color: 'primary',

@@ -75,7 +75,7 @@ const Threads = ({community}) => {
 
     return (
         <>
-            {!community?.moderatorsIds?.includes(user.id) && (
+            {community?.moderatorsIds?.includes(user.id) && (
                 <>
                     <Button
                         onClick={() => setThreadModalOpen(true)}

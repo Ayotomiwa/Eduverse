@@ -2,37 +2,24 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const useImageUpload = (jwtToken, university, postUrl) => {
-    const [picFileName, setPicFileName] = useState(null);
-    const [picData, setPicData] = useState(null);
-    const [keyName, setKeyName] = useState(null);
-    const [picUpload, setPicUpload] = useState(false);
+    const [dataToSave, setDataToSave] = useState(null);
     const[newDataSaved, setNewDataSaved] = useState(false);
+    const [initUploadDone, setInitUploadDone] = useState(false);
     const [newData, setNewData] = useState(null);
 
-    useEffect(() => {
-        if (picFileName) {
-            setKeyName(`${university.id}/${picFileName}`);
-        }
-    }, [picFileName, university]);
 
-    useEffect(() => {
-        if(picUpload){
-            saveToDatabase();
-            setPicUpload(false)
-            setKeyName(null);
-            setPicData(null);
-        }
-    }, [picUpload]);
 
-    useEffect(() => {
+    const initUpload = (newData, picData, keyName) => {
+        console.log("In init upload", newData);
         if(!newData){
             return;
         }
+        setDataToSave(newData);
         if(picData && keyName){
             console.log("Uploading image to S3");
             (async () => {
                 try {
-                    const signedUrl = await getSignedUrl();
+                    const signedUrl = await getSignedUrl(keyName);
                     if (signedUrl) {
                         console.log('Uploading image to S3 signed URL');
                         try {
@@ -43,7 +30,7 @@ const useImageUpload = (jwtToken, university, postUrl) => {
                             });
                             if (response.status === 200) {
                                 console.log('Image uploaded to S3', response);
-                                setPicUpload(true);
+                                setInitUploadDone(true);
                             }
                         } catch (error) {
                             console.error('Error uploading to S3:', error);
@@ -54,13 +41,13 @@ const useImageUpload = (jwtToken, university, postUrl) => {
                 }
             })();
         } else {
-            setPicUpload(true);
+            setInitUploadDone(true);
         }
+    }
 
-    }, [newData]);
 
-    const getSignedUrl = () => {
-        console.log("In get signed" + picFileName);
+    const getSignedUrl = (keyName) => {
+        console.log("In get signed" + keyName);
         return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
             {
                 headers: {
@@ -76,9 +63,8 @@ const useImageUpload = (jwtToken, university, postUrl) => {
     };
 
     const saveToDatabase = () => {
-        console.log("saving to database");
-        // console.log(newData);
-        axios.post(postUrl, newData,
+        setInitUploadDone(false);
+        axios.post(postUrl, dataToSave,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
@@ -86,12 +72,13 @@ const useImageUpload = (jwtToken, university, postUrl) => {
                 }
             })
             .then((response) => {
-                if (response.status === 200) {
+                if (response.status === 200 && response.data) {
                     // console.log("Post newDataSaved to database");
                     // console.log(response.data);
-                    setNewData(null);
+                    setDataToSave(null);
                     setNewDataSaved(true);
                 }
+                return null;
             })
             .catch((error) => {
                 console.log(error);
@@ -99,14 +86,12 @@ const useImageUpload = (jwtToken, university, postUrl) => {
     }
 
     return {
-        picFileName,
-        setPicFileName,
-        picData,
-        setPicData,
         newData,
         setNewData,
         newDataSaved,
         setNewDataSaved,
+        initUpload,
+        initUploadDone,
         saveToDatabase
     };
 }

@@ -1,28 +1,30 @@
 import Post from "./Post.jsx";
-import {Box, Button} from "@mui/material";
+import {Box, Button, CircularProgress} from "@mui/material";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider.jsx";
+import LoadingButton from '@mui/lab/LoadingButton';
+import {Typography} from "@mui/material";
 
-const Posts = ({newPost, selectedTab}) => {
+const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
 
-    const {jwtToken} = useContext(UserContext);
+    const {jwtToken, university, user} = useContext(UserContext);
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0)
     const [loadMore, setLoadMore] = useState(false);
-    const universityId = 1;
-    const userId = 1;
-    const publicUrl = `http://localhost:8222/api/post-service/posts/${universityId}/public?page=${page}&size=20&sortBy=createdAt`;
-    const friendsUrl = `http://localhost:8222/api/post-service/posts/${userId}/friends?page=${page}&size=20&sortBy=createdAt`;
+    const [loadingAgain, setLoadingAgain] = useState(true);
+    const [loadPrevious, setLoadPrevious] = useState(false);
+    const publicUrl = `http://localhost:8222/api/post-service/university/${university.id}/posts/public?page=${page}&size=20&sortBy=createdAt`;
+    const friendsUrl = `http://localhost:8222/api/post-service/users/${user.id}/posts/friends?page=${page}&size=20&sortBy=createdAt`;
 
-    const fetchUrl = selectedTab !== 0 ? publicUrl : friendsUrl;
-
-    console.log("fetchUrl", fetchUrl);
+    const fetchUrl =  profilePostsUrl ?  profilePostsUrl :  (selectedTab === "Public" ? publicUrl : friendsUrl);
 
 
 
     useEffect(() => {
+         console.log(selectedTab)
          fetchPosts();
     }, [selectedTab, page]);
 
@@ -37,35 +39,64 @@ const Posts = ({newPost, selectedTab}) => {
 
 
     const fetchPosts = () => {
+        setLoadingAgain(true);
+        console.log("Fetching posts PaGE ", page)
         axios.get(fetchUrl, {
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }})
             .then((response) => {
+                console.log(response.data)
+                setTotalPages(response.data.totalPages)
+                setLoading(false);
+                setLoadingAgain(false);
+                if(profilePostsUrl){
+                    setPostNo(response.data.totalElements);
+                }
+                if(response.data.content.length === 0){
+                  return
+                }
                 if(loadMore){
                     setPosts([posts, ...response.data.content])
+                    return;
                 }
-                else{
-                    // console.log("response", response.data.content);
-                    setPosts(response.data.content);
+                if(loadPrevious){
+                    setPosts([...response.data.content, ...posts])
+                    return;
                 }
+                setPosts(response.data.content);
+                setTotalPages(response.data.totalPages)
                 setLoading(false);
+                setLoadingAgain(false);
             }).catch((error) => {
                 console.error("Error fetching posts:", error);
                 setLoading(false);
+                setLoadingAgain(false);
             });
     }
 
 
-    const handleLoadMore = () => {
-        if(posts.length == 0){
+    const handleLoadPrevious = () => {
+        setLoadMore(false)
+        if(posts.length === 0 || page + 1 === totalPages){
+            setLoadPrevious(false)
+            return
+        }
+        setLoadPrevious(true)
+        setPage((prev) => prev + 1)
+    }
+
+
+    const handleLoadNewer = () => {
+        setLoadPrevious(false)
+        if(page === 0){
+            setLoadMore(false)
+            fetchPosts();
             return
         }
         setLoadMore(true)
-        setPage((prev) => prev + 1)
-
+        setPage((prev) => prev - 1)
     }
-
 
     return (
         <>
@@ -73,13 +104,42 @@ const Posts = ({newPost, selectedTab}) => {
                 display: "flex", flexDirection: "column", JustifyContent: "center",
                 alignItems: "center", gap: 4, mb: "150px", minHeight: "100vh"
             }}>
-                {posts.map((post, index) => (
-                    <Post key={posts.length - index} post={post} posts={posts}/>
+                {(loading || posts.length === 0) ? (
+                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "70vh"}}>
+                    {loading && <CircularProgress color="secondary" />}
+                        {!loading && posts.length === 0 && <Typography variant="h5" sx={{color:"grey"}}>No posts found. Share a post to get started</Typography>}
+                    </Box>
+                    ):(
+                        <>
+                    <Box>
+                        <LoadingButton
+                            size="small"
+                            variant="outlined"
+                                       loading={loadingAgain}
+                                disabled={page < 0 || posts.length === 0}
+                                color="secondary"
+                                fullWidth
+                               loadingPosition="end"
+                               onClick={handleLoadNewer}>
+                            {page < 0 || posts.length === 0 ? "No more posts" : "Load Latest Posts"}
+                        </LoadingButton>
+                    </Box>
+                    {posts.map((post, index) => (
+                    <Post key={posts.length - index}
+                          post={post}
+                          setPosts={setPosts}
+                          posts={posts}
+                    />
                 ))}
+                        </>
+                )}
             </Box>
              <Box>
-                <Button onClick={handleLoadMore}>
-                    Load more
+                <Button variant="contained"
+                        disabled={page + 1 === totalPages}
+                        color="secondary"
+                        fullWidth sx={{mb:3}} onClick={handleLoadPrevious}>
+                    {page + 1 === totalPages ? "No more posts" : "Previous Posts"}
                 </Button>
             </Box>
 

@@ -17,12 +17,13 @@ import {
     Typography, CircularProgress
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {SearchBar} from "../../../components/SearchBar.jsx";
-import PagesTable from "../../../components/PagesTable.jsx";
-import {useEffect, useState} from "react";
+import {SearchBar} from "../../../components/Input/SearchBar.jsx";
+import PagesTable from "../../../components/Display/PagesTable.jsx";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {AddBox} from "@mui/icons-material";
 import {ImageIcon} from "lucide-react";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
 const AddMembersModal = ({
                              open, handleClose,
@@ -30,9 +31,11 @@ const AddMembersModal = ({
                              community
                          }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const{university} = useContext(UserContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const {jwtToken} = useContext(UserContext);
 
 
     useEffect(() => {
@@ -43,7 +46,6 @@ const AddMembersModal = ({
     }, [searchTerm]);
 
 
-
     const handleAdd = () => {
         handleSubmit(selectedUsers);
         setSelectedUsers([]);
@@ -51,11 +53,12 @@ const AddMembersModal = ({
     }
 
     const fetchUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}`,
+        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}&universityId=${university.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
-                }})
+                }
+            })
             .then(response => {
                 setUsers(response.data);
                 setSearchTerm('');
@@ -88,27 +91,29 @@ const AddMembersModal = ({
 
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, pb: 0}}>
-                <DialogTitle
-                    sx={{color: 'secondary.main'}}
-                >Add Members</DialogTitle>
-                <IconButton
-                    onClick={handleClose}
-                >
+        <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth="md">
+            <Box sx={{display: 'flex', justifyContent:"space-between", p: 1, pb: 0}}>
+                <DialogTitle sx={{color: 'secondary.main'}}>Add Members</DialogTitle>
+                <IconButton onClick={handleClose}>
                     <CloseIcon/>
                 </IconButton>
             </Box>
             <DialogContent>
-                <Box sx={{display: "flex", alignItems: "center", flexDirection: "column"}}>
-                    <Box>
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    width: "100%",
+                    boxSizing: "border-box"
+                }}>
+                    <Box sx={{width: "50%"}}>
                         <SearchBar
                             placeHolder="Search for users"
                             setSearchTerm={setSearchTerm}
                             resetList={resetList}
                         />
                     </Box>
-                    <Box sx={{m: 2}}>
+                    <Box sx={{m: 2, display: "flex", flexDirection: "column", alignItems: "center", width: "100%"}}>
                         <Box>
                             <Typography variant="subtitle2" sx={{px: 1}}>
                                 Search Results
@@ -124,7 +129,8 @@ const AddMembersModal = ({
                                 height: "30vh",
                                 maxHeight: "40vh",
                                 boxSizing: "border-box",
-                                width: "40vw"
+                                width: "100%",
+                                flex: 1
                             }}>
                                 {users.length === 0 && (
                                     <Box sx={{
@@ -145,12 +151,12 @@ const AddMembersModal = ({
                                                       <Box sx={{
                                                           display: "flex",
                                                           flexDirection: "row",
-                                                          justifyContent: "space-between"
+                                                          justifyContent: "center"
                                                       }}>
                                                           {community.moderatorsIds?.includes(user.id) || community.membersIds?.includes(user.id) ? (
                                                               <Button
                                                                   onClick={handleSelectUser(user)}
-                                                                  variant="contained" color="primary">
+                                                                  variant="contained" color="primary" fullWidth>
                                                                   ADD
                                                               </Button>
                                                           ) : (
@@ -178,9 +184,9 @@ const AddMembersModal = ({
                             </List>
                         )}
                     </Box>
-                    <Box sx={{m: 2, mt: 0}}>
+                    <Box sx={{m: 2, display: "flex", flexDirection: "column", alignItems: "center", width: "100%"}}>
                         <Box>
-                            <Typography variant="subtitle2" sx={{px: 1}}>
+                            <Typography variant="subtitle2" sx={{m: 1}}>
                                 Selected Members to be added
                             </Typography>
                         </Box>
@@ -189,7 +195,7 @@ const AddMembersModal = ({
                             minHeight: "20vh",
                             maxHeight: "30vh",
                             boxSizing: "border-box",
-                            width: "40vw"
+                            width: "100%"
                         }}>
                             {selectedUsers.map(user => {
                                 return (
@@ -198,12 +204,12 @@ const AddMembersModal = ({
                                                   <Box sx={{
                                                       display: "flex",
                                                       flexDirection: "row",
-                                                      justifyContent: "space-between"
+                                                      justifyContent: "center"
                                                   }}>
                                                       {community.moderatorsIds?.includes(user.id) || community.membersIds?.includes(user.id) && (
                                                           <Button
                                                               onClick={handleSelectRemove(user)}
-                                                              variant="contained" color="error">
+                                                              variant="contained" color="error" fullWidth>
                                                               Remove
                                                           </Button>
                                                       )}
@@ -226,7 +232,7 @@ const AddMembersModal = ({
                             })}
                         </List>
                     </Box>
-                    <Box>
+                    <Box sx={{width: "100%"}}>
                         <Button onClick={handleAdd}
                                 color="secondary"
                                 variant="contained"

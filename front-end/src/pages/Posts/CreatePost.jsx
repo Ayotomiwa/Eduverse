@@ -1,6 +1,6 @@
 import {Box, Button, lighten, SvgIcon, Typography} from "@mui/material";
 import {PlusIcon} from "lucide-react";
-import ImageUploadModal from "./ImageUploadModal.jsx";
+import PostUploadModal from "./PostUploadModal.jsx";
 import PollCreationModal from "./PollCreationModal.jsx";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
@@ -9,12 +9,11 @@ import UserContext from "../../hooks/UserProvider.jsx";
 const CreatePost = ({setNewPost}) => {
 
 
-    const {jwtToken} = useContext(UserContext);
+    const {jwtToken, university} = useContext(UserContext);
     const [selectedImage, setSelectedImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [openImageModal, setOpenImageModal] = useState(false);
     const [openPollModal, setOpenPollModal] = useState(false);
-    const universityId = 1;
     const [keyName, setKeyName] = useState(null);
     const [pictureFileName, setPictureFileName] = useState(null);
     const [pictureData, setPictureData] = useState(null);
@@ -24,7 +23,7 @@ const CreatePost = ({setNewPost}) => {
 
     useEffect(() => {
         if (pictureFileName) {
-            setKeyName(`${universityId}/${pictureFileName}`);
+            setKeyName(`${university.id}/${pictureFileName}`);
         }
     }, [pictureFileName]);
 
@@ -204,7 +203,7 @@ const CreatePost = ({setNewPost}) => {
                 </Button>
             </Box>
             <Box>
-                <ImageUploadModal
+                <PostUploadModal
                     open={openImageModal}
                     closeModal={handleCloseImageModal}
                     selectedImage={selectedImage}

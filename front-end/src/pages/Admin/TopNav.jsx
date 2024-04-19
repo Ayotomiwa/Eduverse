@@ -58,13 +58,13 @@ export const TopNav = () => {
                                     <ArrowLeftIcon />
                                 </SvgIcon>}
 
-                            onClick={() => {window.location.pathname = "/feed"}}
+                            onClick={() => {window.location.replace("http://localhost:5173/feed")}}
                         >
                             <Typography
                                 variant="subtitle1"
                                 fontWeight="bold"
                                 textAlign="center"
-                                sx={{color:"purple", mr:"5px"}}
+                                sx={{color:"primary.dark", mr:"5px"}}
                             >
                                 Back to EduVerse
                             </Typography>
@@ -100,22 +100,22 @@ export const TopNav = () => {
                             Admin Dashboard
                         </Typography>
                     </Box>
-                        <Tooltip title="Notifications">
-                            <IconButton>
-                                <Badge
-                                    badgeContent={4}
-                                    // color="success"
-                                    variant="dot"
-                                >
+                        {/*<Tooltip title="Notifications">*/}
+                        {/*    <IconButton>*/}
+                        {/*        <Badge*/}
+                        {/*            badgeContent={4}*/}
+                        {/*            // color="success"*/}
+                        {/*            variant="dot"*/}
+                        {/*        >*/}
 
-                                    <SvgIcon fontSize="large">
-                                        {/*<BellIcon color="rgb(185,67,102)"/>*/}
-                                        {/*<BellIcon color="#e75480"/>*/}
-                                        <BellIcon />
-                                    </SvgIcon>
-                                </Badge>
-                            </IconButton>
-                        </Tooltip>
+                        {/*            <SvgIcon fontSize="large">*/}
+                        {/*                /!*<BellIcon color="rgb(185,67,102)"/>*!/*/}
+                        {/*                /!*<BellIcon color="#e75480"/>*!/*/}
+                        {/*                <BellIcon />*/}
+                        {/*            </SvgIcon>*/}
+                        {/*        </Badge>*/}
+                        {/*    </IconButton>*/}
+                        {/*</Tooltip>*/}
                         <Avatar
                             onClick={accountPopover.handleOpen}
                             ref={accountPopover.anchorRef}

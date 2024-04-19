@@ -7,67 +7,65 @@ import {
     Box,
     ListItemButton,
     Typography,
-    ListItemIcon,
     ListItemText,
     SvgIcon, useTheme, Divider
 } from "@mui/material";
 import {InboxIcon} from "lucide-react";
 import {ExpandLess, ExpandMore, LibraryBooks, StarBorder} from "@mui/icons-material";
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import axios from "axios";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
 const ModuleCard = ({maxHeight}) => {
     const theme = useTheme();
+    const{university, user, jwtToken} = useContext(UserContext);
 
     const [open, setOpen] = useState(true);
+    const[modules, setModules] = useState([])
+
+
+    useEffect(() => {
+        fetchModules();
+    },[])
+
+
+    const fetchModules = () => {
+        axios.get(`http://localhost:8222/api/user-service/users/${user.id}/modules`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            }).then(response => {
+            setModules(response.data);
+          }).catch(error => {
+            console.log(error);
+          })
+      };
+
+
 
     const handleClick = () => {
         setOpen(!open);
     };
 
 
-    const modules = [
-        {
-            name: "Module 1",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        },
-        {
-            name: "Module 2",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        },
-        {
-            name: "Module 3",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        },
-        {
-            name: "Module 4",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        },
-        {
-            name: "Module 5",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        },
-        {
-            name: "Module 6",
-            profilePic: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-        }
-    ]
-
     const handleMenuClick = (id) => {
-        console.log("id", id);
+        window.location.href = `/modules/1`;
     }
 
 
     return (
         <Card sx={{
             bgcolor: "white",
-            borderRadius: "12px"
+            borderRadius: "12px",
+            boxShadow: "2px 2px 4px rgba(0,0,0,0.5)"
         }}>
                 <ListItemButton onClick={handleClick}>
                     <Avatar sx={{mr: 1}}>
                         <img width="30" height="30" src="https://img.icons8.com/stickers/100/books.png" alt="books"/>
                     </Avatar>
                     <ListItemText  primary={
-                        <Typography color="secondary" sx={{ fontWeight: "bold"}}>
+                        <Typography color="secondary.dark" sx={{ fontWeight: "bold"}}>
                             Modules
                         </Typography>
                     }>
@@ -89,18 +87,25 @@ const ModuleCard = ({maxHeight}) => {
                     },
                     maxHeight: maxHeight }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Divider />
-                    <List component="div" disablePadding>
+                      <Divider />
+                    <List component="div" disablePadding sx={{minHeight:"20vh"}}>
                         {modules.map((module, index) => {
                             return(
-                                <ListItemButton sx={{pl: 4}} key={index}>
+                                <Box key={index}>
+                                <ListItemButton
+
+                                    onClick={() => handleMenuClick(module.id)}
+                                    sx={{pl: 4}} key={index}>
                                     {/*<ListItemAvatar>*/}
                                     {/*    <Avatar variant="square"  sx={{ bgcolor: 'green', width: 24, height: 24  }}>*/}
                                     {/*        {module.name?.charAt(0).toUpperCase()}</Avatar>*/}
                                     {/*</ListItemAvatar>*/}
                                     <ListItemText primary={module.name}/>
+
                                 </ListItemButton>
+                                </Box>
                             )
+
                         })}
                     </List>
                 </Collapse>

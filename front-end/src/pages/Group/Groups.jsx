@@ -1,7 +1,7 @@
 import {
     AppBar,
     Box, CircularProgress, lighten,
-    Typography
+    Typography, useTheme
 } from "@mui/material";
 import GroupCard from "./GroupCard.jsx";
 import GroupsTopBar from "./GroupsTopBar.jsx";
@@ -16,49 +16,49 @@ const Groups = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const {user, university, jwtToken} = useContext(UserContext);
+    const theme = useTheme();
 
 
     useEffect(() => {
         setGroups(null);
         setSearchTerm('');
-        if(tabValue === 0){
+        if (tabValue === 0) {
             fetchMyGroups();
-        }
-        else{
+        } else {
             fetchAllGroups();
         }
 
-    },[tabValue]);
+    }, [tabValue]);
 
 
     useEffect(() => {
-        if(groups){
-           setLoading(false);
-           return;
+        if (groups) {
+            setLoading(false);
+            return;
         }
         setLoading(true);
     }, [groups]);
 
 
-
     useEffect(() => {
-        if(searchTerm === '') {
-         return
+        if (searchTerm === '') {
+            return
         }
-        if(tabValue === 0){
+        if (tabValue === 0) {
             searchMyGroups();
             return;
-            }
+        }
         searchAllGroups();
 
     }, [searchTerm]);
 
-    const fetchAllGroups = ()=> {
+    const fetchAllGroups = () => {
         axios.get(`http://localhost:8222/api/group-service/university/${university.id}/groups`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
-                }})
+                }
+            })
             .then(response => {
                 setGroups(response.data);
             })
@@ -69,16 +69,18 @@ const Groups = () => {
     }
 
 
-    const fetchMyGroups = () =>{
+    const fetchMyGroups = () => {
         axios.get(`http://localhost:8222/api/group-service/users/${user.id}/groups`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
-                }})
+                }
+            })
             .then(res => {
                 setGroups(res.data)
-            }).catch(error => {
                 setLoading(false);
+            }).catch(error => {
+            setLoading(false);
             console.log(error);
         });
     }
@@ -89,7 +91,8 @@ const Groups = () => {
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
-                }})
+                }
+            })
             .then(response => {
                 setGroups(response.data);
                 setLoading(false);
@@ -105,7 +108,8 @@ const Groups = () => {
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
-                }})
+                }
+            })
             .then(response => {
                 setGroups(response.data);
                 setLoading(false);
@@ -117,9 +121,9 @@ const Groups = () => {
     }
 
     const resetList = (value) => {
-        if(searchTerm === '' || !value ){
+        if (searchTerm === '' || !value) {
             setGroups(null);
-            if(tabValue === 0){
+            if (tabValue === 0) {
                 fetchMyGroups();
                 return
             }
@@ -127,67 +131,52 @@ const Groups = () => {
         }
     }
 
-    const softColors = [
-        '#f8c6d1',
-        '#a7c7e7',
-        '#a8e6cf',
-        '#d1c4e9',
-        '#ffccaa',
-        '#f6e8b1',
-        '#87ceeb',
-        '#88d8b0',
-        '#f3e5f5',
-        '#fffdd0'
-    ];
-
-
-
 
 
     return (
-        <Box sx={{minHeight:"100vh", p:0}}>
+        <Box sx={{minHeight: "100vh", p: 0}}>
             <Box
                 sx={{
-                   p: 2,
+                    p: 2,
                     position: "sticky",
                     top: 0,
-                    backgroundColor: lighten("#c9d1d3", 0.2),
+                    backgroundColor: lighten(theme.palette.primary.main, 0.7),
                     zIndex: 2000
                 }}
             >
                 <GroupsTopBar
-                 setTabValue={setTabValue}
-                 setSearchTerm={setSearchTerm}
-                 resetList={resetList}
+                    setTabValue={setTabValue}
+                    setSearchTerm={setSearchTerm}
+                    resetList={resetList}
                 />
             </Box>
-            {loading || !groups? (
-            <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", height:"100vh"}}>
-                <CircularProgress />
-            </Box>
-                ) : (
-                groups?.length === 0 ? (
-                <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh"}}>
-                    <Typography variant="h5" color="secondary">
-                        No groups found
-                    </Typography>
+            {loading ? (
+                <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+                    <CircularProgress/>
                 </Box>
+            ) : (
+                groups?.length === 0 || !groups ? (
+                    <Box sx={{display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh"}}>
+                        <Typography variant="h5" color="secondary">
+                            No groups found
+                        </Typography>
+                    </Box>
                 ) : (
-            <Box sx={{
-                mt: 2,
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: 4,
-            }}>
-                {groups.map((group) => (
-                    <GroupCard
-                        key={group.id}
-                        group={group}
-                    />
-                ))}
-            </Box>
-            )
+                    <Box sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        gap: 4,
+                    }}>
+                        {groups.map((group) => (
+                            <GroupCard
+                                key={group.id}
+                                group={group}
+                            />
+                        ))}
+                    </Box>
+                )
             )}
         </Box>
     );

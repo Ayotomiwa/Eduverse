@@ -13,6 +13,7 @@ export default function GroupCard({group}) {
 
 
 
+
     return (
         <ThemeProvider theme={theme}>
         <Card
@@ -28,7 +29,7 @@ export default function GroupCard({group}) {
                 <CardCover>
                     <img
                         // src="https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                        src="https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                        src={group?.profilePicUrl}
                         loading="lazy"
                         alt=""
                     />

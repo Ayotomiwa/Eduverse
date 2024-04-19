@@ -57,7 +57,8 @@ const ModuleCard = ({maxHeight}) => {
         <Card sx={{
             bgcolor: "white",
             pt: 0,
-            borderRadius: "12px"
+            borderRadius: "12px",
+            boxShadow: "2px 2px 4px rgba(0,0,0,0.5)"
         }}>
                 <ListItemButton onClick={handleClick}>
                     <Avatar sx={{ mr: 1 }}>
@@ -65,7 +66,7 @@ const ModuleCard = ({maxHeight}) => {
                              alt="groups"/>
                     </Avatar>
                     <ListItemText color="secondary" primary={
-                        <Typography color="secondary" sx={{ fontWeight: "bold"}}>
+                        <Typography color="secondary.dark" sx={{ fontWeight: "bold"}}>
                             Communities
                         </Typography>
                     }>
@@ -88,8 +89,11 @@ const ModuleCard = ({maxHeight}) => {
                     maxHeight: maxHeight }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Divider />
-                        <List component="div" disablePadding>
-                            {groups.map((community, index) => {
+                        <List component="div" disablePadding sx={{minHeight:"15vh"}}>
+                            {!groups || groups.length === 0 ? (
+                                <ListItemText sx={{textAlign:"center"}} primary="No Community. Click the Community Tab to search and join community"/>
+                            ) : (
+                            groups.map((community, index) => {
                                 return(
                                     <ListItemButton sx={{pl: 4}}
                                                     onClick={() => handleMenuClick(community.id)}
@@ -100,8 +104,8 @@ const ModuleCard = ({maxHeight}) => {
                                         {/*</ListItemAvatar>*/}
                                         <ListItemText primary={community.name}/>
                                     </ListItemButton>
-                                )
-                            })}
+                                )})
+                                )}
                         </List>
                     </Collapse>
                 </Box>

@@ -1,7 +1,7 @@
 import {Box, Button, lighten, SvgIcon, Typography} from "@mui/material";
-import SimpleTab from "../../components/SimpleTab.jsx";
+import SimpleTab from "../../components/Input/SimpleTab.jsx";
 import {useState} from "react";
-import {SearchBar} from "../../components/SearchBar.jsx";
+import {SearchBar} from "../../components/Input/SearchBar.jsx";
 
 const GroupsTopBar = ({setTabValue, setSearchTerm, resetList}) => {
 

@@ -35,7 +35,7 @@ const EditableContact = ({ value, onChange }) => (
 );
 
 
-const AppProfileHeader= ({saveChanges, universityPlaceholder}) => {
+const UniversityProfile= ({saveChanges, universityPlaceholder}) => {
     const theme = useTheme();
 
     // console.log("In app header", universityPlaceholder);
@@ -57,7 +57,7 @@ const AppProfileHeader= ({saveChanges, universityPlaceholder}) => {
 
 
     const handleSaveChanges = () => {
-        universityPlaceholder.current.profilePicUrl = picFileName
+        universityPlaceholder.current.logoUrl = picFileName
         saveChanges(universityPlaceholder.current, picData, picFileName);
     }
 
@@ -102,4 +102,4 @@ const AppProfileHeader= ({saveChanges, universityPlaceholder}) => {
     );
 }
 
-export default AppProfileHeader
+export default UniversityProfile
