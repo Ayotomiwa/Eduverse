@@ -208,7 +208,7 @@ const Post = ({post, setPosts}) => {
                 {post.imageUrl && (
                     <CardMedia
                         component="img"
-                        height="400"
+                        height="350"
                         image={post.imageUrl}
                         alt="User post"
                     />

@@ -50,7 +50,7 @@ const ModuleCard = ({maxHeight}) => {
 
 
     const handleMenuClick = (id) => {
-        window.location.href = `/modules/1`;
+        window.location.href = `/modules/${id}`;
     }
 
 

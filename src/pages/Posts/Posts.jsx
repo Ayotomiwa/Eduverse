@@ -124,7 +124,7 @@ const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
                             variant="outlined"
                                        loading={loadingAgain}
                                 disabled={page < 0 || posts.length === 0}
-                                color="secondary"
+                                sx={{bgcolor: "secondary.light", opacity: 0.5, color: "secondary.contrastText"}}
                                 fullWidth
                                loadingPosition="end"
                             endIcon={loadingAgain ? <CircularProgress size={20} color="secondary"/> : null}
@@ -145,8 +145,8 @@ const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
              <Box>
                 <Button variant="contained"
                         disabled={page + 1 === totalPages}
-                        color="secondary"
-                        fullWidth sx={{mb:3}} onClick={handleLoadPrevious}>
+                        sx={{bgcolor: "secondary.light", opacity: 0.5, color: "secondary.contrastText", mb:3}}
+                        fullWidth onClick={handleLoadPrevious}>
                     {page + 1 === totalPages ? "No more posts" : "Previous Posts"}
                 </Button>
             </Box>

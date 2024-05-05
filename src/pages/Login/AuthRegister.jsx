@@ -219,7 +219,7 @@ const AuthRegister = () => {
 
                                 <Grid item xs={12}>
                                     <Stack spacing={1}>
-                                        <InputLabel htmlFor="email-signup">Email Address(University)*</InputLabel>
+                                        <InputLabel htmlFor="email-signup">Email Address(personal)*</InputLabel>
                                         <OutlinedInput
                                             fullWidth
                                             error={Boolean(touched.email && errors.email)}

@@ -33,11 +33,11 @@ const Feed = () => {
 
 
 
-    const tabs = ["Public", "Friends"];
+    const tabs = ["Public", "Following"];
 
     const tabConfig ={
         0: "Public",
-        1: "Friends",
+        1: "Following",
     }
 
     const handleTabChange = (newValue) => {
