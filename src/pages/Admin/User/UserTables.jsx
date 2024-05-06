@@ -12,6 +12,7 @@ const UserTables = ({value, users, userSelection}) => {
         "name": "name",
         "email": "email",
         "Department": "staff.department",
+        "authority": "authority",
         "Staff Type": "staff.staffType",
     }
 

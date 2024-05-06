@@ -318,7 +318,7 @@ const UserManagement = () => {
                             >
                                 <Box sx={{width: "600px"}}>
                                     <SearchBar setSearchTerm={setSearchTerm} resetList={resetList}
-                                               placeHolder="Search UserTables by Name/Email "/>
+                                               placeHolder="Search User by Name/Email "/>
                                 </Box>
 
 

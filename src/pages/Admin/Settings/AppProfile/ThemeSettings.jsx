@@ -25,7 +25,6 @@ const BigColorButton = ({ buttonName, handleClick, colorSchemes, selectedColor }
         <Button
             variant="contained" onClick={handleClick}
             sx={{
-            // backgroundColor:`${colorSchemes.find(colour => colour === selectedColor) || selectedColor}`,
                 backgroundColor: selectedColor,
            }}>
             {buttonName}
@@ -33,7 +32,7 @@ const BigColorButton = ({ buttonName, handleClick, colorSchemes, selectedColor }
     </Box>
 );
 
-const ThemeSettings = ({universityPlaceHolder}) => {
+const ThemeSettings = () => {
     const theme = useTheme();
     const {changeTheme, jwtToken, university} = useContext(UserContext);
     const [primaryColour, setPrimaryColour] = useState(theme.palette.primary.main);
