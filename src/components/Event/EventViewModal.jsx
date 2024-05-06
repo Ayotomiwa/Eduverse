@@ -7,14 +7,20 @@ const EventViewModal = ({ open, event, setOpen }) => {
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, pb:0}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between',
+                alignItems: 'center',
+                bgcolor: 'secondary.main',
+                p: 1, pb:0
+            }}>
                 <DialogTitle
-                    sx={{color: 'secondary.main'}}
+                    sx={{color: 'secondary.contrastText'}}
                 >Event Details</DialogTitle>
                 <IconButton
                     onClick={() => setOpen(false)}
                 >
-                    <CloseIcon/>
+                    <CloseIcon
+                     sx={{color: 'secondary.contrastText'}}
+                    />
                 </IconButton>
             </Box>
             <DialogContent sx={{mb: 1, mt:0}}>
