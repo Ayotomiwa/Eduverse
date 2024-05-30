@@ -21,7 +21,7 @@ const ChatPage = () => {
     const query = new URLSearchParams(location.search);
     const moduleName = query.get('moduleName');
     const topic = query.get('topic');
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [messages, setMessages] = useState([]);
     const [fetched, setFetched] = useState(false);
     const [replyWhom, setReplyWhom] = useState(null);
@@ -42,7 +42,7 @@ const ChatPage = () => {
 
 
     const fetchMessages = () => {
-        axios.get(`http://localhost:8222/api/chat-service/channels/${id}/messages`,{
+        axios.get(`${API_GATEWAY}/api/chat-service/channels/${id}/messages`,{
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }
@@ -60,7 +60,7 @@ const ChatPage = () => {
 
     const establishConnection = () => {
         if (!stompClientRef.current) {
-            let socket = new SockJS('http://localhost:8222/api/chat-service/ws');
+            let socket = new SockJS(`${API_GATEWAY}/api/chat-service/ws`);
             stompClientRef.current = Stomp.over(socket);
             connect();
         }

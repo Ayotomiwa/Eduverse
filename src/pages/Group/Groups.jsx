@@ -15,7 +15,7 @@ const Groups = () => {
     const [tabValue, setTabValue] = useState(0);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const {user, university, jwtToken} = useContext(UserContext);
+    const {user, university, jwtToken, API_GATEWAY} = useContext(UserContext);
     const theme = useTheme();
 
 
@@ -53,7 +53,7 @@ const Groups = () => {
     }, [searchTerm]);
 
     const fetchAllGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/university/${university.id}/groups`,
+        axios.get(`${API_GATEWAY}/api/group-service/university/${university.id}/groups`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

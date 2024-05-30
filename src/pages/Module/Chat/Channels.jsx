@@ -11,7 +11,7 @@ const Channels = ({module, setChannelCount}) => {
 
 
     const [page, setPage] = useState(0);
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [channels, setChannels] = useState([]);
     const [threadModalOpen, setThreadModalOpen] = useState(false);
     const [channel, setChannel] = useState(null);
@@ -32,7 +32,7 @@ const Channels = ({module, setChannelCount}) => {
 
 
     const fetchChannels = () => {
-        axios.get(`http://localhost:8222/api/chat-service/modules/${module.id}/channels?userId=${user.id}`,
+        axios.get(`${API_GATEWAY}/api/chat-service/modules/${module.id}/channels?userId=${user.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -52,7 +52,7 @@ const Channels = ({module, setChannelCount}) => {
 
 
     const postChannel = () => {
-        axios.post(`http://localhost:8222/api/chat-service/modules/${module.id}/channels?userId=${user.id}`, channel,
+        axios.post(`${API_GATEWAY}/api/chat-service/modules/${module.id}/channels?userId=${user.id}`, channel,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

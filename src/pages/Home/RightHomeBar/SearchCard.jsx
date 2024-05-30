@@ -14,7 +14,7 @@ import {useNavigate} from "react-router-dom";
 const SearchCard = ({search, setSearch}) => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const{university, jwtToken} = useContext(UserContext);
+    const{university, jwtToken, API_GATEWAY} = useContext(UserContext);
   const[searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [modules, setModules] = useState([]);
@@ -47,7 +47,7 @@ const SearchCard = ({search, setSearch}) => {
 
     const searchPlatform = () => {
         console.log("searching platform");
-        axios.get(`http://localhost:8222/api/search-service/search?query=${searchTerm}&universityId=${university.id}`,
+        axios.get(`${API_GATEWAY}/api/search-service/search?query=${searchTerm}&universityId=${university.id}`,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,

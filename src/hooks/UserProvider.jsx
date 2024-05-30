@@ -1,20 +1,20 @@
-import {createContext, useState, useContext, useEffect} from 'react';
+import {createContext, useState, useContext, useEffect, useRef} from 'react';
 import { jwtDecode } from 'jwt-decode';
 import {useLocation, useNavigate} from "react-router-dom";
 
 const UserContext = createContext(null);
 
+// eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
 
+    const API_GATEWAY = useRef("http://localhost:8222").current
     const location = useLocation();
-    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [changesMade, setChangesMade] = useState(false);
     const [university, setUniversity] = useState(null);
     const [jwtToken, setJwtToken] = useState(null);
     const [isAuthenticating, setIsAuthenticating] = useState(true);
     let storedPath;
-
 
 
 
@@ -69,7 +69,6 @@ export const UserProvider = ({ children }) => {
         setUser(data.user);
         setJwtToken(data.token);
         setUniversity(data.user.university);
-        console.log("UNIVERSITY", data.user.university)
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('userData', JSON.stringify(data));
         localStorage.setItem('jwtToken', JSON.stringify(data.token));
@@ -84,7 +83,7 @@ export const UserProvider = ({ children }) => {
                     window.location.href = storedPath;
                 }
             else{
-                window.location.pathname = '/home';
+                window.location.pathname = '/feed';
             }
         }
         setIsAuthenticating(false);
@@ -153,6 +152,7 @@ export const UserProvider = ({ children }) => {
             jwtToken,
             university,
             login,
+            API_GATEWAY,
             isAuthenticating,
             logout,
             changeTheme,

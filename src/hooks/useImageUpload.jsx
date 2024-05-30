@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import UserContext from "./UserProvider.jsx";
 
 const useImageUpload = (jwtToken, university, postUrl) => {
     const [dataToSave, setDataToSave] = useState(null);
     const[newDataSaved, setNewDataSaved] = useState(false);
     const [initUploadDone, setInitUploadDone] = useState(false);
     const [newData, setNewData] = useState(null);
+    const {API_GATEWAY} = useContext(UserContext)
 
 
 
@@ -48,7 +50,7 @@ const useImageUpload = (jwtToken, university, postUrl) => {
 
     const getSignedUrl = (keyName) => {
         console.log("In get signed" + keyName);
-        return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
+        return axios.get(`${API_GATEWAY}/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

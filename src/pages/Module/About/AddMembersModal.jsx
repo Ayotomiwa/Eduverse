@@ -29,7 +29,7 @@ const AddMembersModal = ({
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const {jwtToken, university} = useContext(UserContext);
+    const {jwtToken, university, API_GATEWAY} = useContext(UserContext);
 
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const AddMembersModal = ({
     }
 
     const fetchUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}&universityId=${university.id}`,
+        axios.get(`${API_GATEWAY}/api/user-service/users/search?query=${searchTerm}&universityId=${university.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

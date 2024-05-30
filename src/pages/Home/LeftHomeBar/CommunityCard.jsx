@@ -19,7 +19,7 @@ import {useNavigate} from "react-router-dom";
 const ModuleCard = ({maxHeight}) => {
 
     const [open, setOpen] = useState(true);
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [groups, setGroups] = useState([])
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const ModuleCard = ({maxHeight}) => {
     },[]);
 
     const fetchMyGroups = () =>{
-        axios.get(`http://localhost:8222/api/group-service/users/${user.id}/groups`,
+        axios.get(`${API_GATEWAY}/api/group-service/users/${user.id}/groups`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

@@ -7,7 +7,7 @@ import CreateThreadModal from "./CreateThreadModal.jsx";
 
 const Threads = ({community, setDiscussionCount, isModerator}) => {
     const [page, setPage] = useState(0);
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [discussions, setDiscussions] = useState([]);
     const [threadModalOpen, setThreadModalOpen] = useState(false);
     const [discussion, setDiscussion] = useState(null);
@@ -27,7 +27,7 @@ const Threads = ({community, setDiscussionCount, isModerator}) => {
 
 
     const fetchDiscussions = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/discussions?page=${page}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/${community.id}/discussions?page=${page}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -47,7 +47,7 @@ const Threads = ({community, setDiscussionCount, isModerator}) => {
     console.log("Is Moderator", isModerator)
 
     const postDiscussion = () => {
-        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/discussions`, discussion,
+        axios.post(`${API_GATEWAY}/api/group-service/groups/${community.id}/discussions`, discussion,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

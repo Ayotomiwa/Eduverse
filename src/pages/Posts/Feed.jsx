@@ -8,7 +8,7 @@ import {PlusIcon} from "lucide-react";
 import CreatePost from "./CreatePost.jsx";
 import Posts from "./Posts.jsx";
 import UserContext from "../../hooks/UserProvider.jsx";
-import {UseCheckFeature} from "../../hooks/UseCheckFeature.jsx";
+import {UseCheckFeature} from "../../hooks/FeatureChecks/UseCheckFeature.jsx";
 
 
 const Feed = () => {

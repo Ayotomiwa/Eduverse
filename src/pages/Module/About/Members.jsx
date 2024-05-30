@@ -20,15 +20,15 @@ import AddMembersModal from "./AddMembersModal.jsx";
 
 const Members = ({module, setNewMemberAdded}) => {
 
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const teachers = module?.teachingTeam;
     const students = module?.students;
     const [memberType, setMemberType] = useState(null)
     const isTeacher = teachers?.some(teacher => teacher?.id !== user.staff?.id);
     const [newMembers, setNewMembers] = useState([]);
     const [addMemberModalOpen, setAddMemberModalOpen] = useState(false);
-    const studentUrl = `http://localhost:8222/api/user-service/modules/${module.id}/student/multiple?userId=${user.id}`;
-    const teacherUrl = `http://localhost:8222/api/user-service/modules/${module.id}/staff/multiple?userId=${user.id}`;
+    const studentUrl = `${API_GATEWAY}/api/user-service/modules/${module.id}/student/multiple?userId=${user.id}`;
+    const teacherUrl = `${API_GATEWAY}/api/user-service/modules/${module.id}/staff/multiple?userId=${user.id}`;
 
 
 

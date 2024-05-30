@@ -21,7 +21,7 @@ const GroupManagement = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [openModal, setOpenModal] = useState(false);
-    const {jwtToken, user, university} = useContext(UserContext);
+    const {jwtToken, user, university, API_GATEWAY} = useContext(UserContext);
     const tab = queryParams.get("tab");
     const [value, setValue] = useState(tab || "approved");
     const [groups, setGroups] = useState([]);
@@ -31,7 +31,7 @@ const GroupManagement = () => {
     const [userSaved, setUserSaved] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [loading, setLoading] = useState(false);
-    const groupUrl = `http://localhost:8222/api/group-service/university/${university.id}/groups`;
+    const groupUrl = `${API_GATEWAY}/api/group-service/university/${university.id}/groups`;
 
 
     const {
@@ -122,7 +122,7 @@ const GroupManagement = () => {
 
     const searchAllGroups = () => {
         console.log("Searching groups");
-        axios.get(`http://localhost:8222/api/group-service/groups/search?query=${searchTerm}&universityId=${university.id}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/search?query=${searchTerm}&universityId=${university.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

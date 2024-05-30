@@ -13,7 +13,7 @@ import SimpleSelect from "../../components/Input/SimpleSelect.jsx";
 
 const EventPage = () => {
     const theme = useTheme();
-    const{user, jwtToken} = useContext(UserContext);
+    const{user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const[events, setEvents] = useState([]);
     const[selectedEvent, setSelectedEvent] = useState(null);
     const[transformedEvents, setTransformedEvents] = useState([]);
@@ -60,7 +60,7 @@ const EventPage = () => {
     },[transformedEvents]);
 
     const fetchUserEvents = () =>{
-        axios.get(`http://localhost:8222/api/event-service/users/${user.id}/events`,
+        axios.get(`${API_GATEWAY}/api/event-service/users/${user.id}/events`,
             {headers: {
                     Authorization: `Bearer ${jwtToken}`
                 }})

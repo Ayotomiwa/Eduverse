@@ -10,9 +10,9 @@ import ThreadCardPage from "./pages/Group/Threads/ThreadCardPage.jsx";
 import ThreadComment from "./pages/Group/Threads/ThreadComment.jsx";
 import {useContext, useEffect} from "react";
 import UserContext from "./hooks/UserProvider.jsx";
-import FeatureCheckFeed from "./hooks/FeatureCheckFeed.jsx";
-import FeatureCheckGroup from "./hooks/FeatureCheckGroup.jsx";
-import FeatureCheckModule from "./hooks/FeatureCheckModule.jsx";
+import FeatureCheckFeed from "./hooks/FeatureChecks/FeatureCheckFeed.jsx";
+import FeatureCheckGroup from "./hooks/FeatureChecks/FeatureCheckGroup.jsx";
+import FeatureCheckModule from "./hooks/FeatureChecks/FeatureCheckModule.jsx";
 import GroupPage from "./pages/Group/GroupPage.jsx";
 import {CircularProgress, useTheme} from "@mui/material";
 import {Box} from "@mui/material";
@@ -52,22 +52,18 @@ function App() {
               )}
           {!isAuthenticating && (
       <Routes>
-        {/*/!*<Route path="/" element={<Admin />}/>*!/*/}
-        {/*  <Route path="/" element={<Feed/>}/>*/}
-          <Route path="/feed" element={<Home><FeatureCheckFeed><Feed/></FeatureCheckFeed></Home>}/>
           <Route path="/admin?" element={<Admin />}/>
           <Route path="/login" element={<AuthLogin/>}/>
           <Route path="/register" element={<AuthRegister/>}/>
           <Route path="/my-events" element={<Home><EventPage/></Home>}/>
+          <Route path="/feed" element={<Home><FeatureCheckFeed><Feed/></FeatureCheckFeed></Home>}/>
           <Route path="/communities" element={<Home><FeatureCheckGroup><Groups/></FeatureCheckGroup></Home>}/>
           <Route path="/communities/:id" element={<Home><FeatureCheckGroup><GroupPage/></FeatureCheckGroup></Home>}/>
           <Route path="/modules/:id" element={<Home><FeatureCheckModule><ModulePage/></FeatureCheckModule></Home>}/>
           <Route path="/profile/:id" element={<Home><FeatureCheckFeed><Profile/></FeatureCheckFeed></Home>}/>
           <Route path="/modules/channels/:id" element={<Home><FeatureCheckModule><ChatPage/></FeatureCheckModule></Home>}/>
-          {/*<Route path="/community/*" element={<Home><ThreadComment/></Home>}/>*/}
           <Route path="communities/thread/:id" element={<Home><FeatureCheckGroup><ThreadCardPage/></FeatureCheckGroup></Home>}/>
           <Route path="/modules" element={<Home><FeatureCheckModule><div>Hello</div></FeatureCheckModule></Home>}/>
-
           <Route path="*" element={<Home><Feed/></Home>}/>
       </Routes>
             )}

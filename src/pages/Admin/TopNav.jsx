@@ -58,7 +58,9 @@ export const TopNav = () => {
                                     <ArrowLeftIcon />
                                 </SvgIcon>}
 
-                            onClick={() => {window.location.replace("http://localhost:5173/feed")}}
+                            onClick={() => {
+                                window.location.replace("http://localhost:5173/feed")
+                            }}
                         >
                             <Typography
                                 variant="subtitle1"

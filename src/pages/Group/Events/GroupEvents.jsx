@@ -14,7 +14,7 @@ import EventTab from "../../../components/Event/EventTab.jsx";
 
 const GroupEvents = ({community}) => {
     const theme = useTheme();
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken,API_GATEWAY } = useContext(UserContext);
     const [events, setEvents] = useState([]);
     const [newEvent, setNewEvent] = useState(null);
     const[selectedEvent, setSelectedEvent] = useState(null);
@@ -49,7 +49,7 @@ const GroupEvents = ({community}) => {
 
 
     const fetchGroupEvents = () => {
-        axios.get(`http://localhost:8222/api/event-service/groups/${community.id}/events`,
+        axios.get(`${API_GATEWAY}/api/event-service/groups/${community.id}/events`,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`
@@ -84,7 +84,7 @@ const GroupEvents = ({community}) => {
     };
 
     const postEvent = () => {
-        axios.post(`http://localhost:8222/api/event-service/groups/events`, newEvent,
+        axios.post(`${API_GATEWAY}/api/event-service/groups/events`, newEvent,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

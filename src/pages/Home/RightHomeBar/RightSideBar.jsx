@@ -4,7 +4,7 @@ import NotificationCard from "./NotificationCard.jsx";
 import EventsCard from "./EventsCard.jsx";
 import {useContext, useEffect, useState} from "react";
 import UserContext from "../../../hooks/UserProvider.jsx";
-import {UseCheckFeature} from "../../../hooks/UseCheckFeature.jsx";
+import {UseCheckFeature} from "../../../hooks/FeatureChecks/UseCheckFeature.jsx";
 import axios from "axios";
 
 const RightSideBar = () => {
@@ -12,7 +12,7 @@ const RightSideBar = () => {
     const [notificationOpen, setNotificationOpen] = useState(true);
     const [eventsOpen, setEventsOpen] = useState(false);
     const[search, setSearch] = useState(false);
-    const {user, jwtToken} = useContext(UserContext)
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext)
     const featureCheck = UseCheckFeature();
     const eventsFeatureAllowed = featureCheck.checkUserAccess("EVENTS");
     const [eventsData, setEventsData] = useState([]);
@@ -25,7 +25,7 @@ const RightSideBar = () => {
 
 
     const fetchEvents = () => {
-        axios.get(`http://localhost:8222/api/event-service/users/${user.id}/events`,
+        axios.get(`${API_GATEWAY}/api/event-service/users/${user.id}/events`,
             {headers: {
                     Authorization: `Bearer ${jwtToken}`
                 }})

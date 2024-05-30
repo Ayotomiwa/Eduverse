@@ -19,7 +19,7 @@ import {LoadingButton} from "@mui/lab";
 
 
 const FeatureSettings = () => {
-    const{user, jwtToken, university, changeFeatureSettings} = useContext(UserContext);
+    const{user, jwtToken, university, changeFeatureSettings, API_GATEWAY} = useContext(UserContext);
     const [fullFeatureSettings, setFullFeatureSettings] = useState([]);
     const [snackMessage, setSnackMessage] = useState("");
     const [open, setOpen] = useState(false);
@@ -66,7 +66,7 @@ const FeatureSettings = () => {
     }, [snackMessage]);
 
     const saveFeatureChanges = () => {
-        axios.post(`http://localhost:8222/api/user-service/features/university/${university.id}`, fullFeatureSettings,
+        axios.post(`${API_GATEWAY}/api/user-service/features/university/${university.id}`, fullFeatureSettings,
             {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
@@ -89,7 +89,7 @@ const FeatureSettings = () => {
 
 
     const fetchFeatureSettings = () => {
-        axios.get(`http://localhost:8222/api/user-service/features/university/${university.id}`, {
+        axios.get(`${API_GATEWAY}/api/user-service/features/university/${university.id}`, {
             headers: {
                 Authorization: `Bearer ${jwtToken}`,
             }

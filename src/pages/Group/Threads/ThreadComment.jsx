@@ -21,7 +21,7 @@ import CommentInput from "../../../components/Input/CommentInput.jsx";
 import UserContext from "../../../hooks/UserProvider.jsx";
 
 const ThreadComment = ({threadComment, setCommentAdded}) => {
-    const{user, jwtToken} = useContext(UserContext);
+    const{user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const navigate = useNavigate();
     const [openComments, setOpenComments] = useState(false);
     const [isLikedButton, setIsLikedButton] = useState(false);
@@ -54,7 +54,7 @@ const ThreadComment = ({threadComment, setCommentAdded}) => {
 
 
     const handleReply = () => {
-        axios.post(`http://localhost:8222/api/group-service/discussions/comments/${threadComment.id}/reply`, newReply,
+        axios.post(`${API_GATEWAY}/api/group-service/discussions/comments/${threadComment.id}/reply`, newReply,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

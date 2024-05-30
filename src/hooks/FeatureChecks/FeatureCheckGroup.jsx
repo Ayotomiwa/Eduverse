@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import UserContext from "./UserProvider";
+import UserContext from "../UserProvider.jsx";
 import { Navigate } from "react-router-dom";
 import {UseCheckFeature} from "./UseCheckFeature.jsx";
 import {Box, Typography} from "@mui/material";

@@ -51,7 +51,7 @@ const PostUploadModal = ({
 
                           }) => {
 
-    const {user, jwtToken, university} = useContext(UserContext);
+    const {user, jwtToken, university, API_GATEWAY} = useContext(UserContext);
     const [facultyUserAccts, setFacultyUserAccts] = useState([]);
     const [facultyUserAcct, setFacultyUserAcct] = useState(null);
 
@@ -98,7 +98,7 @@ const PostUploadModal = ({
 
 
     const fetchFaculties = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/faculties`,
+        axios.get(`${API_GATEWAY}/api/user-service/university/${university.id}/admin/${user.id}/faculties`,
             {
                 headers: {
                     "Authorization": `Bearer ${jwtToken}`

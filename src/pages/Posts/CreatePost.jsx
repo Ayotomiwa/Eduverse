@@ -9,7 +9,7 @@ import UserContext from "../../hooks/UserProvider.jsx";
 const CreatePost = ({setNewPost}) => {
 
 
-    const {jwtToken, university} = useContext(UserContext);
+    const {jwtToken, university, API_GATEWAY} = useContext(UserContext);
     const [selectedImage, setSelectedImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [openImageModal, setOpenImageModal] = useState(false);
@@ -90,7 +90,7 @@ const CreatePost = ({setNewPost}) => {
 
     const getSignedUrl = () => {
         console.log("In get signed" + pictureFileName);
-        return axios.get(`http://localhost:8222/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
+        return axios.get(`${API_GATEWAY}/api/post-service/presigned-url?bucketName=eduverse-v1&keyName=${keyName}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -107,7 +107,7 @@ const CreatePost = ({setNewPost}) => {
 
     const saveToDatabase = () => {
         console.log("saving to database");
-        axios.post("http://localhost:8222/api/post-service/posts", postToUpload,
+        axios.post(`${API_GATEWAY}/api/post-service/posts`, postToUpload,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

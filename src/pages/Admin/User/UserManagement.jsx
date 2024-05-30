@@ -21,7 +21,7 @@ const UserManagement = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [openModal, setOpenModal] = useState(false);
-    const{jwtToken, user, university} = useContext(UserContext);
+    const{jwtToken, user, university, API_GATEWAY} = useContext(UserContext);
     const tab = queryParams.get("tab");
     const [value, setValue] = useState(tab || "staff");
     const [users, setUsers] = useState([]);
@@ -34,7 +34,7 @@ const UserManagement = () => {
     const [userSaved, setUserSaved] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(false);
-    const baseUrl = `http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}`;
+    const baseUrl = `${API_GATEWAY}/api/user-service/university/${university.id}/admin/${user.id}`;
     const newUsersUrl = `${baseUrl}/users`;
     const updateUsersUrl = `${baseUrl}/update-user`;
 
@@ -85,7 +85,7 @@ const UserManagement = () => {
 
     const searchUsers = () => {
         console.log("searching users in UserManagement");
-        axios.get(`http://localhost:8222/api/user-service/users/search?query=${searchTerm}&universityId=${university.id}&userType=${value.toUpperCase()}`,
+        axios.get(`${API_GATEWAY}/api/user-service/users/search?query=${searchTerm}&universityId=${university.id}&userType=${value.toUpperCase()}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -128,7 +128,7 @@ const UserManagement = () => {
 
 
     const fetchStudentUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STUDENT`,
+        axios.get(`${API_GATEWAY}/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STUDENT`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -146,7 +146,7 @@ const UserManagement = () => {
     }
 
     const fetchStaffUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STAFF`,
+        axios.get(`${API_GATEWAY}/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=STAFF`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -165,7 +165,7 @@ const UserManagement = () => {
 
 
     const fetchFacultyUsers = () => {
-        axios.get(`http://localhost:8222/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=FACULTY`,
+        axios.get(`${API_GATEWAY}/api/user-service/university/${university.id}/admin/${user.id}/users?user-type=FACULTY`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

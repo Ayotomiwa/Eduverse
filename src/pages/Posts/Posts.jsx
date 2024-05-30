@@ -8,7 +8,7 @@ import {Typography} from "@mui/material";
 
 const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
 
-    const {jwtToken, university, user} = useContext(UserContext);
+    const {jwtToken, university, user, API_GATEWAY} = useContext(UserContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
@@ -16,8 +16,8 @@ const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
     const [loadMore, setLoadMore] = useState(false);
     const [loadingAgain, setLoadingAgain] = useState(true);
     const [loadPrevious, setLoadPrevious] = useState(false);
-    const publicUrl = `http://localhost:8222/api/post-service/university/${university.id}/posts/public?page=${page}&size=20&sortBy=createdAt`;
-    const followingsUrl = `http://localhost:8222/api/post-service/users/${user.id}/posts/following?page=${page}&size=20&sortBy=createdAt`;
+    const publicUrl = `${API_GATEWAY}/api/post-service/university/${university.id}/posts/public?page=${page}&size=20&sortBy=createdAt`;
+    const followingsUrl = `${API_GATEWAY}/api/post-service/users/${user.id}/posts/following?page=${page}&size=20&sortBy=createdAt`;
 
     const fetchUrl =  profilePostsUrl ?  profilePostsUrl :  (selectedTab === "Public" ? publicUrl : followingsUrl);
 
@@ -124,7 +124,9 @@ const Posts = ({newPost, selectedTab, profilePostsUrl = null, setPostNo}) => {
                             variant="outlined"
                                        loading={loadingAgain}
                                 disabled={page < 0 || posts.length === 0}
-                                sx={{bgcolor: "secondary.light", opacity: 0.5, color: "secondary.contrastText"}}
+                                sx={{bgcolor: "secondary.light",
+                                    opacity: 0.5,
+                                    color: "secondary.contrastText"}}
                                 fullWidth
                                loadingPosition="end"
                             endIcon={loadingAgain ? <CircularProgress size={20} color="secondary"/> : null}

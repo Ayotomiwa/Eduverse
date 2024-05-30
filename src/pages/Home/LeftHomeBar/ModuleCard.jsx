@@ -18,7 +18,7 @@ import UserContext from "../../../hooks/UserProvider.jsx";
 
 const ModuleCard = ({maxHeight}) => {
     const theme = useTheme();
-    const{university, user, jwtToken} = useContext(UserContext);
+    const{university, user, jwtToken, API_GATEWAY} = useContext(UserContext);
 
     const [open, setOpen] = useState(true);
     const[modules, setModules] = useState([])
@@ -30,7 +30,7 @@ const ModuleCard = ({maxHeight}) => {
 
 
     const fetchModules = () => {
-        axios.get(`http://localhost:8222/api/user-service/users/${user.id}/modules`,
+        axios.get(`${API_GATEWAY}/api/user-service/users/${user.id}/modules`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

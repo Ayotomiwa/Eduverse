@@ -23,9 +23,9 @@ const Channel = ({channel, moduleName}) => {
             width: "100%",
             display:"flex",
             flexDirection:"row",
-            border: "1 grey solid",
+            // border: "5px grey solid",
             boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
-            bgcolor:"primary.contrastText"
+            // bgcolor:"primary.contrastText"
         }}>
             <CardActionArea
                 onClick={() => {

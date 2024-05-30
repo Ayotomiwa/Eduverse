@@ -28,7 +28,7 @@ const AuthRegister = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [universities, setUniversities] = useState([]);
     const [next, setNext] = useState(false);
-    const {login} = useContext(UserContext);
+    const {login, API_GATEWAY} = useContext(UserContext);
     const Navigate = useNavigate();
 
 
@@ -43,7 +43,7 @@ const AuthRegister = () => {
 
 
     const fetchUniversities = () => {
-        axios.get('http://universities.hipolabs.com/search?country=united kingdom')
+        axios.get('https://universities.hipolabs.com/search?country=united kingdom')
             .then(response => {
                 const universitiesWithId = response.data.map((university, index) => ({
                     ...university,
@@ -104,13 +104,13 @@ const AuthRegister = () => {
                             console.log("Signing UP")
                             await axios({
                                 "method": 'POST',
-                                "url": 'http://localhost:8222/api/user-service/university/register',
+                                "url": `${API_GATEWAY}/api/user-service/university/register`,
                                 "data": values
                             });
 
                             const logInResponse = await axios({
                                 "method": 'POST',
-                                "url": 'http://localhost:8222/api/user-service/authenticate',
+                                "url": `${API_GATEWAY}/api/user-service/authenticate`,
                                 "data": {
                                     username: values.email,
                                     password: values.password

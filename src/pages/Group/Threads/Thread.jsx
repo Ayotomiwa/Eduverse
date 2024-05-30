@@ -19,10 +19,10 @@ import UserContext from "../../../hooks/UserProvider.jsx";
 
 const Thread= ({discussion}) => {
     const navigate = useNavigate();
-    const{user, jwtToken} = useContext(UserContext);
+    const{user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [isLikedByUser, setIsLikeByUser] = useState(false);
-    const likeUrl = `http://localhost:8222/api/group-service/group/discussions/${discussion.id}?isLiked=${isLikedButton}&userId=${user.id}`;
+    const likeUrl = `${API_GATEWAY}/api/group-service/group/discussions/${discussion.id}?isLiked=${isLikedButton}&userId=${user.id}`;
 
 
 
@@ -60,7 +60,12 @@ const Thread= ({discussion}) => {
 
     return (
 
-        <Card sx={{width: "100%", border: "1 grey solid", boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",}}>
+        <Card sx={{
+            width: "100%",
+            border: "1 grey solid",
+            boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
+
+        }}>
             <CardActionArea
                 onClick={() => {
                     navigate(`/communities/thread/${discussion.id}`)

@@ -9,7 +9,7 @@ import axios from "axios";
 
 const Profile = () => {
     const {id} = useParams();
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const theme = useTheme();
     const [tabValue, setTabValue] = useState(0);
     const [postNo, setPostNo] = useState(0);
@@ -35,7 +35,7 @@ const Profile = () => {
 
 
     const fetchProfile = () => {
-        axios.get(`http://localhost:8222/api/user-service/users/${id}/profile`,
+        axios.get(`${API_GATEWAY}/api/user-service/users/${id}/profile`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -52,7 +52,7 @@ const Profile = () => {
 
 
     const fetchRelationship = () => {
-        axios.get(`http://localhost:8222/api/user-service/relationship?followerId=${user.id}&followingId=${id}`,
+        axios.get(`${API_GATEWAY}/api/user-service/relationship?followerId=${user.id}&followingId=${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -68,7 +68,7 @@ const Profile = () => {
 
     const handleFollow = (follow) => {
         setProcessingFollow(true);
-        axios.get(`http://localhost:8222/api/user-service/relationship/follow?followerId=${user.id}&followId=${id}&follow=${follow}`,
+        axios.get(`${API_GATEWAY}/api/user-service/relationship/follow?followerId=${user.id}&followId=${id}&follow=${follow}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -132,7 +132,7 @@ const Profile = () => {
                 <Box sx={{display: "flex", flexDirection: "column", width: "100%"}}>
                  <Posts
                      newPost={newPost}
-                     profilePostsUrl={`http://localhost:8222/api/post-service/users/${id}/posts`}
+                     profilePostsUrl={`${API_GATEWAY}/api/post-service/users/${id}/posts`}
                      setPostNo={setPostNo}
                  />
                 </Box>

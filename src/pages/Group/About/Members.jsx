@@ -20,7 +20,7 @@ import AddMembersModal from "./AddMembersModal.jsx";
 
 const Members = ({community}) => {
 
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [members, setMembers] = useState([])
     const [moderators, setModerators] = useState([])
     const [isModerator, setIsModerator] = useState(false)
@@ -59,7 +59,7 @@ const Members = ({community}) => {
     }
 
     const fetchMembers = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${community.id}/members?isAccepted=true`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/${community.id}/members?isAccepted=true`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -77,7 +77,7 @@ const Members = ({community}) => {
 
     const addMembers = () => {
         console.log("newMembers", newMembers);
-        axios.post(`http://localhost:8222/api/group-service/groups/${community.id}/members/multiple`, newMembers,
+        axios.post(`${API_GATEWAY}/api/group-service/groups/${community.id}/members/multiple`, newMembers,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

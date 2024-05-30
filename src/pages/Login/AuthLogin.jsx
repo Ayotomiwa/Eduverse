@@ -11,7 +11,7 @@ import UserContext from "../../hooks/UserProvider";
 
 const AuthLogin = () => {
 
-    const {login} = useContext(UserContext);
+    const {login, API_GATEWAY} = useContext(UserContext);
 
     return (
         <Box sx={{display: "flex",
@@ -40,7 +40,8 @@ const AuthLogin = () => {
                             try {
                                 console.log("Signing IN")
 
-                                const logInResponse = await axios.post('http://localhost:8222/api/user-service/authenticate',
+                                const logInResponse =
+                                    await axios.post(`${API_GATEWAY}/api/user-service/authenticate`,
                                     {
                                         username: values.email,
                                         password: values.password

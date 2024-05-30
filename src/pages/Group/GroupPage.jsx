@@ -14,7 +14,7 @@ import useImageUpload from "../../hooks/useImageUpload.jsx";
 const GroupPage = () => {
     const theme = useTheme();
     const {id} = useParams();
-    const {user, jwtToken, university} = useContext(UserContext);
+    const {user, jwtToken, university, API_GATEWAY} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [community, setCommunity] = useState(null);
     const [membersIds, setMembersIds] = useState(null);
@@ -25,7 +25,7 @@ const GroupPage = () => {
     const [joined, setJoined] = useState(false);
     const [processingJoin, setProcessingJoin] = useState(false);
 
-    const postUrl = `http://localhost:8222/api/group-service/university/${university.id}/groups`;
+    const postUrl = `${API_GATEWAY}/api/group-service/university/${university.id}/groups`;
     const tabs = ["Threads", "About", "Events"];
 
 
@@ -71,7 +71,7 @@ const GroupPage = () => {
 
 
     const leaveGroup = () => {
-        axios.post(`http://localhost:8222/api/group-service/groups/${id}/members/${user.id}/leave`, {},
+        axios.post(`${API_GATEWAY}/api/group-service/groups/${id}/members/${user.id}/leave`, {},
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -88,7 +88,7 @@ const GroupPage = () => {
 
 
     const joinGroup = () => {
-        axios.post(`http://localhost:8222/api/group-service/groups/${id}/members`,
+        axios.post(`${API_GATEWAY}/api/group-service/groups/${id}/members`,
             {
                 userId: user.id,
                 username: user.username,
@@ -108,7 +108,7 @@ const GroupPage = () => {
     }
 
     const fetchMembers = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${id}/members?isAccepted=true`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/${id}/members?isAccepted=true`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -130,7 +130,7 @@ const GroupPage = () => {
 
 
     const fetchCommunity = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/${id}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

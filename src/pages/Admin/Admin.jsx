@@ -6,6 +6,7 @@ import {TopNav} from "./TopNav.jsx";
 import {useLocation} from "react-router-dom";
 import GroupManagement from "./Group/GroupManagment.jsx";
 import SettingsPage from "./Settings/SettingsPage.jsx";
+import ModuleManagement from "./Module/ModuleManagement.jsx";
 
 
 const Admin = () => {
@@ -41,6 +42,11 @@ const Admin = () => {
                     {currentPage === "group-management" &&
                         <Box sx={{m: "20px"}}>
                             <Box sx={{}}><GroupManagement/></Box>
+                        </Box>
+                    }
+                    {currentPage === "module-management" &&
+                        <Box sx={{m: "20px"}}>
+                            <Box sx={{}}><ModuleManagement/></Box>
                         </Box>
                     }
                     {currentPage === "app-configuration" &&

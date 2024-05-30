@@ -25,7 +25,7 @@ import UserContext from "../../../hooks/UserProvider.jsx";
 const ThreadCardPage = () => {
 
     const {id} = useParams();
-    const {user, jwtToken} = useContext(UserContext);
+    const {user, jwtToken, API_GATEWAY} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [newComment, setNewComment] = useState(null);
@@ -58,7 +58,7 @@ const ThreadCardPage = () => {
 
 
     const fetchThread = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/discussions/${id}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/discussions/${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -76,7 +76,7 @@ const ThreadCardPage = () => {
     }
 
     const fetchComments = () => {
-        axios.get(`http://localhost:8222/api/group-service/discussions/${discussion.id}/comments?page=${page}&size=${SIZE}`,
+        axios.get(`${API_GATEWAY}/api/group-service/discussions/${discussion.id}/comments?page=${page}&size=${SIZE}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -101,7 +101,7 @@ const ThreadCardPage = () => {
 
 
     const postComment = () => {
-        axios.post(`http://localhost:8222/api/group-service/discussions/${id}/comments`, newComment,
+        axios.post(`${API_GATEWAY}/api/group-service/discussions/${id}/comments`, newComment,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

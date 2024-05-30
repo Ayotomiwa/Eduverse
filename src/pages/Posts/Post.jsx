@@ -18,13 +18,13 @@ import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
 import CommentInput from "../../components/Input/CommentInput.jsx";
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider.jsx";
-import {UseCheckFeature} from "../../hooks/UseCheckFeature.jsx";
+import {UseCheckFeature} from "../../hooks/FeatureChecks/UseCheckFeature.jsx";
 
 
 const Post = ({post, setPosts}) => {
     const theme = useTheme();
     const {university} = useContext(UserContext)
-    const {user} = useContext(UserContext)
+    const {user, API_GATEWAY} = useContext(UserContext)
     const{jwtToken} = useContext(UserContext)
 
     const [openComments, setOpenComments] = useState(false);
@@ -34,10 +34,10 @@ const Post = ({post, setPosts}) => {
     const [replyWhom, setReplyWhom] = useState(null);
     const [isLikedButton, setIsLikedButton] = useState(false)
     const [isLikedByUser, setIsLikeByUser] = useState(false);
-    const commentsUrl = `http://localhost:8222/api/post-service/${post.id}/comments`;
-    const fetchCommentsUrl = `http://localhost:8222/api/post-service/${post.id}/comments`;
-    const replyUrl = `http://localhost:8222/api/post-service/comments/${commentId}/reply`;
-    const likeUrl = `http://localhost:8222/api/post-service/posts/${post.id}/likes/${isLikedButton}?userId=1`;
+    const commentsUrl = `/api/post-service/${post.id}/comments`;
+    const fetchCommentsUrl = `/api/post-service/${post.id}/comments`;
+    const replyUrl = `/api/post-service/comments/${commentId}/reply`;
+    const likeUrl = `/api/post-service/posts/${post.id}/likes/${isLikedButton}?userId=1`;
     const [comments, setComments] = useState(null);
 
     const userId = 1;
@@ -85,7 +85,7 @@ const Post = ({post, setPosts}) => {
 
 
     const fetchComments = () => {
-        axios.get(fetchCommentsUrl,{
+        axios.get(API_GATEWAY + fetchCommentsUrl,{
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }})
@@ -99,7 +99,7 @@ const Post = ({post, setPosts}) => {
         });
     }
     const postComment = () => {
-        axios.post(commentsUrl, newComment, {
+        axios.post(API_GATEWAY + commentsUrl, newComment, {
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }})
@@ -119,7 +119,7 @@ const Post = ({post, setPosts}) => {
     };
 
     const postReply = () => {
-        axios.post(replyUrl, newComment,
+        axios.post(API_GATEWAY + replyUrl, newComment,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -135,7 +135,7 @@ const Post = ({post, setPosts}) => {
 
 
     const postLikes = () => {
-        axios.post(likeUrl, null,{
+        axios.post(API_GATEWAY + likeUrl, null,{
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
                 }})

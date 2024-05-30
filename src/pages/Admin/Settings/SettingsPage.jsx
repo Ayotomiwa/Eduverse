@@ -31,8 +31,8 @@ const SettingsPage = () => {
 
 
     return (
-        <Box sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-            <Paper elevation={18} sx={{mb: 5, p:5, width: "100%", flex: 1, borderRadius: 2, bgcolor: "white", boxSizing:"border-box"}}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Paper elevation={18} sx={{mb: 3, p:3, width: "100%", flex: 1, borderRadius: 2, bgcolor: "white", boxSizing:"border-box"}}>
                 <Typography variant="h5" sx={{
                     fontWeight: "bold",
                     color: darken("#a7c7e7", 0.5),

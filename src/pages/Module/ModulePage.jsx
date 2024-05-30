@@ -17,7 +17,7 @@ import Channels from "./Chat/Channels.jsx";
 const ModulePage = () => {
     const theme = useTheme();
     const {id} = useParams();
-    const {user, jwtToken, university} = useContext(UserContext);
+    const {user, jwtToken, university, API_GATEWAY} = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [module, setModule] = useState(null);
     const[editModalOpen, setEditModalOpen] = useState(false)
@@ -26,7 +26,7 @@ const ModulePage = () => {
     const[upComingEventCount, setUpComingEventCount] = useState(null);
     const [tabValue, setTabValue] = useState(0);
     const tabs = ["Chats", "About", "Events"];
-    const postUrl = `http://localhost:8222/api/group-service/university/${university.id}/community`;
+    const postUrl = `${API_GATEWAY}/api/group-service/university/${university.id}/community`;
 
     const handleTabChange = (newValue) => {
         setTabValue(newValue);
@@ -52,7 +52,7 @@ const ModulePage = () => {
 
 
     const fetchModule = () => {
-        axios.get(`http://localhost:8222/api/user-service/modules/${id}`,
+        axios.get(`${API_GATEWAY}/api/user-service/modules/${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

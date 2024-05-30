@@ -17,7 +17,7 @@ import DocumentPlusIcon from "@heroicons/react/24/solid/DocumentPlusIcon.js";
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import {useContext} from "react";
 import UserContext from "../../../hooks/UserProvider.jsx";
-import {UseCheckFeature} from "../../../hooks/UseCheckFeature.jsx";
+import {UseCheckFeature} from "../../../hooks/FeatureChecks/UseCheckFeature.jsx";
 
 
 

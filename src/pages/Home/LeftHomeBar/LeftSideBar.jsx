@@ -2,7 +2,7 @@ import MainCard from "./MainCard.jsx";
 import ModuleCard from "./ModuleCard.jsx";
 import CommunityCard from "./CommunityCard.jsx";
 import {Box} from "@mui/material";
-import {UseCheckFeature} from "../../../hooks/UseCheckFeature.jsx";
+import {UseCheckFeature} from "../../../hooks/FeatureChecks/UseCheckFeature.jsx";
 
 const LeftSideBar = () => {
 
