@@ -7,7 +7,8 @@ const UserContext = createContext(null);
 // eslint-disable-next-line react/prop-types
 export const UserProvider = ({ children }) => {
 
-    const API_GATEWAY = useRef("http://localhost:8222").current
+    // const API_GATEWAY = useRef("http://localhost:8222").current
+    const API_GATEWAY = useRef("https://api-gateway-dgrsoybfsa-ew.a.run.app").current
     const location = useLocation();
     const [user, setUser] = useState(null);
     const [changesMade, setChangesMade] = useState(false);

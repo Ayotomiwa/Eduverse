@@ -30,6 +30,7 @@ export const TopNav = () => {
 
     // const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const currentPath = useLocation().pathname;
+    const navigate = useNavigate();
 
 
 
@@ -59,9 +60,11 @@ export const TopNav = () => {
                                 </SvgIcon>}
 
                             onClick={() => {
-                                window.location.replace("http://localhost:5173/feed")
+                                navigate("/feed")
+                                window.location.reload();
+                                // window.location.replace("http://localhost:5173/feed")
                             }}
-                        >
+a                        >
                             <Typography
                                 variant="subtitle1"
                                 fontWeight="bold"
