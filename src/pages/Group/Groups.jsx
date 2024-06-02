@@ -70,7 +70,7 @@ const Groups = () => {
 
 
     const fetchMyGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/users/${user.id}/groups`,
+        axios.get(`${API_GATEWAY}/api/group-service/users/${user.id}/groups`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -87,7 +87,7 @@ const Groups = () => {
 
 
     const searchAllGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/search?query=${searchTerm}&universityId=${university.id}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/search?query=${searchTerm}&universityId=${university.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
@@ -104,7 +104,7 @@ const Groups = () => {
     }
 
     const searchMyGroups = () => {
-        axios.get(`http://localhost:8222/api/group-service/groups/search?query=${searchTerm}&userId=${user.id}`,
+        axios.get(`${API_GATEWAY}/api/group-service/groups/search?query=${searchTerm}&userId=${user.id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`

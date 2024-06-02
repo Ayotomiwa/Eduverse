@@ -43,13 +43,18 @@ const AuthRegister = () => {
 
 
     const fetchUniversities = () => {
-        axios.get('https://universities.hipolabs.com/search?country=united kingdom')
+        axios.get('https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json')
             .then(response => {
                 const universitiesWithId = response.data.map((university, index) => ({
                     ...university,
                     id: index,
                 }));
-                setUniversities(universitiesWithId);
+                const universitiesInTheUk = universitiesWithId.filter((university) => university.country === "United Kingdom");
+                const uniqueUniversities = Array.from(
+                    new Set(universitiesInTheUk.map((university) => JSON.stringify(university)))
+                ).map((university) => JSON.parse(university));
+                setUniversities(uniqueUniversities);
+
                 console.log("Universities", universitiesWithId);
             })
             .catch(error => {
@@ -216,29 +221,6 @@ const AuthRegister = () => {
                                   )}
                                 </Stack>
                               </Grid>
-
-                                <Grid item xs={12}>
-                                    <Stack spacing={1}>
-                                        <InputLabel htmlFor="email-signup">Email Address(personal)*</InputLabel>
-                                        <OutlinedInput
-                                            fullWidth
-                                            error={Boolean(touched.email && errors.email)}
-                                            id="email-login"
-                                            type="email"
-                                            value={values.email}
-                                            name="email"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            placeholder="demo@lsbu.ac.uk"
-                                            inputProps={{}}
-                                        />
-                                        {touched.email && errors.email && (
-                                            <FormHelperText error id="helper-text-email-signup">
-                                                {errors.email}
-                                            </FormHelperText>
-                                        )}
-                                    </Stack>
-                                </Grid>
                                 <Grid item xs={12}>
                                     <Stack spacing={1}>
                                         <InputLabel htmlFor="password-signup">Password</InputLabel>
@@ -315,6 +297,29 @@ const AuthRegister = () => {
                                                 {touched.domain && errors.domain && (
                                                     <FormHelperText error id="helper-text-domain-signup">
                                                         {errors.domain}
+                                                    </FormHelperText>
+                                                )}
+                                            </Stack>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Stack spacing={1}>
+                                                <InputLabel htmlFor="email-signup">Email Address(@domain)*</InputLabel>
+                                                <OutlinedInput
+                                                    fullWidth
+                                                    error={Boolean(touched.email && errors.email)}
+                                                    id="email-login"
+                                                    type="email"
+                                                    // value={values.email === "" || values.email.startsWith("@") ? values.email + "@" + values.domain : values.email}
+                                                    value={values.domain === "" ? values.email : values.email.substr(0, values.email.indexOf("@")) + "@" + values.domain }
+                                                    name="email"
+                                                    onBlur={handleBlur}
+                                                    onChange={handleChange}
+                                                    placeholder="demo@lsbu.ac.uk"
+                                                    inputProps={{}}
+                                                />
+                                                {touched.email && errors.email && (
+                                                    <FormHelperText error id="helper-text-email-signup">
+                                                        {errors.email}
                                                     </FormHelperText>
                                                 )}
                                             </Stack>

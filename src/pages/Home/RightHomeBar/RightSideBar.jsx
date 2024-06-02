@@ -9,8 +9,8 @@ import axios from "axios";
 
 const RightSideBar = () => {
 
-    const [notificationOpen, setNotificationOpen] = useState(true);
-    const [eventsOpen, setEventsOpen] = useState(false);
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const [eventsOpen, setEventsOpen] = useState(true);
     const[search, setSearch] = useState(false);
     const {user, jwtToken, API_GATEWAY} = useContext(UserContext)
     const featureCheck = UseCheckFeature();

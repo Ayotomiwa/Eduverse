@@ -14,7 +14,7 @@ import {useNavigate} from "react-router-dom";
 const SearchCard = ({search, setSearch}) => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const{university, jwtToken, API_GATEWAY} = useContext(UserContext);
+    const{university, jwtToken, API_GATEWAY, user} = useContext(UserContext);
   const[searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [modules, setModules] = useState([]);
@@ -92,6 +92,8 @@ const SearchCard = ({search, setSearch}) => {
 
         }}>
             <Box sx={{m: 2, borderRadius: "12px", backgroundColor:"primary.main", p:2, height:"15vh"}}>
+                {university.logoUrl ?
+                    (
                 <CardMedia
                     component="img"
                     width="100%"
@@ -99,6 +101,22 @@ const SearchCard = ({search, setSearch}) => {
                     image={university.logoUrl}
                     alt="University Logo"
                 />
+                    ):(
+                        <>
+                        <Typography color="primary.contrastText"
+                                    variant="h6"
+                                    textAlign="center"
+                                    sx={{mb:1}}
+                        >
+                            {university.name.toUpperCase()}
+                        </Typography>
+                        {user.authority === "ADMIN" && (
+                        <Typography color="primary.contrastText" variant="caption">
+                            Upload SVG logo in Admin settings
+                        </Typography>
+                                )}
+                        </>
+                    )}
             </Box>
             <Box sx={{m:"3px", display:"flex", justifyContent:"center"}}>
                <Typography variant="caption" color="black" textAlign="center"
