@@ -206,7 +206,7 @@ const EditUserModal = ({
                     <Box sx={{flexBasis: `calc(50% - 0.5rem)`}}>
                         <TextField
                             fullWidth
-                            label="Email Address"
+                            label="EMAIL - use real email to get password"
                             name="email"
                             defaultValue={userPlaceHolder.current?.email}
                             onChange={handleChange}
@@ -264,7 +264,7 @@ const EditUserModal = ({
                                     <Select
                                         sx={{width: "100%"}}
                                         name="authority"
-                                        defaultValue={userPlaceHolder.current?.authority}
+                                        defaultValue={userPlaceHolder.current?.authority || "ELEVATED"}
                                         onChange={handleChange}
                                     >
                                         <MenuItem value='ADMIN'>Admin</MenuItem>
@@ -293,7 +293,7 @@ const EditUserModal = ({
                                     <Select
                                         sx={{width: "100%"}}
                                         name="userType"
-                                        defaultValue={userPlaceHolder.current?.userType || ""}
+                                        defaultValue={userPlaceHolder.current?.userType || "STUDENT"}
                                         onChange={handleChange}
                                     >
                                         <MenuItem value='STUDENT'>Current</MenuItem>
