@@ -6,6 +6,7 @@ import TrashIcon from "@heroicons/react/24/solid/TrashIcon.js";
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import PencilSquareIcon from "@heroicons/react/24/solid/PencilSquareIcon.js";
+import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
 import {useLocation, useNavigate} from "react-router-dom";
 import {UserPlusIcon} from "lucide-react";
 import axios from "axios";
@@ -14,6 +15,8 @@ import useImageUpload from "../../../hooks/useImageUpload.jsx";
 import UserTables from "../User/UserTables.jsx";
 import GroupTable from "./GroupTable.jsx";
 import EditGroupProfileModal from "../../../components/EditGroupProfileModal.jsx";
+import {UserGroupIcon} from "@heroicons/react/20/solid/index.js";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 const GroupManagement = () => {
@@ -37,6 +40,8 @@ const GroupManagement = () => {
     const {
         saveToDatabase, initUpload, newDataSaved, initUploadDone,setNewDataSaved
     } = useImageUpload(jwtToken, university, groupUrl);
+
+    const groupSelection = useSelection(groupIds);
 
     useEffect(() => {
         if(tab){
@@ -112,7 +117,7 @@ const GroupManagement = () => {
         }
         if(value === "pending"){
             console.log("Pending groups");
-            setGroups(data.filter(group => group.name === true));
+            setGroups(data.filter(group => group.approved === false));
             return;
         }
         if(value === "blocked"){
@@ -146,7 +151,7 @@ const GroupManagement = () => {
     }
 
 
-    const groupSelection = useSelection(groupIds);
+
     const closeModal = () => {
         groupSelection.handleDeselectAll()
         setSelectedGroup(null);
@@ -155,10 +160,24 @@ const GroupManagement = () => {
 
 
 
-    const handleDelete = () => {
-        setGroups(prevUsers => prevUsers.filter(user => !groupSelection.selected.includes(user.id)));
-    }
+    // const handleDelete = () => {
+    //     setGroups(prevUsers => prevUsers.filter(user => !groupSelection.selected.includes(user.id)));
+    // }
 
+
+    const handleDelete = () => {
+        axios.post(`${API_GATEWAY}/api/group-service/groups/delete?user-id=${user.id}`,
+            groupSelection.selected,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => {
+                console.log("Module deleted", response.data);
+                setGroups(prevUsers => prevUsers.filter(user => !groupSelection.selected.includes(user.id)));
+            })
+    }
 
     const handleEditClicked = () => {
         if (groupSelection.selected.length === 0) {
@@ -244,25 +263,32 @@ const GroupManagement = () => {
                             </Box>
                             <Box sx={{mr: 4, display: "flex", gap: 2}}>
                                 <IconButton
+                                    color="primary"
+                                    variant="contained"
                                     onClick={handeNewClicked}
                                     sx={{bgcolor: "lightgrey"}}>
                                     <SvgIcon sx={{fontSize: "30px"}}>
-                                        <UserPlusIcon color={darken("#9c27b0", 0.3)}/>
+                                        {/*<UserGroupIcon/>*/}
+                                        <AddBoxIcon/>
                                     </SvgIcon>
                                 </IconButton>
                                 <IconButton
+                                    color="primary"
+                                    variant="contained"
                                     onClick={handleEditClicked}
                                     sx={{bgcolor: "lightgrey"}}>
                                     <SvgIcon sx={{fontSize: "30px"}}>
-                                        <PencilSquareIcon color={darken("#9c27b0", 0.3)}/>
+                                        <PencilSquareIcon/>
                                     </SvgIcon>
                                 </IconButton>
                                 <IconButton
+                                    color="primary"
+                                    variant="contained"
                                     sx={{bgcolor: "lightgrey"}}
                                     onClick={handleDelete}
                                 >
                                     <SvgIcon sx={{fontSize: "30px"}}>
-                                        <TrashIcon color={darken("#9c27b0", 0.3)}/>
+                                        <TrashIcon />
                                     </SvgIcon>
                                 </IconButton>
                             </Box>

@@ -33,6 +33,7 @@ const useImageUpload = (jwtToken, university, postUrl) => {
                             if (response.status === 200) {
                                 console.log('Image uploaded to S3', response);
                                 setInitUploadDone(true);
+
                             }
                         } catch (error) {
                             console.error('Error uploading to S3:', error);

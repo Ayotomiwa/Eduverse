@@ -61,7 +61,7 @@ export const TopNav = () => {
 
                             onClick={() => {
                                 navigate("/feed")
-                                window.location.reload();
+                                // window.location.reload();
                                 // window.location.replace("http://localhost:5173/feed")
                             }}
 a                        >
@@ -85,7 +85,8 @@ a                        >
                     justifyContent="flex-end"
                     spacing={2}
                     sx={{
-                        px: 2
+                        px: 2,
+                        mr: 2,
                     }}
                 >
                     <Box
@@ -121,23 +122,18 @@ a                        >
                         {/*        </Badge>*/}
                         {/*    </IconButton>*/}
                         {/*</Tooltip>*/}
-                        <Avatar
-                            onClick={accountPopover.handleOpen}
-                            ref={accountPopover.anchorRef}
-                            size="large"
-                            sx={{
-                                cursor: 'pointer',
-                                // height: 40,
-                                // width: 40
-                            }}
-                            src={"/assets/avatars/avatar-carson-darrin.png"}
-                        />
+                        {/*<Avatar*/}
+                        {/*    onClick={accountPopover.handleOpen}*/}
+                        {/*    ref={accountPopover.anchorRef}*/}
+                        {/*    size="large"*/}
+                        {/*    sx={{*/}
+                        {/*        cursor: 'pointer',*/}
+                        {/*        // height: 40,*/}
+                        {/*        // width: 40*/}
+                        {/*    }}*/}
+                        {/*    src={"/assets/avatars/avatar-carson-darrin.png"}*/}
+                        {/*/>*/}
                     </Stack>
-                <AccountPopOver
-                    anchorEl={accountPopover.anchorRef.current}
-                    open={accountPopover.open}
-                    onClose={accountPopover.handleClose}
-                />
             </Card>
     );
 };

@@ -100,7 +100,7 @@ export default function EditProfileModal({open, closeModal, userProfile }) {
                 <CloseButton onClick={closeModal}>
                     <CloseIcon />
                 </CloseButton>
-                <Box sx={{display:"flex", FlexDirection:"row", alignItems:"center", border:"1px red solid", justifyContent:"space-between"}}>
+                <Box sx={{display:"flex", FlexDirection:"row", alignItems:"center", justifyContent:"center"}}>
                     <Box sx={{display: 'flex',
                         flexDirection: 'column',
                         width:"100%",
@@ -108,7 +108,7 @@ export default function EditProfileModal({open, closeModal, userProfile }) {
                         position: "relative", m:2}}>
                         <img
                             src={userProfileHolder.current?.profilePicUrl}
-                            style={{width: "100%", height: "100%", objectFit: "cover", borderRadius: "25px"}}
+                            style={{width: "100%", height: "100%", objectFit: "cover", borderRadius: "50px"}}
                         />
                         <Button
                             component="label"
@@ -121,29 +121,29 @@ export default function EditProfileModal({open, closeModal, userProfile }) {
                             <input type="file" hidden onChange={handleProfileImageChange}/>
                         </Button>
                     </Box>
-                    <Divider orientation="vertical" flexItem sx={{mx: 2}} />
-                    <Box sx={{
-                        m:2,
-                        position: "relative",
-                        borderRadius: "12px",
-                        height: "15vh",
-                        width:"100%"
-                    }}>
-                        <img
-                            src={userProfileHolder.current?.coverPicUrl}
-                            style={{width: "100%", height: "100%", objectFit: "cover"}}
-                        />
-                        <Button
-                            component="label"
-                            size="small"
-                            variant="contained"
-                            color="secondary"
-                            sx={{position: "absolute", top: "50%", left: "50%"}}
-                        >
-                            Change
-                            <input type="file" hidden onChange={handleImageChange}/>
-                        </Button>
-                    </Box>
+                    {/*<Divider orientation="vertical" flexItem sx={{mx: 2}} />*/}
+                    {/*<Box sx={{*/}
+                    {/*    m:2,*/}
+                    {/*    position: "relative",*/}
+                    {/*    borderRadius: "12px",*/}
+                    {/*    height: "15vh",*/}
+                    {/*    width:"100%"*/}
+                    {/*}}>*/}
+                    {/*    <img*/}
+                    {/*        src={userProfileHolder.current?.coverPicUrl}*/}
+                    {/*        style={{width: "100%", height: "100%", objectFit: "cover"}}*/}
+                    {/*    />*/}
+                    {/*    <Button*/}
+                    {/*        component="label"*/}
+                    {/*        size="small"*/}
+                    {/*        variant="contained"*/}
+                    {/*        color="secondary"*/}
+                    {/*        sx={{position: "absolute", top: "50%", left: "50%"}}*/}
+                    {/*    >*/}
+                    {/*        Change*/}
+                    {/*        <input type="file" hidden onChange={handleImageChange}/>*/}
+                    {/*    </Button>*/}
+                    {/*</Box>*/}
                 </Box>
 
                 <Box sx={{ flex: 1, p: 2 }}>

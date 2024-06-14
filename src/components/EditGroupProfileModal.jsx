@@ -99,7 +99,7 @@ const EditGroupProfileModal = ({open, closeModal,
 
 
     return (
-        <StyledModal open={open} onClose={closeModal}>
+        <StyledModal open={open? open : false} onClose={closeModal}>
             <ModalContent>
                 <CloseButton onClick={closeModal}>
                     <CloseIcon/>

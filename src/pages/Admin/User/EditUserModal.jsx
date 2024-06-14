@@ -38,9 +38,10 @@ const EditUserModal = ({
             email: selectedUser?.email || '',
             userType: selectedUser?.userType|| "",
         }
-        if (tab === "student") {
+        if (tab === "Student") {
             userPlaceHolder.current = {
                 ...userPlaceHolder.current,
+                authority: selectedUser?.authority || "",
                 student: {
                     ...userPlaceHolder.current.student,
                     studentNumber: selectedUser?.student.studentNumber || '',
@@ -74,7 +75,7 @@ const EditUserModal = ({
                     department: selectedUser?.faculty?.department || "",
                 }
             }
-            return
+
         }
     }, [selectedUser, open])
 
@@ -247,7 +248,7 @@ const EditUserModal = ({
                                     <Select
                                         sx={{width: "100%"}}
                                         name="staff.staffType"
-                                        defaultValue={userPlaceHolder.current?.staff?.staffType}
+                                        defaultValue={userPlaceHolder.current?.staff?.staffType? userPlaceHolder.current?.staff?.staffType : ""  }
                                         onChange={handleChange}
                                     >
                                         <MenuItem value='TEACHING'>Teaching</MenuItem>
@@ -266,7 +267,7 @@ const EditUserModal = ({
                                         defaultValue={userPlaceHolder.current?.authority}
                                         onChange={handleChange}
                                     >
-                                        <MenuItem value='ADMIN'>GOD</MenuItem>
+                                        <MenuItem value='ADMIN'>Admin</MenuItem>
                                         <MenuItem value='ELEVATED'>Elevated</MenuItem>
                                         <MenuItem value='STANDARD'>Standard</MenuItem>
                                     </Select>

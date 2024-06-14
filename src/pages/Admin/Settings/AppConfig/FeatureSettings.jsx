@@ -77,6 +77,7 @@ const FeatureSettings = () => {
                     setSaving(false);
                     setFeaturesSaved(true);
                     setSnackMessage("Settings saved successfully");
+                    setOpen(true);
                     console.log("data response", response.data);
              }).catch(error => {
                  setSnackMessage("Error saving settings: " + error);

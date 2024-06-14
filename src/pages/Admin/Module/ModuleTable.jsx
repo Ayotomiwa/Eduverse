@@ -4,7 +4,7 @@ import PagesTable from "../../../components/Display/PagesTable.jsx";
 import axios from "axios";
 import UserContext from "../../../hooks/UserProvider.jsx";
 
-const ModuleTable = ({modules, setModules , moduleSelection, loading}) =>{
+const ModuleTable = ({modules, setModules , moduleSelection, loading, newDataSaved}) =>{
 
 
     const{jwtToken, API_GATEWAY} = useContext(UserContext);
@@ -15,15 +15,24 @@ const ModuleTable = ({modules, setModules , moduleSelection, loading}) =>{
     const userUrl = `${API_GATEWAY}/api/user-service/users/staff`;
 
 
+    useEffect(() => {
+        if(newDataSaved && modules){
+            setStaffFetched(false);
+        }
+    },[newDataSaved])
 
     useEffect(() => {
-        setStaffIds(modules?.map(module => module.teachingTeam.map(staff => staff.id)).flat());
-        console.log("Staff ids", staffIds);
+        if(modules?.length > 0) {
+            console.log("In first useEffect", modules);
+            setStaffIds(modules?.map(module => module.teachingTeam.map(staff => staff.id)).flat());
+
+        }
     },[modules])
 
 
     useEffect(() => {
-        if(staffIds?.length > 0 && modules?.length > 0 && !staffFetched){
+        console.log("Staff ids", staffIds);
+        if(staffIds.length > 0 && !staffFetched){
             console.log("staff fetching");
             fetchUsers();
         }
@@ -65,7 +74,7 @@ const ModuleTable = ({modules, setModules , moduleSelection, loading}) =>{
 
 
     const handleRowClick = (id) => {
-        window.location.href = `/module/${id}` ;
+        window.location.href = `/modules/${id}` ;
     }
 
 

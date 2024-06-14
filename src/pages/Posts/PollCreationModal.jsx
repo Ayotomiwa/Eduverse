@@ -112,7 +112,7 @@ const PollCreationModal = ({ isOpen, onClose }) => {
             onClick={() => alert('Poll created!')}
             disabled={!pollQuestion.trim() || pollOptions.some((option) => !option.trim())}
           >
-            Create Poll
+            Future Update
           </Button>
         </Box>
       </Box>

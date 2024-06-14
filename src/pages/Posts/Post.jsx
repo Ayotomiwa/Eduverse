@@ -19,7 +19,8 @@ import CommentInput from "../../components/Input/CommentInput.jsx";
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider.jsx";
 import {UseCheckFeature} from "../../hooks/FeatureChecks/UseCheckFeature.jsx";
-
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 const Post = ({post, setPosts}) => {
     const theme = useTheme();
@@ -38,9 +39,10 @@ const Post = ({post, setPosts}) => {
     const fetchCommentsUrl = `/api/post-service/${post.id}/comments`;
     const replyUrl = `/api/post-service/comments/${commentId}/reply`;
     const likeUrl = `/api/post-service/posts/${post.id}/likes/${isLikedButton}?userId=1`;
+    const deletePostUrl = `/api/post-service/posts/${post.id}/delete?user-id=${user.id}`;
     const [comments, setComments] = useState(null);
 
-    const userId = 1;
+    const userId = user.id;
 
     const featureCheck = UseCheckFeature("POST_COMMENTING");
     const postCommentAllowed = featureCheck.checkUserAccess("POST_COMMENTING");
@@ -179,6 +181,18 @@ const Post = ({post, setPosts}) => {
     }
 
 
+    const deletePost = () => {
+     axios.post(API_GATEWAY + deletePostUrl, {}, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        }).then((response) => {
+            console.log("Post deleted", response.data);
+            setPosts(posts => posts.filter(p => p.id !== post.id));
+        }).catch((error) => {
+            console.error("Error deleting post:", error);
+        });
+     }
 
 
     return (
@@ -187,23 +201,37 @@ const Post = ({post, setPosts}) => {
             boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
         }}>
             <CardContent sx={{display: 'flex', flexDirection: "column", gap: 2}}>
-                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                    <Avatar variant="square" sx={{
-                        bgcolor: 'secondary.main',
-                        color:"secondary.contrastText",
-                        border: `0.5px solid ${theme.palette.primary.dark}`,
-                        width: 30,
-                        height: 30
-                    }}>
-                        { post.userProfileUrl ? post.userProfileUrl : post.facultyId? post.facultyName?.charAt(0).toUpperCase() : post.username?.charAt(0).toUpperCase() }
-                    </Avatar>
-                    <Link
-                        sx={{cursor: "pointer"}}
-                        color="textPrimary"
-                        onClick={() =>  window.location.href = `/profile/${post.facultyId? post.facultyId : post.userId}`}
-                        variant="subtitle2" >
-                        {post.facultyId ? <><b>{post.facultyName?.toUpperCase()}</b> - posted by</> : ""} {post.username}
-                    </Link>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Box sx={{display: 'flex', alignItems: 'center', gap:1}}>
+                        <Avatar variant="square" sx={{
+                            bgcolor: 'secondary.main',
+                            color:"secondary.contrastText",
+                            border: `0.5px solid ${theme.palette.primary.dark}`,
+                            width: 30,
+                            height: 30
+                        }}>
+                            { post.userProfileUrl ? post.userProfileUrl : post.facultyId? post.facultyName?.charAt(0).toUpperCase() : post.username?.charAt(0).toUpperCase() }
+                        </Avatar>
+                        <Link
+                            sx={{cursor: "pointer"}}
+                            color="textPrimary"
+                            onClick={() =>  window.location.href = `/profile/${post.facultyId? post.facultyId : post.userId}`}
+                            variant="subtitle2" >
+                            {post.facultyId ? <><b>{post.facultyName?.toUpperCase()}</b> - posted by</> : ""} {post.username}
+                        </Link>
+                        <Box>
+                            <Typography variant="body2" color="textSecondary">
+                                {new Date(post.createdAt).toLocaleString()}
+                            </Typography>
+                        </Box>
+                    </Box>
+                    {post.userId === user.id && (
+                    <Box sx={{cursor: "pointer", ml:"auto"}} >
+                        <IconButton>
+                            <ClearOutlinedIcon  sx={{colour: "primary.main"}} onClick={deletePost}/>
+                        </IconButton>
+                    </Box>
+                    )}
                 </Box>
                 {post.imageUrl && (
                     <CardMedia

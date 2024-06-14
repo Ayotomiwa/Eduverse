@@ -149,11 +149,14 @@ const Members = ({community}) => {
                          }
                     >
                         <ListItemAvatar>
-                            <Avatar variant="square" sx={{
-                                bgcolor: 'secondary.main',
-                                width: 24,
-                                height: 24
-                            }}>{moderator.username?.charAt(0).toUpperCase()}</Avatar>
+                            <Avatar>
+                                {moderator.profileInfo?.profilePicUrl ? (
+                                    <img src={moderator.profileInfo.profilePicUrl} alt="profile-pic"
+                                         style={{width: "100%", height: "100%", objectFit: "cover"}}/>
+                                ) : (
+                                    <ImageIcon/>
+                                )}
+                            </Avatar>
                         </ListItemAvatar>
                         <ListItemText
                             primary={moderator.username}
@@ -182,9 +185,10 @@ const Members = ({community}) => {
                 </Box>
                 {members.length > 0 ? (
                     <List>
-                        {members.map(members => {
+                        {members.map(member => {
+                            console.log(member);
                             return (
-                                <ListItem key={members.id}
+                                <ListItem key={member.id}
                                           secondaryAction={
                                               <Box sx={{
                                                   display: "flex",
@@ -202,11 +206,16 @@ const Members = ({community}) => {
                                 >
                                     <ListItemAvatar>
                                         <Avatar>
-                                            <ImageIcon/>
+                                            {member.profileInfo?.profilePicUrl ? (
+                                                <img src={member.profileInfo.profilePicUrl} alt="profile-pic"
+                                                     style={{width: "100%", height: "100%", objectFit: "cover"}}/>
+                                            ) : (
+                                                <ImageIcon/>
+                                            )}
                                         </Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary={members.username}
-                                                  secondary={new Date(members.joinedDate).toDateString()}/>
+                                    <ListItemText primary={member.username}
+                                                  secondary={new Date(member.joinedDate).toDateString()}/>
                                 </ListItem>
                             )
                         })}

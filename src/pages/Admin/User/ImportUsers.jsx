@@ -18,13 +18,14 @@ import {
     Typography
 } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import PagesTable from "../../../components/Display/PagesTable.jsx";
 import {useDropzone} from 'react-dropzone';
 import * as XLSX from 'xlsx';
 import * as Papa from 'papaparse';
 import axios from "axios";
 import {LoadingButton} from "@mui/lab";
+import UserContext from "../../../hooks/UserProvider.jsx";
 
 
 const ImportUsers = (
@@ -51,6 +52,7 @@ const ImportUsers = (
     const[missingValues, setMissingValues] = useState(0);
     const[inCompleteRows, setInCompleteRows] = useState([]);
     const[errorUsers, setErrorUsers] = useState([]);
+    const{jwtToken} = useContext(UserContext);
     const requiredFields = selectedValue === "STUDENT" ? ["studentId", "firstName", "lastName", "email", "schoolCode", "courseCode"]
         : ["staffId", "name", "email", "role", "accessLevel"];
 
@@ -506,6 +508,8 @@ const ImportUsers = (
                         </Box>
                         <Box sx={{
                             display: "flex", flexDirection: "column", justifyContent: "space-between",
+                            gap:2,
+                            p:2
                         }}>
                             <Button variant="outlined" color="secondary"
                                     size="medium"

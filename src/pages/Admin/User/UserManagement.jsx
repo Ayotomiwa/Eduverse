@@ -13,6 +13,7 @@ import {UserPlusIcon} from "lucide-react";
 import EditUserModal from "./EditUserModal.jsx";
 import axios from "axios";
 import UserContext from "../../../hooks/UserProvider.jsx";
+import AddBoxIcon from "@mui/icons-material/AddBox.js";
 
 
 const UserManagement = () => {
@@ -331,7 +332,7 @@ const UserManagement = () => {
                                            sx={{bgcolor:"lightgrey"}}
                                         >
                                             <SvgIcon sx={{fontSize: "30px"}}>
-                                                <UserPlusIcon />
+                                                <AddBoxIcon/>
                                             </SvgIcon>
                                         </IconButton>
                                         <IconButton

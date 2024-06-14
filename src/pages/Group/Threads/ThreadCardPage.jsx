@@ -12,15 +12,16 @@ import {
     IconButton,
     Typography,
     CardHeader,
-    CardActionArea, LinearProgress, CircularProgress
+    CardActionArea, LinearProgress, CircularProgress, Button, SvgIcon
 } from "@mui/material";
 import {Favorite, FavoriteBorderOutlined} from "@mui/icons-material";
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 import CommentInput from "../../../components/Input/CommentInput.jsx";
 import ThreadComment from "./ThreadComment.jsx";
 import {Pagination} from "@mui/material";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import UserContext from "../../../hooks/UserProvider.jsx";
+import ArrowLeftIcon from "@heroicons/react/24/solid/ArrowLeftIcon.js";
 
 const ThreadCardPage = () => {
 
@@ -34,6 +35,7 @@ const ThreadCardPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [paginationPage, setPaginationPage] = useState(null)
     const [page, setPage] = useState(0)
+    const navigate = useNavigate();
 
     const SIZE = 15;
     const [discussion, setDiscussion] = useState(null);
@@ -134,17 +136,48 @@ const ThreadCardPage = () => {
 
 
     return (
+        <Box>
+            <Box
+                sx={{
+                    display:"flex",
+                    alignItems:"center",
+                    mt:1
+                }}
+            >
+                <Button
+                    startIcon={
+                        <SvgIcon>
+                            <ArrowLeftIcon />
+                        </SvgIcon>}
+
+                    onClick={() => {
+                        navigate(-1)
+                        // window.location.reload();
+                        // window.location.replace("http://localhost:5173/feed")
+                    }}
+                    a                        >
+                    <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        textAlign="center"
+                        sx={{color:"primary.dark", mr:"5px"}}
+                    >
+                        Back
+                    </Typography>
+                </Button>
+            </Box>
         <Card sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             border: "1px grey solid",
-            minHeight: "95vh",
+            minHeight: "90vh",
             mt: 2,
             boxSizing: 'border-box',
             boxShadow: "1.5px 1.5px 3px rgba(0,0,0,0.5)",
             m: 2
         }}>
+
             <Box>
                 {isLoading || !discussion ? (
                     <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
@@ -232,6 +265,7 @@ const ThreadCardPage = () => {
                 />
             </Box>
         </Card>
+        </Box>
     );
 }
 

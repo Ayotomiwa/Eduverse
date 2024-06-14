@@ -101,7 +101,7 @@ const ModulePage = () => {
                 width: "100%",
             }}>
                 <Box sx={{ position: 'relative', height: "40vh", overflow: "hidden"}}>
-                    <img src={"https://eduverse-v1.s3.eu-west-2.amazonaws.com/1/494106.jpg"} alt={module?.name} style={{ width: "100%", position: "absolute", top: 0, left: 0, objectFit: "cover" }} />
+                    <img src={module?.profileUrl} alt={module?.name} style={{ width: "100%", position: "absolute", top: 0, left: 0, objectFit: "cover" }} />
                     {/*<Box sx={{ position: 'absolute', top: 0, right: 10, p: 2 }}>*/}
                     {/*    <Button variant="contained" color="secondary" size="large">*/}
                     {/*        {module?.membersIds?.includes(user.id) ? "Leave" : "Join"}*/}

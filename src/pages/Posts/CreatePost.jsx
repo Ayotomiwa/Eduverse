@@ -5,6 +5,8 @@ import PollCreationModal from "./PollCreationModal.jsx";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import UserContext from "../../hooks/UserProvider.jsx";
+import {Announcement} from "@mui/icons-material";
+import AnnouncementModal from "./AnnouncementModal.jsx";
 
 const CreatePost = ({setNewPost}) => {
 
@@ -14,6 +16,7 @@ const CreatePost = ({setNewPost}) => {
     const [caption, setCaption] = useState('');
     const [openImageModal, setOpenImageModal] = useState(false);
     const [openPollModal, setOpenPollModal] = useState(false);
+    const[openAnnouncementModal, setOpenAnnouncementModal] = useState(false);
     const [keyName, setKeyName] = useState(null);
     const [pictureFileName, setPictureFileName] = useState(null);
     const [pictureData, setPictureData] = useState(null);
@@ -151,6 +154,9 @@ const CreatePost = ({setNewPost}) => {
     const handleClosePollModal = () => setOpenPollModal(false);
 
 
+    const handleOpenAnnouncementModal = () => setOpenAnnouncementModal(true);
+    const handleCloseAnnouncementModal = () => setOpenAnnouncementModal(false);
+
     return (
         <>
             <Box sx={{display: "flex", justifyContent: "flex-start", alignItems: "center", p: 1, gap: 2}}>
@@ -175,7 +181,7 @@ const CreatePost = ({setNewPost}) => {
                     </Button>
                     <Button size="medium" sx={{color: "grey"}} startIcon={
                         <img width="30" height="30" src="https://img.icons8.com/stickers/100/siren.png" alt="siren"/>
-                    } onClick={handleOpenPollModal}>
+                    } onClick={handleOpenAnnouncementModal}>
                         <Typography>
                             Shout
                         </Typography>
@@ -216,6 +222,9 @@ const CreatePost = ({setNewPost}) => {
             </Box>
             <Box>
                 <PollCreationModal isOpen={openPollModal} onClose={handleClosePollModal}/>
+            </Box>
+            <Box>
+                <AnnouncementModal isOpen={openAnnouncementModal} onClose={handleCloseAnnouncementModal}/>
             </Box>
         </>
     )

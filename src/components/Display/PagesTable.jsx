@@ -78,7 +78,7 @@ const PagesTable = ({
                             )}
                             {Object.entries(columnHeaders).map(([columnHeader], index) => (
                                 <TableCell key={index}>
-                                    <Typography textAlign="center" variant="subtitle2"
+                                    <Typography textAlign="center" variant="subtitle2" color="primary"
                                     sx={{fontWeight:500}}
                                     >
                                         {columnHeader}
@@ -113,6 +113,9 @@ const PagesTable = ({
                                             layout
                                             selected={isSelected}
                                             onClick={() => {
+                                                if(selectedSome || selectedAll) {
+                                                    return
+                                                }
                                               handleRowClick(item.id)
                                             }}
                                             sx={{

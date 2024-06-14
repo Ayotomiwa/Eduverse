@@ -19,52 +19,53 @@ const NotificationCard = ({open, handleOpen, maxHeight}) => {
     const handleClick = (event) => {
         handleOpen(event);
     };
+    const [notifications, setNotifications] = useState([]);
 
-    const notifications = [
-        {
-            user: "Ayotomiwa Omope",
-            message: "You have a new reply on your post",
-            time: "2 minutes ago",
-            type: "reply"
-        },
-        {
-            user: "Dave Oyewole",
-            message: "You have a new comment on your post",
-            time: "5 minutes ago",
-            type: "comment"
-        },
-        {
-            user: "LSBU",
-            messgage: "New announcement from LSBU",
-            time: "10 minutes ago",
-            type: "announcement"
-        },
-        {
-            user: "Ayotomiwa Omope",
-            message: "You have a new reply on your post",
-            time: "2 minutes ago",
-            type: "reply"
-        },
-        {
-            user: "Ayotomiwa Omope",
-            message: "You have a new reply on your post",
-            time: "2 minutes ago",
-            type: "reply"
-        },
-        {
-            user: "Ayotomiwa Omope",
-            message: "You have a new reply on your post",
-            time: "2 minutes ago",
-            type: "reply"
-        },
-        {
-            user: "Ayotomiwa Omope",
-            message: "You have a new reply on your post",
-            time: "2 minutes ago",
-            type: "reply"
-        },
-
-    ]
+    // const notifications = [
+    //     {
+    //         user: "Ayotomiwa Omope",
+    //         message: "You have a new reply on your post",
+    //         time: "2 minutes ago",
+    //         type: "reply"
+    //     },
+    //     {
+    //         user: "Dave Oyewole",
+    //         message: "You have a new comment on your post",
+    //         time: "5 minutes ago",
+    //         type: "comment"
+    //     },
+    //     {
+    //         user: "LSBU",
+    //         messgage: "New announcement from LSBU",
+    //         time: "10 minutes ago",
+    //         type: "announcement"
+    //     },
+    //     {
+    //         user: "Ayotomiwa Omope",
+    //         message: "You have a new reply on your post",
+    //         time: "2 minutes ago",
+    //         type: "reply"
+    //     },
+    //     {
+    //         user: "Ayotomiwa Omope",
+    //         message: "You have a new reply on your post",
+    //         time: "2 minutes ago",
+    //         type: "reply"
+    //     },
+    //     {
+    //         user: "Ayotomiwa Omope",
+    //         message: "You have a new reply on your post",
+    //         time: "2 minutes ago",
+    //         type: "reply"
+    //     },
+    //     {
+    //         user: "Ayotomiwa Omope",
+    //         message: "You have a new reply on your post",
+    //         time: "2 minutes ago",
+    //         type: "reply"
+    //     },
+    //
+    // ]
 
 
     const NotificationIcon = ({type}) => {

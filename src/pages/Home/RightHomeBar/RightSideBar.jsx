@@ -63,18 +63,19 @@ const RightSideBar = () => {
             setSearch={setSearch}
             search={search}
             />
+            {eventsFeatureAllowed  && (
+                <EventsCard
+                    eventsData={eventsData}
+                    open={eventsOpen && !search}
+                    handleOpen={handleOpen}
+                />
+            )}
             <NotificationCard
-                maxHeight={eventsFeatureAllowed? "43vh" : "52vh"}
+                maxHeight={eventsFeatureAllowed? "43vh" : "50vh"}
              open={notificationOpen && !search}
              handleOpen={handleOpen}
             />
-            {eventsFeatureAllowed  && (
-            <EventsCard
-                eventsData={eventsData}
-                open={eventsOpen && !search}
-                handleOpen={handleOpen}
-            />
-                )}
+
         </Box>
     )
 }

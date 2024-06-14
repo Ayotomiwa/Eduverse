@@ -26,7 +26,7 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
 const EventsCard = ({open,
                         eventsData,
                         handleOpen,
-                        maxHeight="45vh",
+                        maxHeight="42vh",
                         borderRadius = "12px",
                         showButton=true}) => {
 

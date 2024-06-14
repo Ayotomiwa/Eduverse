@@ -129,8 +129,8 @@ const AuthRegister = () => {
                         } catch (err) {
                             console.error(err);
                             if (err.response) {
-                                setErrors({submit: err.response.data.message});
-                            } else if (err.response) {
+                                setErrors({submit: err.response.data});
+                            } else if (err.message) {
                                 setErrors({submit: err.message});
                             } else if (err.request) {
                                 console.error(err.request);

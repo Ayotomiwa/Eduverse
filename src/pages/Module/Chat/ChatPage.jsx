@@ -3,13 +3,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CommentInput from "../../../components/Input/CommentInput.jsx";
 import MessageList from "./MessgeList.jsx";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import UserContext from "../../../hooks/UserProvider.jsx";
 import axios from "axios";
-import {Card, Divider, lighten, useTheme} from "@mui/material";
+import {Button, Card, Divider, lighten, SvgIcon, useTheme} from "@mui/material";
 import './global';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import ArrowLeftIcon from "@heroicons/react/24/solid/ArrowLeftIcon.js";
+import GlobeAltIcon from "@heroicons/react/24/solid/GlobeAltIcon.js";
 
 
 
@@ -26,6 +28,7 @@ const ChatPage = () => {
     const [fetched, setFetched] = useState(false);
     const [replyWhom, setReplyWhom] = useState(null);
     const stompClientRef = useRef(null);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -119,6 +122,34 @@ const ChatPage = () => {
             flexDirection: 'column',
             justifyContent: 'space-between'
         }}>
+            <Box
+                sx={{
+                    display:"flex",
+                    alignItems:"center",
+                }}
+            >
+                <Button
+                    startIcon={
+                        <SvgIcon>
+                            <ArrowLeftIcon />
+                        </SvgIcon>}
+
+                    onClick={() => {
+                        navigate(-1)
+                        // window.location.reload();
+                        // window.location.replace("http://localhost:5173/feed")
+                    }}
+                    a                        >
+                    <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        textAlign="center"
+                        sx={{color:"primary.dark", mr:"5px"}}
+                    >
+                        Back
+                    </Typography>
+                </Button>
+            </Box>
             <Typography variant="h5"  component="h2" sx={{mb: 2, color:"grey"}}>
                 {topic}  from {moduleName}
             </Typography>

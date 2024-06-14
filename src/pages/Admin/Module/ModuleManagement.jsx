@@ -8,10 +8,12 @@ import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../../hooks/UserProvider.jsx";
 import ModuleTable from "./ModuleTable.jsx";
-import EditGroupProfileModal from "../../../components/EditGroupProfileModal.jsx";
 import {SearchBar} from "../../../components/Input/SearchBar.jsx";
 import useImageUpload from "../../../hooks/useImageUpload.jsx";
 import {UserPlusIcon} from "lucide-react";
+import EditModuleModal from "./EditModuleModal.jsx";
+import {AcademicCapIcon} from "@heroicons/react/20/solid/index.js";
+import AddBoxIcon from "@mui/icons-material/AddBox.js";
 
 
 const ModuleManagement = () => {
@@ -28,27 +30,30 @@ const ModuleManagement = () => {
     const [selectedModule, setSelectedModule] = useState(null);
     const [loading, setLoading] = useState(false);
     const moduleUrl = `${API_GATEWAY}/api/user-service/university/${university.id}/modules`;
+    const uploadModuleUrl = moduleUrl + `?user-id=${user.id}`;
 
 
     const {
         saveToDatabase, initUpload, newDataSaved, initUploadDone,setNewDataSaved
-    } = useImageUpload(jwtToken, university, moduleUrl);
+    } = useImageUpload(jwtToken, university, uploadModuleUrl);
 
+
+    const moduleSelection = useSelection(moduleIds);
 
 
     useEffect(() => {
-            // setModules([]);
-            // setSearchTerm('');
-            // setSelectedModule(null);
-            fetchModules();
-    }, []);
+        setModules([]);
+        setSearchTerm('');
+        setSelectedModule(null);
+        fetchModules();
+    } , [newDataSaved]);
 
 
-    // useEffect(() => {
-    //     if (modules.length > 0) {
-    //         setModuleIds(modules.map(user => user.id));
-    //     }
-    // }, [modules]);
+    useEffect(() => {
+        if (modules.length > 0) {
+            setModuleIds(modules.map(user => user.id));
+        }
+    }, [modules]);
 
 
     useEffect(() => {
@@ -93,22 +98,37 @@ const ModuleManagement = () => {
     }
 
 
+    const handleDelete = () => {
+        axios.post(`${API_GATEWAY}/api/user-service/modules/delete?user-id=${user.id}`,
+            moduleSelection.selected,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => {
+                console.log("Module deleted", response.data);
+                setModules(prevModules => prevModules.filter(user => !moduleSelection.selected.includes(user.id)));
+            })
+    }
+
+
     const searchModules = () => {
-        // console.log("Searching modules");
-        // axios.get(`http://localhost:8222/api/-service/g/search?query=${searchTerm}&universityId=${university.id}`,
-        //     {
-        //         headers: {
-        //             'Authorization': `Bearer ${jwtToken}`
-        //         }
-        //     })
-        //     .then(response => {
-        //         setModules(response.data);
-        //         setLoading(false);
-        //     })
-        //     .catch(error => {
-        //         console.error("Failed to search modules", error);
-        //         setLoading(false);
-        //     });
+        console.log("Searching modules");
+        axios.get(`${API_GATEWAY}/api/user-service/modules/search?query=${searchTerm}&universityId=${university.id}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            })
+            .then(response => {
+                setModules(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Failed to search modules", error);
+                setLoading(false);
+            });
     }
 
     const resetList = (value) => {
@@ -119,7 +139,7 @@ const ModuleManagement = () => {
     }
 
 
-    const moduleSelection = useSelection(moduleIds);
+
     const closeModal = () => {
         moduleSelection.handleDeselectAll()
         setSelectedModule(null);
@@ -128,9 +148,9 @@ const ModuleManagement = () => {
 
 
 
-    const handleDelete = () => {
-        setModules(prevModules => prevModules.filter(user => !moduleSelection.selected.includes(user.id)));
-    }
+    // const handleDelete = () => {
+    //     setModules(prevModules => prevModules.filter(user => !moduleSelection.selected.includes(user.id)));
+    // }
 
 
     const handleEditClicked = () => {
@@ -187,7 +207,7 @@ const ModuleManagement = () => {
                                     onClick={handeNewClicked}
                                     sx={{bgcolor: "lightgrey"}}>
                                     <SvgIcon sx={{fontSize: "30px"}}>
-                                        <UserPlusIcon />
+                                        <AddBoxIcon/>
                                     </SvgIcon>
                                 </IconButton>
                                 <IconButton
@@ -239,11 +259,12 @@ const ModuleManagement = () => {
                     moduleSelection={moduleSelection}
                     setModules={setModules}
                     loading={loading}
+                    newDataSaved={newDataSaved}
                 />
             </Box>
-            <EditGroupProfileModal
+            <EditModuleModal
                 open={openModal} closeModal={closeModal}
-                community={selectedModule}
+                module={selectedModule}
                 saveChanges={saveChanges}
             />
         </Box>
